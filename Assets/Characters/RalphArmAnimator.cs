@@ -12,10 +12,13 @@ public class RalphArmAnimator : MonoBehaviour
 
         public void DrawAnchorEndLine()
         {
+            if (!Anchor || !End) return;
             Gizmos.DrawLine(Anchor.position, End.position);
         }
         public void DrawElbowLine()
         {
+            if (!Anchor || !End || !Elbow) return;
+
             Vector3 pntOnLine = NearestPointOnLine(Anchor.position, End.position - Anchor.position, Elbow.position);
             Gizmos.DrawLine(pntOnLine, Elbow.position);
         }
@@ -36,16 +39,19 @@ public class RalphArmAnimator : MonoBehaviour
             return linePnt + lineDir * d;
         }
     }
+
     [Header("Source")]
     public TransformGroup Source;
+    public Transform SourceHands;
     [Header("Ralph")]
     public TransformGroup RalphProxy;
     public TransformGroup Ralph;
+    public Transform RalphHands;
 
     // Anchor to End
     private float _scaleRatio = 1.0f;
-    private Vector3 _anchorEndDirection = Vector3.zero;
-    private float _anchorEndDistance = 0f;
+    private Vector3 _sourceAnchorToEndDir = Vector3.zero;
+    private float _ralphAnchorToEndDist = 0f;
 
     // Anchor to Elbow
     private float _elbowNormalisedPosition = 0f;
@@ -67,43 +73,47 @@ public class RalphArmAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         // Calculate direction and position of end
-        _anchorEndDirection = (Source.End.position - Source.Anchor.position).normalized;
-        Vector3 anchorElbowDirection = (Source.Elbow.position - Source.Anchor.position).normalized;
-        _anchorEndDistance = (Source.End.position - Source.Anchor.position).magnitude * _scaleRatio;
+        _sourceAnchorToEndDir = (Source.End.position - Source.Anchor.position).normalized;
+        Vector3 sourceAnchorToElbowDir = (Source.Elbow.position - Source.Anchor.position).normalized;
+        _ralphAnchorToEndDist = (Source.End.position - Source.Anchor.position).magnitude * _scaleRatio;
 
-        RalphProxy.End.position = RalphProxy.Anchor.position + _anchorEndDirection * _anchorEndDistance;
-
-        // Calculate direction and position of elbow
-        _elbowNormalisedPosition = Vector3.Distance(Source.GetElbowPtOnLine(), Source.Anchor.position) / (Source.End.position - Source.Anchor.position).magnitude;
-
-        _elbowDisplacement = Source.GetElbowDisplacement() * _scaleRatio;
-
-        RalphProxy.Elbow.position = RalphProxy.Anchor.position + _anchorEndDirection * _anchorEndDistance * _elbowNormalisedPosition + _elbowDisplacement;
+        // Set proxy end position to match animation
+        RalphProxy.End.position = RalphProxy.Anchor.position + _sourceAnchorToEndDir * _ralphAnchorToEndDist;
 
         float upperArmLength = Vector3.Distance(Ralph.Anchor.position, Ralph.Elbow.position);
         float lowerArmLength = Vector3.Distance(Ralph.Elbow.position, Ralph.End.position);
 
-        Vector3 armPlaneNormal = Vector3.Cross(_anchorEndDirection, anchorElbowDirection);
+        Vector3 armPlaneNormal = Vector3.Cross(_sourceAnchorToEndDir, sourceAnchorToElbowDir);
         Ralph.Anchor.forward = armPlaneNormal;
-        Vector3 angles = Ralph.Anchor.localEulerAngles;
-        angles.z = 0;
-        Ralph.Anchor.localEulerAngles = angles;
+        SetZRotation(Ralph.Anchor, 0);
+
         Vector3 targetDisp = RalphProxy.End.position - RalphProxy.Anchor.position;
-        float x = Vector3.Dot(targetDisp, Ralph.Anchor.right);
-        float y = Vector3.Dot(targetDisp, Ralph.Anchor.up);
-        //Debug.Log("X: " + x + ", Y:" + y);
-        IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, upperArmLength, lowerArmLength, y, x);
-        Debug.Log(angle1 * Mathf.Rad2Deg + ", " + angle2 * Mathf.Rad2Deg);
+        float x = Vector3.Dot(targetDisp, Ralph.Anchor.up);
+        float y = Vector3.Dot(targetDisp, Ralph.Anchor.right);
 
-        angles = Ralph.Anchor.localEulerAngles;
-        angles.z = -angle1 * Mathf.Rad2Deg;
-        Ralph.Anchor.localEulerAngles = angles;
+        IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, upperArmLength, lowerArmLength, x, y);
 
-        angles = Ralph.Elbow.localEulerAngles;
-        angles.z = -angle2 * Mathf.Rad2Deg + 90;
-        Ralph.Elbow.localEulerAngles = angles;
+        // Abstract function
+        SetZRotation(Ralph.Anchor, -angle1 * Mathf.Rad2Deg);
+        SetZRotation(Ralph.Elbow, -angle2 * Mathf.Rad2Deg);
+
+        Ralph.End.rotation = SourceHands.rotation;
+        Vector3 angles = Ralph.End.localEulerAngles;
+        angles.x = angles.z = 0;
+        Ralph.End.localEulerAngles = angles;
+    }
+    private void SetYRotation(Transform transform, float rotation)
+    {
+        Vector3 angles = transform.localEulerAngles;
+        angles.y = rotation;
+        transform.localEulerAngles = angles;
+    }
+    private void SetZRotation(Transform transform, float rotation)
+    {
+        Vector3 angles = transform.localEulerAngles;
+        angles.z = rotation;
+        transform.localEulerAngles = angles;
     }
 
     private void OnDrawGizmos()
@@ -113,9 +123,7 @@ public class RalphArmAnimator : MonoBehaviour
         Source.DrawAnchorEndLine();
         Source.DrawElbowLine();
         RalphProxy.DrawAnchorEndLine();
-        //RalphProxy.DrawElbowLine();
         Ralph.DrawElbowLine();
-
     }
 
 
