@@ -147,24 +147,25 @@ public class RalphLegAnimator : RalphAnimator
         Ralph.ConnectorExtension = remappedToeLift;
 
         // Ground targeting
-        Vector3 sourceDisp = Source.HeelBase.position - Source.Hips.position;
+        Vector3 sourceDisp = Source.HeelBase.position - Source.UpperLeg.position;
         
         // Scale displacement in the correct direction
         Vector3 targetDisp = Vector3.zero;
-        targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Hips.up) * Ralph.Hips.up;
-        targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Hips.forward) * Ralph.Hips.forward;
-        targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Hips.right) * Ralph.Hips.right;
+        targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Anchor.up) * Ralph.Anchor.up;
+        targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.forward) * Ralph.Anchor.forward;
+        targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.right) * Ralph.Anchor.right;
 
-        DirectTarget = targetDisp + Ralph.Hips.position + Ralph.Hips.rotation * TargetOffset;
+        DirectTarget = targetDisp + Ralph.Anchor.position + Ralph.Anchor.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2);
         AdjustedTarget = hitInfo.point;
+
 
         // IK Logic
         // Tilt
         Vector3 activeTarget = _groundDetected ? AdjustedTarget : DirectTarget;
         float disp = Mathf.Clamp(Vector3.Dot((activeTarget - Ralph.UpperLegPitch.position), Ralph.Hips.forward), -0.125f, 0.125f);
-        float tiltAngle = 0f;
+        float tiltAngle;
         if (disp > 0f)
             tiltAngle = math.remap(0f, 0.125f, 0f, TiltRange.y, disp);
         else
@@ -172,6 +173,26 @@ public class RalphLegAnimator : RalphAnimator
         SetXRotation(Ralph.UpperLegTilt, tiltAngle);
 
         // Yaw
+        // Find components in local space
+        SetZRotation(Ralph.Connector, 0);
+        float xOffset = Vector3.Dot(Ralph.UpperLegTilt.up, -Ralph.Connector.up);
+        float yOffset = Vector3.Dot(Ralph.UpperLegTilt.up, Ralph.Connector.right);
+
+        float yawOffset = Vector2.SignedAngle(Vector2.up, new Vector2(yOffset, xOffset));
+
+        // (- Ralph.Anchor.rotation * Vector3.up)
+        Vector3 connectorToTarget = Ralph.Connector.position - activeTarget;
+        float x = Vector3.Dot(connectorToTarget, -Ralph.Connector.up);
+        float y = Vector3.Dot(connectorToTarget, Ralph.Connector.right);
+
+        float yaw = -Vector2.SignedAngle(Vector2.down, new Vector2(y, x));
+        yaw += yawOffset;
+
+        if (yaw > 90f) yaw = yaw - 180f;
+        if (yaw < -90f) yaw = 180f + yaw;
+        SetZRotation(Ralph.Connector, yaw);
+
+        // Calculate yaw
 
 
         // Bone Solver
@@ -179,7 +200,7 @@ public class RalphLegAnimator : RalphAnimator
 
 
         //Debug.Log(name + ", Disp: " + disp + ", Tilt: " + tiltAngle);
-        //Debug.Log(yaw);
+        Debug.Log(yaw);
     }
     private void SetXRotation(Transform transform, float rotation)
     {
