@@ -55,7 +55,7 @@ public class RalphProxyAnimator : MonoBehaviour
     void UpdateRootMotion()
     {
         Ralph.SetPelvisOffset(Source.GetPelvisOffset() * _scaleRatio);
-        Ralph.Pelvis.rotation = Source.Pelvis.rotation * Ralph._pelvisRotation;
+        //Ralph.Pelvis.rotation = Source.Pelvis.rotation * Ralph._pelvisRotation;
     }
 
     private void OnDrawGizmos()

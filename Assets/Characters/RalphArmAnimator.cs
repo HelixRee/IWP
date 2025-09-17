@@ -10,6 +10,18 @@ public class RalphArmAnimator : RalphAnimator
         public Transform Elbow;
         public Transform End;
 
+        public void DrawArmature()
+        {
+            if (Anchor && Elbow)
+                Gizmos.DrawLine(Anchor.position, Elbow.position);
+            if (Elbow && End)
+                Gizmos.DrawLine(Elbow.position, End.position);
+        }
+        public void DrawConstructionLines()
+        {
+            DrawAnchorEndLine();
+            DrawElbowLine();
+        }
         public void DrawAnchorEndLine()
         {
             if (!Anchor || !End) return;
@@ -112,16 +124,15 @@ public class RalphArmAnimator : RalphAnimator
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = _validTarget ? Color.green : Color.red;
+        Gizmos.color = _validTarget ? Color.yellow : Color.red;
+        Source.DrawConstructionLines();
+        Ralph.DrawConstructionLines();
 
-        Source.DrawAnchorEndLine();
-        Source.DrawElbowLine();
-        Ralph.DrawAnchorEndLine();
-        Ralph.DrawElbowLine();
+        Gizmos.color = Color.green;
+        Source.DrawArmature();
+        Ralph.DrawArmature();
 
-        Color color = Gizmos.color;
-        color.a = 0.5f;
-        Gizmos.color = color;
+        Gizmos.color = _validTarget ? new Color(0f,1f,0f,0.5f) : new Color(1f, 0f, 0f, 0.5f);
         Gizmos.DrawSphere(handTarget, _lowerArmLength * 0.1f);
     }
 
