@@ -42,31 +42,31 @@ public class RalphArmAnimator : RalphAnimator
 
     [Header("Source")]
     public TransformGroup Source;
-    public Transform SourceHands;
     [Header("Ralph")]
-    public TransformGroup RalphProxy;
+    public Vector3 handTarget;
     public TransformGroup Ralph;
-    public Transform RalphHands;
 
     // Anchor to End
     private float _scaleRatio = 1.0f;
     private Vector3 _sourceAnchorToEndDir = Vector3.zero;
     private float _ralphAnchorToEndDist = 0f;
 
-    // Anchor to Elbow
-    private float _elbowNormalisedPosition = 0f;
-    private Vector3 _elbowDisplacement = Vector3.zero;
+    // Arm lengths
+    float _upperArmLength = 0f;
+    float _lowerArmLength = 0f;
 
-
+    // Target within range
+    bool _validTarget = true;
     public override void ManualInit()
     {
-        float ralphLength = Vector3.Magnitude(RalphProxy.Anchor.position - RalphProxy.End.position);
+        float ralphLength = Vector3.Magnitude(Ralph.Anchor.position - Ralph.End.position);
         float sourceLength = Vector3.Magnitude(Source.Anchor.position - Source.End.position);
-        float sourceElbowLength = Vector3.Magnitude(Source.Anchor.position - Source.Elbow.position);
+
+        // Measure arm lengths
+        _upperArmLength = Vector3.Distance(Ralph.Anchor.position, Ralph.Elbow.position);
+        _lowerArmLength = Vector3.Distance(Ralph.Elbow.position, Ralph.End.position);
 
         _scaleRatio = ralphLength / sourceLength;
-
-        _elbowNormalisedPosition = Vector3.Distance(Source.GetElbowPtOnLine(), Source.Anchor.position) / sourceLength;
     }
 
     public override void ManualUpdate()
@@ -77,36 +77,32 @@ public class RalphArmAnimator : RalphAnimator
         _ralphAnchorToEndDist = (Source.End.position - Source.Anchor.position).magnitude * _scaleRatio;
 
         // Set proxy end position to match animation
-        RalphProxy.End.position = RalphProxy.Anchor.position + _sourceAnchorToEndDir * _ralphAnchorToEndDist;
+        handTarget = Ralph.Anchor.position + _sourceAnchorToEndDir * _ralphAnchorToEndDist;
 
-        float upperArmLength = Vector3.Distance(Ralph.Anchor.position, Ralph.Elbow.position);
-        float lowerArmLength = Vector3.Distance(Ralph.Elbow.position, Ralph.End.position);
-
+        // Find arm rotation plane
         Vector3 armPlaneNormal = Vector3.Cross(_sourceAnchorToEndDir, sourceAnchorToElbowDir);
-        Ralph.Anchor.forward = armPlaneNormal;
+        if (armPlaneNormal != Vector3.zero)
+            Ralph.Anchor.forward = armPlaneNormal;
         SetZRotation(Ralph.Anchor, 0);
 
-        Vector3 targetDisp = RalphProxy.End.position - RalphProxy.Anchor.position;
+        // Measure displacements on plane
+        Vector3 targetDisp = handTarget - Ralph.Anchor.position;
         float x = Vector3.Dot(targetDisp, Ralph.Anchor.up);
         float y = Vector3.Dot(targetDisp, Ralph.Anchor.right);
 
-        IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, upperArmLength, lowerArmLength, x, y);
+        _validTarget = IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, _upperArmLength, _lowerArmLength, x, y);
 
-        // Abstract function
+        // Set joint rotations on plane
         SetZRotation(Ralph.Anchor, -angle1 * Mathf.Rad2Deg);
         SetZRotation(Ralph.Elbow, -angle2 * Mathf.Rad2Deg);
 
-        Ralph.End.rotation = SourceHands.rotation;
+        // Set hand rotation in Y axis only
+        Ralph.End.rotation = Source.End.rotation;
         Vector3 angles = Ralph.End.localEulerAngles;
         angles.x = angles.z = 0;
         Ralph.End.localEulerAngles = angles;
     }
-    private void SetYRotation(Transform transform, float rotation)
-    {
-        Vector3 angles = transform.localEulerAngles;
-        angles.y = rotation;
-        transform.localEulerAngles = angles;
-    }
+
     private void SetZRotation(Transform transform, float rotation)
     {
         Vector3 angles = transform.localEulerAngles;
@@ -116,12 +112,17 @@ public class RalphArmAnimator : RalphAnimator
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = _validTarget ? Color.green : Color.red;
 
         Source.DrawAnchorEndLine();
         Source.DrawElbowLine();
         Ralph.DrawAnchorEndLine();
         Ralph.DrawElbowLine();
+
+        Color color = Gizmos.color;
+        color.a = 0.5f;
+        Gizmos.color = color;
+        Gizmos.DrawSphere(handTarget, _lowerArmLength * 0.1f);
     }
 
 

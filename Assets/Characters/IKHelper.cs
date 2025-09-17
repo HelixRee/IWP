@@ -30,8 +30,8 @@ public class IKHelper
     /// CalcIK_2D_TwoBoneAnalytic
     /// Given a two bone chain located at the origin (bone1 is the parent of bone2), this
     /// function will compute the bone angles needed for the end of the chain to line up
-    /// with a target position. If there is no valid solution, the angles will be set to
-    /// get as close to the target as possible.
+    /// with a handTarget position. If there is no valid solution, the angles will be set to
+    /// get as close to the handTarget as possible.
     ///  
     /// returns: True when a valid solution was found.
     ///***************************************************************************************
@@ -67,7 +67,7 @@ public class IKHelper
                         / (cosAngle2_denom);
 
             // if our result is not in the legal cosine range, we can not find a
-            // legal solution for the target
+            // legal solution for the handTarget
             if ((cosAngle2 < -1.0) || (cosAngle2 > 1.0))
                 foundValidSolution = false;
 

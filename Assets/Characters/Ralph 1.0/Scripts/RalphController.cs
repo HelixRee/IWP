@@ -223,20 +223,20 @@ public class RalphController : MonoBehaviour
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-        // Cinemachine will follow this target
+        // Cinemachine will follow this handTarget
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
     }
 
     private void Move()
     {
-        // set target speed based on move speed, sprint speed and if sprint is pressed
+        // set handTarget speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
         // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
         // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-        // if there is no input, set the target speed to 0
+        // if there is no input, set the handTarget speed to 0
         if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
         // a reference to the players current horizontal velocity
@@ -245,7 +245,7 @@ public class RalphController : MonoBehaviour
         float speedOffset = 0.1f;
         float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
-        // accelerate or decelerate to target speed
+        // accelerate or decelerate to handTarget speed
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
             currentHorizontalSpeed > targetSpeed + speedOffset)
         {
