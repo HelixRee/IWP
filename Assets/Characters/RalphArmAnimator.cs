@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class RalphArmAnimator : MonoBehaviour
+public class RalphArmAnimator : RalphAnimator
 {
     [Serializable]
     public class TransformGroup
@@ -58,8 +58,7 @@ public class RalphArmAnimator : MonoBehaviour
     private Vector3 _elbowDisplacement = Vector3.zero;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void ManualInit()
     {
         float ralphLength = Vector3.Magnitude(RalphProxy.Anchor.position - RalphProxy.End.position);
         float sourceLength = Vector3.Magnitude(Source.Anchor.position - Source.End.position);
@@ -70,8 +69,7 @@ public class RalphArmAnimator : MonoBehaviour
         _elbowNormalisedPosition = Vector3.Distance(Source.GetElbowPtOnLine(), Source.Anchor.position) / sourceLength;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ManualUpdate()
     {
         // Calculate direction and position of end
         _sourceAnchorToEndDir = (Source.End.position - Source.Anchor.position).normalized;
@@ -122,7 +120,7 @@ public class RalphArmAnimator : MonoBehaviour
 
         Source.DrawAnchorEndLine();
         Source.DrawElbowLine();
-        RalphProxy.DrawAnchorEndLine();
+        Ralph.DrawAnchorEndLine();
         Ralph.DrawElbowLine();
     }
 
