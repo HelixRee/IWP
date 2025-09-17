@@ -36,15 +36,21 @@ public class RalphLegAnimator : RalphAnimator
             Vector3 pntOnLine = NearestPointOnLine(UpperLeg.position, HeelBase.position - UpperLeg.position, LowerLeg.position);
             Gizmos.DrawLine(pntOnLine, LowerLeg.position);
         }
-
+        public Vector3 GetElbowDisplacement()
+        {
+            Vector3 pntOnLine = NearestPointOnLine(UpperLeg.position, HeelBase.position - UpperLeg.position, LowerLeg.position);
+            return LowerLeg.position - pntOnLine;
+        }
     }
 
     [Serializable]
     public class RalphArmature
     {
+        public Transform Hips;
         public Transform Anchor;
         public Transform Connector;
-        public Transform UpperLeg;
+        public Transform UpperLegPitch;
+        public Transform UpperLegTilt;
         public Transform LowerLeg;
         public Transform Foot; // IK Point
 
@@ -69,19 +75,23 @@ public class RalphLegAnimator : RalphAnimator
                 DrawLine(Anchor, Connector);
                 Gizmos.color = originalColor;
             }
-            if (Connector && UpperLeg)
-                DrawLine(Connector, UpperLeg);
-            if (UpperLeg && LowerLeg)
-                DrawLine(UpperLeg, LowerLeg);
+            if (Connector && UpperLegPitch)
+                DrawLine(Connector, UpperLegPitch);
+            if (UpperLegPitch && LowerLeg)
+                DrawLine(UpperLegPitch, LowerLeg);
             if (LowerLeg && Foot)
                 DrawLine(LowerLeg, Foot);
         }
 
         public void DrawConstructionLines()
         {
-            DrawLine(UpperLeg, Foot);
-            Vector3 pntOnLine = NearestPointOnLine(UpperLeg.position, Foot.position - UpperLeg.position, LowerLeg.position);
-            Gizmos.DrawLine(pntOnLine, LowerLeg.position);
+            if (UpperLegPitch && Foot)
+                DrawLine(UpperLegPitch, Foot);
+            if (UpperLegPitch && Foot && LowerLeg)
+            {
+                Vector3 pntOnLine = NearestPointOnLine(UpperLegPitch.position, Foot.position - UpperLegPitch.position, LowerLeg.position);
+                Gizmos.DrawLine(pntOnLine, LowerLeg.position);
+            }
         }
     }
     static void DrawLine(Transform pos1, Transform pos2)
@@ -107,10 +117,15 @@ public class RalphLegAnimator : RalphAnimator
 
     private float _sourceLegLength;
     private float _ralphLegLength;
-    private float _scaleRatio = 1.0f;
+    private float _scaleRatio = 1f;
     public Vector3 TargetOffset = Vector3.zero;
     public Vector3 DirectTarget = Vector3.zero;
     public Vector3 AdjustedTarget = Vector3.zero;
+
+    // Foot base
+    public float footBaseScalar = 1f;
+    public float stepDepthScalar = 1f;
+    public Vector2 TiltRange = Vector2.zero;
 
     private Vector3 _raycastStartPos = Vector3.zero;
     private bool _groundDetected = true;
@@ -120,10 +135,9 @@ public class RalphLegAnimator : RalphAnimator
         Source.Init();
 
         _sourceLegLength = LengthBetween(Source.UpperLeg, Source.LowerLeg) + LengthBetween(Source.LowerLeg, Source.HeelBase);
-        _ralphLegLength = LengthBetween(Ralph.UpperLeg, Ralph.LowerLeg) + LengthBetween(Ralph.LowerLeg, Ralph.Foot);
+        _ralphLegLength = LengthBetween(Ralph.UpperLegPitch, Ralph.LowerLeg) + LengthBetween(Ralph.LowerLeg, Ralph.Foot);
 
         _scaleRatio = _ralphLegLength / _sourceLegLength;
-
     }
 
     public override void ManualUpdate()
@@ -133,18 +147,45 @@ public class RalphLegAnimator : RalphAnimator
         Ralph.ConnectorExtension = remappedToeLift;
 
         // Ground targeting
-        Vector3 sourceDisp = Source.HeelBase.position - Source.UpperLeg.position;
-        Vector3 targetDisp = sourceDisp * _scaleRatio;
+        Vector3 sourceDisp = Source.HeelBase.position - Source.Hips.position;
+        
+        // Scale displacement in the correct direction
+        Vector3 targetDisp = Vector3.zero;
+        targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Hips.up) * Ralph.Hips.up;
+        targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Hips.forward) * Ralph.Hips.forward;
+        targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Hips.right) * Ralph.Hips.right;
 
-        DirectTarget = targetDisp + Ralph.UpperLeg.position + Ralph.Foot.rotation * TargetOffset;
+        DirectTarget = targetDisp + Ralph.Hips.position + Ralph.Hips.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2);
         AdjustedTarget = hitInfo.point;
 
-
         // IK Logic
-        
+        // Tilt
+        Vector3 activeTarget = _groundDetected ? AdjustedTarget : DirectTarget;
+        float disp = Mathf.Clamp(Vector3.Dot((activeTarget - Ralph.UpperLegPitch.position), Ralph.Hips.forward), -0.125f, 0.125f);
+        float tiltAngle = 0f;
+        if (disp > 0f)
+            tiltAngle = math.remap(0f, 0.125f, 0f, TiltRange.y, disp);
+        else
+            tiltAngle = math.remap(-0.125f, 0f, TiltRange.x, 0f, disp);
+        SetXRotation(Ralph.UpperLegTilt, tiltAngle);
+
+        // Yaw
+
+
+        // Bone Solver
+
+
+
+        //Debug.Log(name + ", Disp: " + disp + ", Tilt: " + tiltAngle);
         //Debug.Log(yaw);
+    }
+    private void SetXRotation(Transform transform, float rotation)
+    {
+        Vector3 angles = transform.localEulerAngles;
+        angles.x = rotation;
+        transform.localEulerAngles = angles;
     }
     private void SetZRotation(Transform transform, float rotation)
     {

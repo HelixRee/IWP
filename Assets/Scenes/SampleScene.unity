@@ -531,7 +531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 61944793}
   m_Layer: 3
-  m_Name: Thigh.L.001
+  m_Name: Thigh.L.001 (Y)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,7 +554,7 @@ Transform:
   - {fileID: 1111479986}
   - {fileID: 738406231}
   - {fileID: 486123069}
-  - {fileID: 481260161}
+  - {fileID: 921602981}
   m_Father: {fileID: 1935633904}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &64936410
@@ -664,7 +664,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82458860}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b412eb3faf66664483b7e30dd9054d4, type: 3}
   m_Name: 
@@ -678,15 +678,20 @@ MonoBehaviour:
     HeelBase: {fileID: 1270467203}
     _initialToeLift: 0
   Ralph:
+    Hips: {fileID: 2101275149}
     Anchor: {fileID: 82458861}
     Connector: {fileID: 875857536}
-    UpperLeg: {fileID: 931236789}
+    UpperLegPitch: {fileID: 674399988}
+    UpperLegTilt: {fileID: 931236789}
     LowerLeg: {fileID: 1829230131}
     Foot: {fileID: 819208879}
     _connectorExtension: 0
-  TargetOffset: {x: 0, y: -0.045, z: 0}
+  TargetOffset: {x: 0.045, y: 0, z: 0.02}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
+  footBaseScalar: 0.4
+  stepDepthScalar: 0.5
+  TiltRange: {x: 8, y: -16}
 --- !u!1 &89612130
 GameObject:
   m_ObjectHideFlags: 0
@@ -22107,7 +22112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 481260161}
   m_Layer: 3
-  m_Name: Thigh.L
+  m_Name: Thigh.L (X)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22121,7 +22126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 481260160}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6042129, y: -0.35042632, z: 0.63761526, w: 0.32492313}
+  m_LocalRotation: {x: 0.000000044703484, y: 0.00000008940697, z: 0.00000011920929, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22129,7 +22134,7 @@ Transform:
   - {fileID: 1961492462}
   - {fileID: 402732256}
   - {fileID: 231615681}
-  m_Father: {fileID: 61944793}
+  m_Father: {fileID: 921602981}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &484404627
 GameObject:
@@ -32467,6 +32472,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 665927811}
   m_Mesh: {fileID: 6500777077744168946, guid: 10d1889a6d156b74db1c5bdce2805700, type: 3}
+--- !u!1 &674399987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 674399988}
+  m_Layer: 3
+  m_Name: UpperLeg.R (Z)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &674399988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674399987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.63056743, y: 0.31383023, z: -0.6105902, w: -0.36204278}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 931236789}
+  m_Father: {fileID: 875857536}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &682668261
 GameObject:
   m_ObjectHideFlags: 0
@@ -33728,7 +33765,7 @@ GameObject:
   m_Component:
   - component: {fileID: 875857536}
   m_Layer: 3
-  m_Name: Thigh.R.001
+  m_Name: Thigh.R.001 (Y)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33749,7 +33786,7 @@ Transform:
   m_Children:
   - {fileID: 1306818266}
   - {fileID: 564854859}
-  - {fileID: 931236789}
+  - {fileID: 674399988}
   m_Father: {fileID: 82458861}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &897225549
@@ -33815,6 +33852,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 181081928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &921602980
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 921602981}
+  m_Layer: 3
+  m_Name: UpperLeg.L (Z)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &921602981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921602980}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.60564476, y: -0.35957685, z: 0.6353217, w: 0.31664702}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 481260161}
+  m_Father: {fileID: 61944793}
+  m_LocalEulerAnglesHint: {x: 4.206, y: -89.552, z: 122.843}
 --- !u!1 &931236788
 GameObject:
   m_ObjectHideFlags: 0
@@ -33825,7 +33894,7 @@ GameObject:
   m_Component:
   - component: {fileID: 931236789}
   m_Layer: 3
-  m_Name: Thigh.R
+  m_Name: Thigh.R (X)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33839,7 +33908,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 931236788}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.63056743, y: 0.3138303, z: -0.6105902, w: -0.36204278}
+  m_LocalRotation: {x: -0.000000014901156, y: 0.000000029802312, z: -0.000000014901156, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33847,7 +33916,7 @@ Transform:
   - {fileID: 1281386803}
   - {fileID: 1571877241}
   - {fileID: 1829230131}
-  m_Father: {fileID: 875857536}
+  m_Father: {fileID: 674399988}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &942651971
 PrefabInstance:
@@ -33900,6 +33969,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c77aeffea8642c54a981c4fa77b9e3a6, type: 3}
       propertyPath: m_Name
       value: Y Bot
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c77aeffea8642c54a981c4fa77b9e3a6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -49446,7 +49519,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777477069}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 54cef253adedaf848967f6ac508e1dd4, type: 2}
   m_CullingMode: 0
@@ -50622,15 +50695,20 @@ MonoBehaviour:
     HeelBase: {fileID: 797467523}
     _initialToeLift: 0
   Ralph:
+    Hips: {fileID: 2101275149}
     Anchor: {fileID: 1935633904}
     Connector: {fileID: 61944793}
-    UpperLeg: {fileID: 481260161}
+    UpperLegPitch: {fileID: 921602981}
+    UpperLegTilt: {fileID: 481260161}
     LowerLeg: {fileID: 231615681}
     Foot: {fileID: 1902357743}
     _connectorExtension: 0
-  TargetOffset: {x: 0, y: -0.045, z: 0}
+  TargetOffset: {x: 0.045, y: 0, z: -0.02}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
+  footBaseScalar: 0.4
+  stepDepthScalar: 0.5
+  TiltRange: {x: 16, y: -8}
 --- !u!1 &1941804138
 GameObject:
   m_ObjectHideFlags: 0
