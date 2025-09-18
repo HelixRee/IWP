@@ -119,8 +119,9 @@ public class RalphLegAnimator : RalphAnimator
     private float _ralphLegLength;
     private float _scaleRatio = 1f;
     public Vector3 TargetOffset = Vector3.zero;
-    public Vector3 DirectTarget = Vector3.zero;
-    public Vector3 AdjustedTarget = Vector3.zero;
+    [HideInInspector] public Vector3 DirectTarget = Vector3.zero;
+    [HideInInspector] public Vector3 AdjustedTarget = Vector3.zero;
+    public Vector3 ActiveTarget = Vector3.zero;
 
     // Foot base
     public float footBaseScalar = 1f;
@@ -161,48 +162,140 @@ public class RalphLegAnimator : RalphAnimator
         AdjustedTarget = hitInfo.point;
 
 
+        ActiveTarget = _groundDetected ? AdjustedTarget : DirectTarget;
+
         // IK Logic
-        // Tilt
-        Vector3 activeTarget = _groundDetected ? AdjustedTarget : DirectTarget;
-        float disp = Mathf.Clamp(Vector3.Dot((activeTarget - Ralph.UpperLegPitch.position), Ralph.Hips.forward), -0.125f, 0.125f);
-        float tiltAngle;
-        if (disp > 0f)
-            tiltAngle = math.remap(0f, 0.125f, 0f, TiltRange.y, disp);
-        else
-            tiltAngle = math.remap(-0.125f, 0f, TiltRange.x, 0f, disp);
-        SetXRotation(Ralph.UpperLegTilt, tiltAngle);
-
+        CalculateTilt();
+        //Debug.Log(CalculateZOffset());
         // Yaw
+        CalculateYaw();
         // Find components in local space
-        SetZRotation(Ralph.Connector, 0);
-        float xOffset = Vector3.Dot(Ralph.UpperLegTilt.up, -Ralph.Connector.up);
-        float yOffset = Vector3.Dot(Ralph.UpperLegTilt.up, Ralph.Connector.right);
+        //SetZRotation(Ralph.Connector, 0);
+        //float xOffset = Vector3.Dot(Ralph.UpperLegTilt.up, -Ralph.Connector.up);
+        //float yOffset = Vector3.Dot(Ralph.UpperLegTilt.up, Ralph.Connector.right);
 
-        float yawOffset = Vector2.SignedAngle(Vector2.up, new Vector2(yOffset, xOffset));
+        //float yawOffset = Vector2.SignedAngle(Vector2.up, new Vector2(yOffset, xOffset));
 
-        // (- Ralph.Anchor.rotation * Vector3.up)
-        // change to 
-        Vector3 connectorToTarget = Ralph.Connector.position - activeTarget;
-        float x = Vector3.Dot(connectorToTarget, -Ralph.Connector.up);
-        float y = Vector3.Dot(connectorToTarget, Ralph.Connector.right);
+        //// (- Ralph.Anchor.rotation * Vector3.up)
+        //// change to 
+        //{
+        //    Vector3 connectorToTarget = Ralph.Connector.position - ActiveTarget;
+        //    float x = Vector3.Dot(connectorToTarget, -Ralph.Connector.up);
+        //    float y = Vector3.Dot(connectorToTarget, Ralph.Connector.right);
+        //    float yaw = -Vector2.SignedAngle(Vector2.down, new Vector2(y, x));
 
-        float yaw = -Vector2.SignedAngle(Vector2.down, new Vector2(y, x));
-        yaw += yawOffset;
+        //    //yaw += yawOffset;
 
-        if (yaw > 90f) yaw = yaw - 180f;
-        if (yaw < -90f) yaw = 180f + yaw;
-        SetZRotation(Ralph.Connector, yaw);
+        //    if (yaw > 90f) yaw = yaw - 180f;
+        //    if (yaw < -90f) yaw = 180f + yaw;
+        //    //SetZRotation(Ralph.Connector, yaw);
+        //    //Debug.Log(yaw);
 
+        //}
         // Calculate yaw
 
 
         // Bone Solver
-
-
+        //float weebus = GetRotationAroundAxis(Quaternion.AngleAxis(excessTilt, Ralph.UpperLegTilt.right), Ralph.Connector.forward);
+        //Debug.Log(weebus);
 
         //Debug.Log(name + ", Disp: " + disp + ", Tilt: " + tiltAngle);
-        Debug.Log(yaw);
+        //Debug.Log(yaw);
     }
+    private float excessTilt = 0f;
+    float GetRotationAroundAxis(Quaternion q, Vector3 axis)
+    {
+        // Rotate the axis by the quaternion
+        Vector3 rotated = q * axis;
+
+        // Get the angle between original and rotated
+        float angle = Vector3.SignedAngle(axis, rotated, axis);
+
+        return angle;
+    }
+    private void CalculateTilt()
+    {
+        // Tilt
+        // Reset frame of reference
+        SetXRotation(Ralph.UpperLegTilt, 0);
+
+        Vector3 tiltToTarget = Ralph.UpperLegTilt.position - ActiveTarget;
+        float x = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
+        float y = Vector3.Dot(tiltToTarget, -Ralph.UpperLegTilt.up);
+        float tiltAngle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
+        excessTilt = tiltAngle;
+        if (TiltRange.y > TiltRange.x)
+            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.x, TiltRange.y);
+        else
+            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.y, TiltRange.x);
+        excessTilt -= tiltAngle;
+        SetXRotation(Ralph.UpperLegTilt, tiltAngle);
+
+        //float zOffset = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
+        //Debug.Log(name + ", " + (Mathf.Abs(zOffset) < 0.0001f ? 0 : zOffset));
+        //Debug.Log(zOffset);
+        //Debug.Log(tiltAngle);
+        Debug.DrawRay(Ralph.Connector.position, Ralph.UpperLegTilt.up * 100, Color.red);
+    }
+    private float CalculateZOffset()
+    {
+        Vector3 tiltToTarget = Ralph.UpperLegTilt.position - ActiveTarget;
+        float zOffset = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
+        return Math.Abs(zOffset);
+    }
+    private void CalculateYaw()
+    {
+        SetZRotation(Ralph.Connector, 0);
+
+        int iterationCount = 15;
+
+        int initialIntervalCount = 2;
+        float intervalDistance = 360f / initialIntervalCount;
+        float bestAngle = 0f;
+        float bestResult = CalculateZOffset();
+
+        for (int i = 0; i < initialIntervalCount; i++)
+        {
+            float testAngle = 0f;
+            testAngle *= i * intervalDistance;
+
+            float result = TestYaw(testAngle);
+            if (result < bestAngle)
+            {
+                bestAngle = testAngle;
+                bestResult = result;
+            }
+        }
+        for (int iteration = 1; iteration <= iterationCount; iteration++)
+        {
+            float angleOffset = intervalDistance / Mathf.Pow(2, iteration + 1);
+
+            float positiveResult = TestYaw(bestAngle + angleOffset);
+            float negativeResult = TestYaw(bestAngle - angleOffset);
+            // if positive result is better
+            if (positiveResult < negativeResult)
+            {
+                bestAngle = bestAngle + angleOffset;
+                bestResult = positiveResult;
+            }
+            else
+            {
+                bestAngle = bestAngle - angleOffset;
+                bestResult = negativeResult;
+            }
+        }
+
+        SetZRotation(Ralph.Connector, bestAngle);
+
+    }
+
+    private float TestYaw(float testAngle)
+    {
+        SetZRotation(Ralph.Connector, testAngle);
+
+        return CalculateZOffset();
+    }
+
     private void SetXRotation(Transform transform, float rotation)
     {
         Vector3 angles = transform.localEulerAngles;
@@ -215,7 +308,6 @@ public class RalphLegAnimator : RalphAnimator
         angles.z = rotation;
         transform.localEulerAngles = angles;
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
