@@ -181,6 +181,7 @@ public class RalphLegAnimator : RalphAnimator
         float yawOffset = Vector2.SignedAngle(Vector2.up, new Vector2(yOffset, xOffset));
 
         // (- Ralph.Anchor.rotation * Vector3.up)
+        // change to 
         Vector3 connectorToTarget = Ralph.Connector.position - activeTarget;
         float x = Vector3.Dot(connectorToTarget, -Ralph.Connector.up);
         float y = Vector3.Dot(connectorToTarget, Ralph.Connector.right);

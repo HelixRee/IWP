@@ -664,7 +664,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82458860}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b412eb3faf66664483b7e30dd9054d4, type: 3}
   m_Name: 
@@ -686,7 +686,7 @@ MonoBehaviour:
     LowerLeg: {fileID: 1829230131}
     Foot: {fileID: 819208879}
     _connectorExtension: 0
-  TargetOffset: {x: 0.045, y: 0, z: 0.02}
+  TargetOffset: {x: 0, y: 0.16, z: 0}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
   footBaseScalar: 0.4
@@ -49519,7 +49519,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777477069}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 54cef253adedaf848967f6ac508e1dd4, type: 2}
   m_CullingMode: 0
@@ -50703,7 +50703,7 @@ MonoBehaviour:
     LowerLeg: {fileID: 231615681}
     Foot: {fileID: 1902357743}
     _connectorExtension: 0
-  TargetOffset: {x: 0.045, y: 0, z: -0.02}
+  TargetOffset: {x: 0, y: 0.16, z: 0}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
   footBaseScalar: 0.4
