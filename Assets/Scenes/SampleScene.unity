@@ -683,11 +683,13 @@ MonoBehaviour:
     Anchor: {fileID: 82458861}
     Connector: {fileID: 875857536}
     UpperLegPitch: {fileID: 674399988}
+    initialUpperPitch: 0
     UpperLegTilt: {fileID: 931236789}
     LowerLeg: {fileID: 1829230131}
+    initialLowerPitch: 0
     Foot: {fileID: 819208879}
     _connectorExtension: 0
-  TargetOffset: {x: 0, y: 0.09, z: 0}
+  TargetOffset: {x: 0, y: 0, z: -0.05}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}
@@ -43893,7 +43895,7 @@ PositionConstraint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 970810987}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 4.796163e-16, y: 0.40599436, z: 1.1701751e-15}
@@ -49940,7 +49942,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777477069}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 54cef253adedaf848967f6ac508e1dd4, type: 2}
   m_CullingMode: 0
@@ -51120,11 +51122,13 @@ MonoBehaviour:
     Anchor: {fileID: 1935633904}
     Connector: {fileID: 61944793}
     UpperLegPitch: {fileID: 921602981}
+    initialUpperPitch: 0
     UpperLegTilt: {fileID: 481260161}
     LowerLeg: {fileID: 231615681}
+    initialLowerPitch: 0
     Foot: {fileID: 1902357743}
     _connectorExtension: 0
-  TargetOffset: {x: 0, y: 0.09, z: 0}
+  TargetOffset: {x: 0, y: 0, z: -0.05}
   DirectTarget: {x: 0, y: 0, z: 0}
   AdjustedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}

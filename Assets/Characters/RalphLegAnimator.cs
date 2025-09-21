@@ -50,8 +50,10 @@ public class RalphLegAnimator : RalphAnimator
         public Transform Anchor;
         public Transform Connector;
         public Transform UpperLegPitch;
+        public float initialUpperPitch;
         public Transform UpperLegTilt;
         public Transform LowerLeg;
+        public float initialLowerPitch;
         public Transform Foot; // IK Point
 
         // Distance connector is extended below the anchor [-0.015, 0.015]
@@ -65,7 +67,11 @@ public class RalphLegAnimator : RalphAnimator
                 Connector.position = Anchor.position - Anchor.forward * value;
             }
         }
-
+        public void Init()
+        {
+            initialUpperPitch = UpperLegPitch.localEulerAngles.z;
+            initialLowerPitch = LowerLeg.localEulerAngles.z;
+        }
         public void DrawArmature()
         {
             if (Anchor && Connector)
@@ -131,44 +137,75 @@ public class RalphLegAnimator : RalphAnimator
     private Vector3 _raycastStartPos = Vector3.zero;
     private bool _groundDetected = true;
 
+    private float _yaw = 0f;
+
+
+    private float _upperLegLength = 0f;
+    private float _lowerLegLength = 0f;
     public override void ManualInit()
     {
         Source.Init();
 
         _sourceLegLength = LengthBetween(Source.UpperLeg, Source.LowerLeg) + LengthBetween(Source.LowerLeg, Source.HeelBase);
-        _ralphLegLength = LengthBetween(Ralph.UpperLegPitch, Ralph.LowerLeg) + LengthBetween(Ralph.LowerLeg, Ralph.Foot);
+
+        _upperLegLength = LengthBetween(Ralph.UpperLegPitch, Ralph.LowerLeg);
+        _lowerLegLength = LengthBetween(Ralph.LowerLeg, Ralph.Foot);
+        _ralphLegLength = _upperLegLength + _lowerLegLength;
 
         _scaleRatio = _ralphLegLength / _sourceLegLength;
+
+
     }
 
     public override void ManualUpdate()
     {
+        Debug.DrawRay(Ralph.Connector.position, Ralph.UpperLegTilt.up * 100, Color.red);
+
         // Connector movement
         float remappedToeLift = math.remap(-0.05f, 0.05f, -0.015f, 0.015f, Source.ToeLift);
         Ralph.ConnectorExtension = remappedToeLift;
 
+        // Calculate Yaw with added offset, max at rest
+        CalculateYaw();
+
+        // Calculate Tilt
+        CalculateTilt();
+
+        // Calculate Ground Target
+
+
         // Ground targeting
         Vector3 sourceDisp = Source.HeelBase.position - Source.UpperLeg.position;
-        
+
         // Scale displacement in the correct direction
         Vector3 targetDisp = Vector3.zero;
         targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Anchor.up) * Ralph.Anchor.up;
         targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.forward) * Ralph.Anchor.forward;
         targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.right) * Ralph.Anchor.right;
 
-        DirectTarget = targetDisp + Ralph.Anchor.position + Ralph.Anchor.rotation * TargetOffset;
+        DirectTarget = targetDisp + Ralph.Anchor.position + Source.UpperLeg.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2);
         AdjustedTarget = hitInfo.point;
 
 
         ActiveTarget = _groundDetected ? AdjustedTarget : DirectTarget;
+        SetZRotation(Ralph.UpperLegPitch, 0);
 
         // IK Logic
-        CalculateTilt();
+        Vector3 adjustedTargetDisp = ActiveTarget - Ralph.Anchor.position;
+        float x = Vector3.Dot(adjustedTargetDisp, Ralph.UpperLegPitch.up);
+        float y = Vector3.Dot(adjustedTargetDisp, Ralph.UpperLegPitch.right);
+
+        bool _validTarget = IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, _upperLegLength, _lowerLegLength, x, y);
+
+        // Set joint rotations on plane
+        SetZRotation(Ralph.UpperLegPitch, -angle1 * Mathf.Rad2Deg + Ralph.initialUpperPitch);
+        SetZRotation(Ralph.LowerLeg, -angle2 * Mathf.Rad2Deg + Ralph.initialLowerPitch);
+        //CalculateTilt();
         //Debug.Log(CalculateZOffset());
         // Yaw
-        CalculateYaw();
+        //CalculateYaw();
         // Find components in local space
         //SetZRotation(Ralph.Connector, 0);
         //float xOffset = Vector3.Dot(Ralph.UpperLegTilt.up, -Ralph.Connector.up);
@@ -219,23 +256,22 @@ public class RalphLegAnimator : RalphAnimator
         // Reset frame of reference
         SetXRotation(Ralph.UpperLegTilt, 0);
 
-        Vector3 tiltToTarget = Ralph.UpperLegTilt.position - ActiveTarget;
-        float x = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
-        float y = Vector3.Dot(tiltToTarget, -Ralph.UpperLegTilt.up);
+        Vector3 tiltToTarget = Ralph.UpperLegPitch.position - ActiveTarget;
+        float x = Vector3.Dot(tiltToTarget, Ralph.UpperLegPitch.forward);
+        float y = Vector3.Dot(tiltToTarget, -Ralph.UpperLegPitch.up);
         float tiltAngle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
-        excessTilt = tiltAngle;
-        if (TiltRange.y > TiltRange.x)
-            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.x, TiltRange.y);
-        else
-            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.y, TiltRange.x);
-        excessTilt -= tiltAngle;
+        //excessTilt = tiltAngle;
+        //if (TiltRange.y > TiltRange.x)
+        //    tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.x, TiltRange.y);
+        //else
+        //    tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.y, TiltRange.x);
+        //excessTilt -= tiltAngle;
         SetXRotation(Ralph.UpperLegTilt, tiltAngle);
 
         //float zOffset = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
         //Debug.Log(name + ", " + (Mathf.Abs(zOffset) < 0.0001f ? 0 : zOffset));
         //Debug.Log(zOffset);
         //Debug.Log(tiltAngle);
-        Debug.DrawRay(Ralph.Connector.position, Ralph.UpperLegTilt.up * 100, Color.red);
     }
     private float CalculateZOffset()
     {
@@ -245,47 +281,15 @@ public class RalphLegAnimator : RalphAnimator
     }
     private void CalculateYaw()
     {
-        SetZRotation(Ralph.Connector, 0);
+        _yaw = Source.UpperLeg.localEulerAngles.y > 180f ? Source.UpperLeg.localEulerAngles.y - 360f: Source.UpperLeg.localEulerAngles.y;
+        // Arbitrary range
+        float clampedYaw = Mathf.Clamp(_yaw, -20, 20);
+        float weightedYaw = clampedYaw == _yaw ? 0 : _yaw - clampedYaw;
 
-        int iterationCount = 15;
+            
+        SetZRotation(Ralph.Connector, weightedYaw);
+        Debug.Log("Name: " + name + ", " + weightedYaw);
 
-        int initialIntervalCount = 2;
-        float intervalDistance = 360f / initialIntervalCount;
-        float bestAngle = 0f;
-        float bestResult = CalculateZOffset();
-
-        for (int i = 0; i < initialIntervalCount; i++)
-        {
-            float testAngle = 0f;
-            testAngle *= i * intervalDistance;
-
-            float result = TestYaw(testAngle);
-            if (result < bestAngle)
-            {
-                bestAngle = testAngle;
-                bestResult = result;
-            }
-        }
-        for (int iteration = 1; iteration <= iterationCount; iteration++)
-        {
-            float angleOffset = intervalDistance / Mathf.Pow(2, iteration + 1);
-
-            float positiveResult = TestYaw(bestAngle + angleOffset);
-            float negativeResult = TestYaw(bestAngle - angleOffset);
-            // if positive result is better
-            if (positiveResult < negativeResult)
-            {
-                bestAngle = bestAngle + angleOffset;
-                bestResult = positiveResult;
-            }
-            else
-            {
-                bestAngle = bestAngle - angleOffset;
-                bestResult = negativeResult;
-            }
-        }
-
-        SetZRotation(Ralph.Connector, bestAngle);
 
     }
 
