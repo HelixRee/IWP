@@ -25,7 +25,9 @@ namespace StarterAssets
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
-		}
+			if (value.Get<Vector2>() == Vector2.zero)
+                SprintInput(false);
+        }
 
 		public void OnLook(InputValue value)
 		{
@@ -46,8 +48,7 @@ namespace StarterAssets
 		}
 #endif
 
-
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 

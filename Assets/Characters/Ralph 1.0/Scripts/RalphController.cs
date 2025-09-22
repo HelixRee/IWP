@@ -183,10 +183,10 @@ public class RalphController : MonoBehaviour
     private void AssignAnimationIDs()
     {
         _animIDSpeed = Animator.StringToHash("Speed");
-        _animIDGrounded = Animator.StringToHash("Grounded");
-        _animIDJump = Animator.StringToHash("Jump");
-        _animIDFreeFall = Animator.StringToHash("FreeFall");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        //_animIDGrounded = Animator.StringToHash("Grounded");
+        //_animIDJump = Animator.StringToHash("Jump");
+        //_animIDFreeFall = Animator.StringToHash("FreeFall");
+        //_animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
 
     private void GroundedCheck()

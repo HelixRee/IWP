@@ -153,7 +153,7 @@ public class RalphLegAnimator : RalphAnimator
         _ralphLegLength = _upperLegLength + _lowerLegLength;
 
         _scaleRatio = _ralphLegLength / _sourceLegLength;
-
+        Debug.Log(_scaleRatio);
 
     }
 
@@ -173,13 +173,13 @@ public class RalphLegAnimator : RalphAnimator
 
         // Scale displacement in the correct direction
         Vector3 targetDisp = Vector3.zero;
-        targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Anchor.up) * Ralph.Anchor.up;
-        targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.forward) * Ralph.Anchor.forward;
-        targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.right) * Ralph.Anchor.right;
+        targetDisp += _scaleRatio * Vector3.Dot(sourceDisp, Ralph.Anchor.forward) * Ralph.Anchor.forward;
+        targetDisp += footBaseScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.right) * Ralph.Anchor.right;
+        targetDisp += stepDepthScalar * Vector3.Dot(sourceDisp, Ralph.Anchor.up) * Ralph.Anchor.up;
 
-        DirectTarget = targetDisp + Ralph.Anchor.position + Source.UpperLeg.rotation * TargetOffset;
+        DirectTarget = targetDisp + Ralph.Connector.position + Source.UpperLeg.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
-        _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2);
+        _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2, GroundLayers);
         AdjustedTarget = hitInfo.point + Ralph.Anchor.forward * 0.01f;
 
 
@@ -200,7 +200,7 @@ public class RalphLegAnimator : RalphAnimator
         // Calculate Tilt
         CalculateTilt();
     }
-    private float excessTilt = 0f;
+    //private float excessTilt = 0f;
     private void CalculateTilt()
     {
         // Tilt
@@ -232,14 +232,22 @@ public class RalphLegAnimator : RalphAnimator
     }
     private void CalculateYaw()
     {
-        _yaw = Source.UpperLeg.localEulerAngles.y > 180f ? Source.UpperLeg.localEulerAngles.y - 360f: Source.UpperLeg.localEulerAngles.y;
+        //Vector3 hipToKnee = Source.UpperLeg.position - Source.LowerLeg.position + Source.LowerLeg.forward;
+        //float x = Vector3.Dot(hipToKnee, -Source.UpperLeg.right);
+        //float y = Vector3.Dot(hipToKnee, Source.UpperLeg.forward);
+        //float rawYaw = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
+        float rawYaw = (Source.Hips.InverseTransformDirection(Source.UpperLeg.up)).y >= 0 ? Source.UpperLeg.localEulerAngles.y - 180f : Source.UpperLeg.localEulerAngles.y;
+        //float rawYaw = Source.UpperLeg.localEulerAngles.y;
+
+        float yaw = rawYaw > 180f ? rawYaw - 360f: rawYaw;
+        _yaw = Mathf.Lerp(_yaw, yaw, Time.deltaTime * 24f);
         // Arbitrary range
         float clampedYaw = Mathf.Clamp(_yaw, -20, 20);
         float weightedYaw = clampedYaw == _yaw ? 0 : _yaw - clampedYaw;
 
             
         SetZRotation(Ralph.Connector, weightedYaw);
-        Debug.Log("Name: " + name + ", " + weightedYaw);
+        //Debug.Log("Name: " + name + ", " + rawYaw);
 
 
     }

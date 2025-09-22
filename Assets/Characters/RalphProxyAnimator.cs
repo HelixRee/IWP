@@ -26,6 +26,7 @@ public class RalphProxyAnimator : MonoBehaviour
             Pelvis.position = Root.position + offset;
         }
     }
+    public LayerMask GroundLayers;
     public List<RalphAnimator> updateOrder = new();
 
     public Armature Source;
@@ -40,6 +41,7 @@ public class RalphProxyAnimator : MonoBehaviour
         Ralph.CaptureInitialOffset();
 
         // Initalise child scripts
+        updateOrder.ForEach(item => item.GroundLayers = GroundLayers);
         updateOrder.ForEach(item => item.ManualInit());
     }
 
