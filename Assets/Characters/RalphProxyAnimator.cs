@@ -51,7 +51,7 @@ public class RalphProxyAnimator : MonoBehaviour
 
 
         // Update child scripts
-        updateOrder.ForEach(item => item.ManualUpdate());
+        updateOrder.ForEach(item => { if (item.enabled) item.ManualUpdate(); });
     }
 
     void UpdateRootMotion()

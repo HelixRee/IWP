@@ -1,3 +1,5 @@
+using System;
+using System.Xml.Linq;
 using UnityEngine;
 
 public class IKHelper
@@ -117,5 +119,43 @@ public class IKHelper
         angle1 = Mathf.Atan2(tanY, tanX);
 
         return foundValidSolution;
+    }
+
+
+}
+public class SecondOrderDyanmics
+{
+    private Vector3 xp; // previous input
+    private Vector3 y, yd; // state variables
+    private float k1, k2, k3;
+
+    public SecondOrderDyanmics(Vector3 x0, float f = 1, float z = 0.5f, float r = 2)
+    {
+        // compute constants
+        k1 = z / (Mathf.PI * f);
+        k2 = 1 / ((2 * Mathf.PI * f) * (2 * Mathf.PI * f));
+        k3 = r * z / (2 * Mathf.PI * f);
+
+        // initialize variables
+        xp = x0;
+        y = x0;
+        yd = Vector3.zero;
+    }
+
+    public Vector3 Update(float dt, Vector3 x)
+    {
+        // estimate velocity
+        Vector3 xd = (x - xp) / dt;
+        xp = x;
+
+        float k2_stable = Mathf.Max(k2, dt * dt / 2 + dt * k1 / 2, dt * k1); // clamp k2 to guarantee stability without jitter
+        y = y + dt * yd; // integrate position by velocity
+        yd = yd + dt * (x + k3 * xd - y - k1 * yd) / k2_stable; // integrate velocity by acceleration
+        return y;
+    }
+
+    public void ForceSetValue(Vector3 value)
+    {
+        y = value;
     }
 }

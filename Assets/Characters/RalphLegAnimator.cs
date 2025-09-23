@@ -153,10 +153,13 @@ public class RalphLegAnimator : RalphAnimator
         _ralphLegLength = _upperLegLength + _lowerLegLength;
 
         _scaleRatio = _ralphLegLength / _sourceLegLength;
-        Debug.Log(_scaleRatio);
+        //Debug.Log(_scaleRatio);
 
+        _smoothedRaycastDistance = _ralphLegLength / 2f;
     }
 
+    private float _smoothedRaycastDistance = 0f;
+    private bool _validTarget = true;
     public override void ManualUpdate()
     {
         //Debug.DrawRay(Ralph.Connector.position, Ralph.UpperLegTilt.up * 100, Color.red);
@@ -180,7 +183,10 @@ public class RalphLegAnimator : RalphAnimator
         DirectTarget = targetDisp + Ralph.Connector.position + Source.UpperLeg.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2, GroundLayers);
-        AdjustedTarget = hitInfo.point + Ralph.Anchor.forward * 0.01f;
+
+        if (_groundDetected) _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, hitInfo.distance, 12f * Time.deltaTime);
+        else _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength / 2, 12f * Time.deltaTime);
+        AdjustedTarget = _raycastStartPos - Ralph.Anchor.forward * _smoothedRaycastDistance + Ralph.Anchor.forward * 0.01f;
 
 
         ActiveTarget = _groundDetected ? AdjustedTarget : DirectTarget;
@@ -191,7 +197,7 @@ public class RalphLegAnimator : RalphAnimator
         float x = Vector3.Dot(adjustedTargetDisp, Ralph.UpperLegPitch.up);
         float y = Vector3.Dot(adjustedTargetDisp, Ralph.UpperLegPitch.right);
 
-        bool _validTarget = IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, _upperLegLength, _lowerLegLength, x, y);
+        _validTarget = IKHelper.CalcIK_2D_TwoBoneAnalytic(out float angle1, out float angle2, true, _upperLegLength, _lowerLegLength, x, y);
 
         // Set joint rotations on plane
         SetZRotation(Ralph.UpperLegPitch, -angle1 * Mathf.Rad2Deg + Ralph.initialUpperPitch);
@@ -200,7 +206,7 @@ public class RalphLegAnimator : RalphAnimator
         // Calculate Tilt
         CalculateTilt();
     }
-    //private float excessTilt = 0f;
+
     private void CalculateTilt()
     {
         // Tilt
@@ -211,12 +217,14 @@ public class RalphLegAnimator : RalphAnimator
         float x = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
         float y = Vector3.Dot(tiltToTarget, -Ralph.UpperLegTilt.up);
         float tiltAngle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
-        //excessTilt = tiltAngle;
-        //if (TiltRange.y > TiltRange.x)
-        //    tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.x, TiltRange.y);
-        //else
-        //    tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.y, TiltRange.x);
-        //excessTilt -= tiltAngle;
+
+
+        // Something is fucked here
+        if (TiltRange.y > TiltRange.x)
+            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.x, TiltRange.y);
+        else
+            tiltAngle = Mathf.Clamp(tiltAngle, TiltRange.y, TiltRange.x);
+
         SetXRotation(Ralph.UpperLegTilt, tiltAngle);
 
         //float zOffset = Vector3.Dot(tiltToTarget, Ralph.UpperLegTilt.forward);
@@ -249,7 +257,6 @@ public class RalphLegAnimator : RalphAnimator
         SetZRotation(Ralph.Connector, weightedYaw);
         //Debug.Log("Name: " + name + ", " + rawYaw);
 
-
     }
     private void SetXRotation(Transform transform, float rotation)
     {
@@ -265,7 +272,7 @@ public class RalphLegAnimator : RalphAnimator
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = _validTarget ? Color.green : Color.red;
         Source.DrawArmature();
         Ralph.DrawArmature();
 
