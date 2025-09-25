@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RalphHeadAnimator : RalphAnimator
+public class RalphHeadAnimator : BaseRalphAnimator
 {
     public Transform HeadProxy;
     [Range(0f, 1f)]

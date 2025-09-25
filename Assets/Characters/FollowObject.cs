@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FollowObject : RalphAnimator
+public class FollowObject : BaseRalphAnimator
 {
     [Header("Behaviour")]
     [SerializeField] private bool _unparentOnAwake = true;
@@ -14,6 +14,9 @@ public class FollowObject : RalphAnimator
     public float MaxDistance = 0.1f;
     private SODVec3 smoothedPosition;
 
+    [Header("Distance Anchor")]
+    public Transform DistanceAnchor;
+    public float AnchorMaxDistance = 0.1f;
 
     public override void ManualInit()
     {
@@ -33,20 +36,31 @@ public class FollowObject : RalphAnimator
 
         Vector3 newPos = smoothedPosition.Update(Time.deltaTime, Target.position);
 
-        Vector3 direction = (newPos - Target.position).normalized;
-        float displacement = Vector3.Distance(newPos, Target.position);
-        displacement = Mathf.Min(displacement, MaxDistance);
+        CalculateDistanceAnchor(Target, MaxDistance, ref newPos);
+        if (DistanceAnchor)
+            CalculateDistanceAnchor(DistanceAnchor, AnchorMaxDistance, ref newPos);
 
-        newPos = Target.position + direction * displacement;
         smoothedPosition.Value = newPos;
         transform.position = newPos;
-
     }
+
+    private void CalculateDistanceAnchor(Transform reference, float maxDistance, ref Vector3 newPos)
+    {
+        Vector3 direction = (newPos - reference.position).normalized;
+        float displacement = Vector3.Distance(newPos, reference.position);
+        displacement = Mathf.Min(displacement, maxDistance);
+
+        newPos = reference.position + direction * displacement;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         if (Target)
             Gizmos.DrawWireSphere(Target.position, MaxDistance);
+        if (DistanceAnchor)
+            Gizmos.DrawWireSphere(DistanceAnchor.position, AnchorMaxDistance);
+
     }
     void Unparent()
     {
@@ -78,9 +92,17 @@ public class FollowObject : RalphAnimator
 
     private void OnDrawGizmos()
     {
+        if (!Target) return;
+
         float distance = Vector3.Distance(transform.position, Target.position);
 
         Gizmos.color = Color.Lerp(Color.green, Color.red, distance / MaxDistance);
         Gizmos.DrawLine(transform.position, Target.position);
+
+        if (!DistanceAnchor) return;
+        float anchorDistance = Vector3.Distance(transform.position, DistanceAnchor.position);
+
+        Gizmos.color = Color.Lerp(Color.green, Color.red, anchorDistance / AnchorMaxDistance);
+        Gizmos.DrawLine(transform.position, DistanceAnchor.position);
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class RalphAnimator : MonoBehaviour
+public abstract class BaseRalphAnimator : MonoBehaviour
 {
     public LayerMask GroundLayers;
     public abstract void ManualInit();

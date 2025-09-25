@@ -27,7 +27,7 @@ public class RalphProxyAnimator : MonoBehaviour
         }
     }
     public LayerMask GroundLayers;
-    public List<RalphAnimator> updateOrder = new();
+    public List<BaseRalphAnimator> updateOrder = new();
 
     public Armature Source;
     public Armature Ralph;
@@ -63,7 +63,6 @@ public class RalphProxyAnimator : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        //updateOrder.ForEach(item => { if (item.GetType() != typeof(FollowObject)) Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position); });
         foreach (var item in updateOrder)
         {
             if (!item.enabled) continue;
@@ -76,8 +75,6 @@ public class RalphProxyAnimator : MonoBehaviour
             else
             {
                 DrawGizmoToParent(item.transform);
-
-                //Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position);
             }
 
         }

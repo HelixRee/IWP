@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class RalphArmAnimator : RalphAnimator
+public class RalphArmAnimator : BaseRalphAnimator
 {
     [Serializable]
     public class TransformGroup

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RalphWiggleBoneChain : RalphAnimator
+public class RalphWiggleBoneChain : BaseRalphAnimator
 {
     public List<Transform> Bones = new();
     public float CurveAmount = 1f;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RalphAntennaLookAt : RalphAnimator
+public class RalphAntennaLookAt : BaseRalphAnimator
 {
     public Transform Source;
 
