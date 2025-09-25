@@ -63,17 +63,30 @@ public class RalphProxyAnimator : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        updateOrder.ForEach(item => { if (item.GetType() != typeof(FollowObject)) Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position); });
+        //updateOrder.ForEach(item => { if (item.GetType() != typeof(FollowObject)) Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position); });
         foreach (var item in updateOrder)
         {
-            if (item.GetType() != typeof(FollowObject)) 
-                Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position);
-            else
+            if (!item.enabled) continue;
+
+            if (item.GetType() == typeof(FollowObject))
             {
                 FollowObject followObject = item as FollowObject;
-                Gizmos.DrawLine(followObject.Target.position, Ralph.Pelvis.position);
+                DrawGizmoToParent(followObject.Target);
+            }
+            else
+            {
+                DrawGizmoToParent(item.transform);
+
+                //Gizmos.DrawLine(item.transform.position, Ralph.Pelvis.position);
             }
 
         }
+    }
+
+    private void DrawGizmoToParent(Transform child)
+    {
+        if (child.name == "Main") return;
+        Gizmos.DrawLine(child.position, child.parent.position);
+        DrawGizmoToParent(child.parent);
     }
 }
