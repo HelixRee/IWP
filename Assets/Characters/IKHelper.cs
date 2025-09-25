@@ -229,7 +229,6 @@ public class SODAngle
         if (xp - y > 180f)
             y = y + 360f;
 
-
         // estimate velocity
         float xd = (x - xp) / dt;
         xp = x;
@@ -237,6 +236,10 @@ public class SODAngle
         float k2_stable = Mathf.Max(k2, dt * dt / 2 + dt * k1 / 2, dt * k1); // clamp k2 to guarantee stability without jitter
         y = y + dt * yd; // integrate position by velocity
         yd = yd + dt * (x + k3 * xd - y - k1 * yd) / k2_stable; // integrate velocity by acceleration
+
+        xp = xp % 360;
+        y = y % 360;
+
         return y;
     }
 }

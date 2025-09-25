@@ -29,13 +29,16 @@ public class RalphHeadAnimator : RalphAnimator
         if (_nonSmoothedAngle > 180f) // 359f
             _nonSmoothedAngle = _nonSmoothedAngle - 360f;
 
+
         float smoothedAngle = _smoothedAngle.Update(Time.deltaTime, _nonSmoothedAngle);
 
-        float disp = (smoothedAngle - _nonSmoothedAngle) % 360f;
+        float disp = (smoothedAngle - _nonSmoothedAngle);
         if (disp < -180f) // -359f
             disp = disp + 360f;
         if (disp > 180f) // 359f
             disp = disp - 360f;
+
+        //Debug.Log("Smoothed: " + smoothedAngle + ", NonSmoothed: " + _nonSmoothedAngle + ", Disp: " + disp);
 
         Vector3 angles = _initialAngles;
         angles.z += disp * Weight;
