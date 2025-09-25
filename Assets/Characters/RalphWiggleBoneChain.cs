@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class WiggleBoneChain : RalphAnimator
+public class RalphWiggleBoneChain : RalphAnimator
 {
     public List<Transform> Bones = new();
     public float CurveAmount = 1f;
@@ -25,6 +24,15 @@ public class WiggleBoneChain : RalphAnimator
             float weight = 1 - weightDelta * i;
 
             Bones[i].localRotation = _startingRotations[i] * Quaternion.Lerp(Quaternion.identity, rootBone.localRotation, weight * CurveAmount);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        for (int i = 0; i < Bones.Count - 1; i++)
+        {
+            Gizmos.DrawLine(Bones[i].position, Bones[i + 1].position);
         }
     }
 }

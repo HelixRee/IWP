@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SimpleLookAt : RalphAnimator
+public class RalphAntennaLookAt : RalphAnimator
 {
     public Transform Source;
 
@@ -19,5 +19,11 @@ public class SimpleLookAt : RalphAnimator
         transform.Rotate(Vector3.up, 90);
          
         transform.localRotation = Quaternion.Slerp(_initialRotation, transform.localRotation, Weight);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, Source.position);
     }
 }

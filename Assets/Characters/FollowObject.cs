@@ -76,5 +76,11 @@ public class FollowObject : RalphAnimator
         transform.SetParent(root, true);
     }
 
+    private void OnDrawGizmos()
+    {
+        float distance = Vector3.Distance(transform.position, Target.position);
 
+        Gizmos.color = Color.Lerp(Color.green, Color.red, distance / MaxDistance);
+        Gizmos.DrawLine(transform.position, Target.position);
+    }
 }
