@@ -7,11 +7,12 @@ public class FollowObject : RalphAnimator
 
     [Header("Target")]
     public Transform Target;
+    public bool LockPosition = false;
     public float Frequency = 1.0f;
     public float Damping = 0.5f;
     public float Readiness = 2f;
     public float MaxDistance = 0.1f;
-    private SecondOrderDyanmics smoothedPosition;
+    private SODVec3 smoothedPosition;
 
 
     public override void ManualInit()
@@ -19,11 +20,17 @@ public class FollowObject : RalphAnimator
         if (_unparentOnAwake)
             Unparent();
 
-        smoothedPosition = new SecondOrderDyanmics(transform.position, Frequency, Damping, Readiness);
+        smoothedPosition = new SODVec3(transform.position, Frequency, Damping, Readiness);
     }
 
     public override void ManualUpdate()
     {
+        if (LockPosition)
+        {
+            transform.position = Target.position;
+            return;
+        }
+
         Vector3 newPos = smoothedPosition.Update(Time.deltaTime, Target.position);
 
         Vector3 direction = (newPos - Target.position).normalized;
@@ -31,14 +38,15 @@ public class FollowObject : RalphAnimator
         displacement = Mathf.Min(displacement, MaxDistance);
 
         newPos = Target.position + direction * displacement;
-        smoothedPosition.ForceSetValue(newPos);
+        smoothedPosition.Value = newPos;
         transform.position = newPos;
 
     }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(Target.position, MaxDistance);
+        if (Target)
+            Gizmos.DrawWireSphere(Target.position, MaxDistance);
     }
     void Unparent()
     {

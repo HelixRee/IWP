@@ -123,13 +123,18 @@ public class IKHelper
 
 
 }
-public class SecondOrderDyanmics
+public class SODVec3
 {
     private Vector3 xp; // previous input
     private Vector3 y, yd; // state variables
     private float k1, k2, k3;
 
-    public SecondOrderDyanmics(Vector3 x0, float f = 1, float z = 0.5f, float r = 2)
+    public Vector3 Value
+    {
+        get { return y; }
+        set { y = value; }
+    }
+    public SODVec3(Vector3 x0, float f = 1, float z = 0.5f, float r = 2)
     {
         // compute constants
         k1 = z / (Mathf.PI * f);
@@ -153,9 +158,85 @@ public class SecondOrderDyanmics
         yd = yd + dt * (x + k3 * xd - y - k1 * yd) / k2_stable; // integrate velocity by acceleration
         return y;
     }
-
-    public void ForceSetValue(Vector3 value)
+}
+public class SODFloat
+{
+    private float xp; // previous input
+    private float y, yd; // state variables
+    private float k1, k2, k3;
+    public float Value
     {
-        y = value;
+        get { return y; }
+        set { y = value; }
+    }
+    public SODFloat(float x0, float f = 1, float z = 0.5f, float r = 2)
+    {
+        // compute constants
+        k1 = z / (Mathf.PI * f);
+        k2 = 1 / ((2 * Mathf.PI * f) * (2 * Mathf.PI * f));
+        k3 = r * z / (2 * Mathf.PI * f);
+
+        // initialize variables
+        xp = x0;
+        y = x0;
+        yd = 0;
+    }
+
+    public float Update(float dt, float x)
+    {
+        // estimate velocity
+        float xd = (x - xp) / dt;
+        xp = x;
+
+        float k2_stable = Mathf.Max(k2, dt * dt / 2 + dt * k1 / 2, dt * k1); // clamp k2 to guarantee stability without jitter
+        y = y + dt * yd; // integrate position by velocity
+        yd = yd + dt * (x + k3 * xd - y - k1 * yd) / k2_stable; // integrate velocity by acceleration
+        return y;
+    }
+}
+
+public class SODAngle
+{
+    private float xp; // previous input
+    private float y, yd; // state variables
+    private float k1, k2, k3;
+    public float Value
+    {
+        get { return y; }
+        set { y = value; }
+    }
+    public SODAngle(float x0, float f = 1, float z = 0.5f, float r = 2)
+    {
+        // compute constants
+        k1 = z / (Mathf.PI * f);
+        k2 = 1 / ((2 * Mathf.PI * f) * (2 * Mathf.PI * f));
+        k3 = r * z / (2 * Mathf.PI * f);
+
+        // initialize variables
+        xp = x0;
+        y = x0;
+        yd = 0;
+    }
+
+    public float Update(float dt, float x)
+    {
+        if (x - xp > 180f)
+            x = x - 360f;
+        if (xp - x > 180f)
+            x = x + 360f;
+        if (y - xp > 180f)
+            y = y - 360f;
+        if (xp - y > 180f)
+            y = y + 360f;
+
+
+        // estimate velocity
+        float xd = (x - xp) / dt;
+        xp = x;
+
+        float k2_stable = Mathf.Max(k2, dt * dt / 2 + dt * k1 / 2, dt * k1); // clamp k2 to guarantee stability without jitter
+        y = y + dt * yd; // integrate position by velocity
+        yd = yd + dt * (x + k3 * xd - y - k1 * yd) / k2_stable; // integrate velocity by acceleration
+        return y;
     }
 }
