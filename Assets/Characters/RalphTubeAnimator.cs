@@ -59,9 +59,9 @@ public class RalphTubeAnimator : BaseRalphAnimator
         {
 
 
-            float offset = rp.normalisedDistance + 0.001f >= 1f ? -0.001f : 0.001f;
+            float offset = rp.normalisedDistance + 0.1f >= 1f ? -0.1f : 0.1f;
             //rp.wrapper.up = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)) - rp.wrapper.position;
-            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)));
+            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)), transform.right);
 
             rp.point.SetParent(rp.wrapper, true);
             rp.point.localPosition = Vector3.zero;
@@ -92,9 +92,9 @@ public class RalphTubeAnimator : BaseRalphAnimator
         for (int i = 0; i < ReferencePoints.Count; i++)
         {
             ReferencePoint rp = ReferencePoints[i];
-            float offset = rp.normalisedDistance + 0.001f >= 1f ? -0.001f : 0.001f;
+            float offset = rp.normalisedDistance + 0.1f >= 1f ? -0.1f : 0.1f;
             //rp.wrapper.up = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)) - rp.wrapper.position;
-            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)));
+            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)), transform.right);
 
             //transform.Rotate(Vector3.up, 90);
 
