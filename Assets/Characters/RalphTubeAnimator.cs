@@ -24,11 +24,13 @@ public class RalphTubeAnimator : BaseRalphAnimator
         public float normalisedDistance = 0f;
         public Transform point;
 
+        [HideInInspector] public Transform wrapper;
         [HideInInspector] public Vector3 positionOffset = Vector3.zero;
-        [HideInInspector] public Quaternion rotationOffset = Quaternion.identity;
+        [HideInInspector] public Vector3 rotationOffset = Vector3.zero;
     }
 
     public List<ReferencePoint> ReferencePoints = new();
+
     private void OnValidate()
     {
         _splineContainer = GetComponent<SplineContainer>();
@@ -42,8 +44,32 @@ public class RalphTubeAnimator : BaseRalphAnimator
 
         foreach (var anim in childAnimations)
             anim.ManualInit();
+
+        foreach (var rp in ReferencePoints)
+        {
+            GameObject wrapper = new GameObject(rp.point.name + " Wrapper");
+            rp.wrapper = wrapper.transform;
+            wrapper.transform.parent = rp.point.parent;
+            wrapper.transform.SetSiblingIndex(rp.point.GetSiblingIndex());
+
+
+            rp.wrapper.position = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance));
+        }
+        foreach (var rp in ReferencePoints)
+        {
+
+
+            float offset = rp.normalisedDistance + 0.001f >= 1f ? -0.001f : 0.001f;
+            //rp.wrapper.up = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)) - rp.wrapper.position;
+            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)));
+
+            rp.point.SetParent(rp.wrapper, true);
+            rp.point.localPosition = Vector3.zero;
+
+        }
     }
 
+    public bool test = false;
     public override void ManualUpdate()
     {
         foreach (var anim in childAnimations)
@@ -57,9 +83,22 @@ public class RalphTubeAnimator : BaseRalphAnimator
 
         foreach (var rp in ReferencePoints)
         {
-            rp.point.position = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance));
-        }
+            rp.wrapper.position = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance));
+            rp.point.localPosition = Vector3.zero;
 
+        }
+        if (Input.GetKeyDown(KeyCode.F1)) test = !test;
+
+        for (int i = 0; i < ReferencePoints.Count; i++)
+        {
+            ReferencePoint rp = ReferencePoints[i];
+            float offset = rp.normalisedDistance + 0.001f >= 1f ? -0.001f : 0.001f;
+            //rp.wrapper.up = transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)) - rp.wrapper.position;
+            rp.wrapper.LookAt(transform.TransformPoint(_spline.EvaluatePosition(rp.normalisedDistance + offset)));
+
+            //transform.Rotate(Vector3.up, 90);
+
+        }
     }
 
     private void OnDrawGizmos()
