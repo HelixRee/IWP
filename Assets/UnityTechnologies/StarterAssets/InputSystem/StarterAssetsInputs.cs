@@ -21,11 +21,16 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		private PlayerInput _playerInput;
+        private void Start()
+        {
+            _playerInput = GetComponent<PlayerInput>();
+        }
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
-			if (value.Get<Vector2>() == Vector2.zero)
+			if (value.Get<Vector2>() == Vector2.zero && _playerInput.currentControlScheme == "Gamepad")
                 SprintInput(false);
         }
 
