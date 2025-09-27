@@ -324,7 +324,7 @@ public class RalphController : MonoBehaviour
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    Animator.SetBool(_animIDJump, true);
+                    //Animator.SetBool(_animIDJump, true);
                 }
 
                 // activate jumping flag
@@ -354,7 +354,7 @@ public class RalphController : MonoBehaviour
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    Animator.SetBool(_animIDFreeFall, true);
+                    //Animator.SetBool(_animIDFreeFall, true);
                 }
             }
 
