@@ -31,12 +31,21 @@ public class RalphTubeAnimator : BaseRalphAnimator
 
     private void OnValidate()
     {
-        _splineContainer = GetComponent<SplineContainer>();
-        _spline = _splineContainer.Splines[0];
+        InitSpline();
+    }
+
+    private void InitSpline()
+    {
+        if (!_splineContainer)
+            _splineContainer = GetComponent<SplineContainer>();
+        if (_spline == null)
+            _spline = _splineContainer.Splines[0];
     }
 
     public override void ManualInit()
     {
+        InitSpline();
+
         _rightKnot = _spline[1];
         _leftKnot = _spline[2];
 
@@ -68,7 +77,7 @@ public class RalphTubeAnimator : BaseRalphAnimator
         _rightKnot.Position = transform.InverseTransformPoint(ControlPointR.position);
         _leftKnot.Position = transform.InverseTransformPoint(ControlPointL.position);
 
-        _spline.SetKnot(1, _rightKnot);
+        _spline.SetKnotNoNotify(1, _rightKnot);
         _spline.SetKnot(2, _leftKnot);
 
         foreach (var rp in ReferencePoints)

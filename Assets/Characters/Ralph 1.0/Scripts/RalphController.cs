@@ -87,7 +87,6 @@ public class RalphController : MonoBehaviour
 
     // player
     private float _speed;
-    private float _animationBlend;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private float _verticalVelocity;
@@ -98,11 +97,11 @@ public class RalphController : MonoBehaviour
     private float _fallTimeoutDelta;
 
     // animation IDs
-    private int _animIDSpeed;
+    private int _animIDSpeedZ;
+    private int _animIDSpeedX;
     private int _animIDGrounded;
     private int _animIDJump;
     private int _animIDFreeFall;
-    private int _animIDMotionSpeed;
 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
@@ -141,6 +140,7 @@ public class RalphController : MonoBehaviour
 
     private void Start()
     {
+        //Time.timeScale = 0.2f;
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
         if (!Animator)
@@ -182,11 +182,11 @@ public class RalphController : MonoBehaviour
 
     private void AssignAnimationIDs()
     {
-        _animIDSpeed = Animator.StringToHash("Speed");
+        _animIDSpeedZ = Animator.StringToHash("SpeedZ");
+        _animIDSpeedX = Animator.StringToHash("SpeedX");
         //_animIDGrounded = Animator.StringToHash("Grounded");
         //_animIDJump = Animator.StringToHash("Jump");
         //_animIDFreeFall = Animator.StringToHash("FreeFall");
-        //_animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
 
     private void GroundedCheck()
@@ -203,7 +203,7 @@ public class RalphController : MonoBehaviour
         // update animator if using character
         if (_hasAnimator)
         {
-            Animator.SetBool(_animIDGrounded, Grounded);
+            //Animator.SetBool(_animIDGrounded, Grounded);
         }
     }
 
@@ -262,8 +262,8 @@ public class RalphController : MonoBehaviour
             _speed = targetSpeed;
         }
 
-        _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
-        if (_animationBlend < 0.01f) _animationBlend = 0f;
+        if (_speed < 0.01f) _speed = 0f;
+
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
@@ -291,8 +291,11 @@ public class RalphController : MonoBehaviour
         // update animator if using character
         if (_hasAnimator)
         {
-            Animator.SetFloat(_animIDSpeed, _animationBlend);
-            Animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+            Vector3 relativeVel = _controller.transform.InverseTransformDirection(_controller.velocity);
+            Animator.SetFloat(_animIDSpeedZ, Mathf.Lerp(Animator.GetFloat(_animIDSpeedZ), relativeVel.z, 12f * Time.deltaTime));
+            Animator.SetFloat(_animIDSpeedX, Mathf.Lerp(Animator.GetFloat(_animIDSpeedX), relativeVel.x, 12f * Time.deltaTime));
+            //Debug.Log(relativeVel);
+            //Animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
         }
     }
     private bool _jumpActive = false;
@@ -306,8 +309,8 @@ public class RalphController : MonoBehaviour
             // update animator if using character
             if (_hasAnimator)
             {
-                Animator.SetBool(_animIDJump, false);
-                Animator.SetBool(_animIDFreeFall, false);
+                //Animator.SetBool(_animIDJump, false);
+                //Animator.SetBool(_animIDFreeFall, false);
             }
 
 
