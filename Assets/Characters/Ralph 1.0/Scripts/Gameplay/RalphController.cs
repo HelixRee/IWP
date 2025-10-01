@@ -184,9 +184,9 @@ public class RalphController : MonoBehaviour
     {
         _animIDSpeedZ = Animator.StringToHash("SpeedZ");
         _animIDSpeedX = Animator.StringToHash("SpeedX");
-        //_animIDGrounded = Animator.StringToHash("Grounded");
-        //_animIDJump = Animator.StringToHash("Jump");
-        //_animIDFreeFall = Animator.StringToHash("FreeFall");
+        _animIDGrounded = Animator.StringToHash("Grounded");
+        _animIDJump = Animator.StringToHash("Jump");
+        _animIDFreeFall = Animator.StringToHash("FreeFall");
     }
 
     private void GroundedCheck()
@@ -203,7 +203,7 @@ public class RalphController : MonoBehaviour
         // update animator if using character
         if (_hasAnimator)
         {
-            //Animator.SetBool(_animIDGrounded, Grounded);
+            Animator.SetBool(_animIDGrounded, Grounded);
         }
     }
 
@@ -309,8 +309,8 @@ public class RalphController : MonoBehaviour
             // update animator if using character
             if (_hasAnimator)
             {
-                //Animator.SetBool(_animIDJump, false);
-                //Animator.SetBool(_animIDFreeFall, false);
+                Animator.SetBool(_animIDJump, false);
+                Animator.SetBool(_animIDFreeFall, false);
             }
 
 
@@ -324,7 +324,7 @@ public class RalphController : MonoBehaviour
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    //Animator.SetBool(_animIDJump, true);
+                    Animator.SetBool(_animIDJump, true);
                 }
 
                 // activate jumping flag
@@ -349,12 +349,12 @@ public class RalphController : MonoBehaviour
             {
                 _fallTimeoutDelta -= Time.deltaTime;
             }
-            else
+            else if (_verticalVelocity < 0f)
             {
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    //Animator.SetBool(_animIDFreeFall, true);
+                    Animator.SetBool(_animIDFreeFall, true);
                 }
             }
 

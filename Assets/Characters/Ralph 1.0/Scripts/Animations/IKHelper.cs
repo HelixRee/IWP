@@ -126,7 +126,7 @@ public class IKHelper
 public class SODVec3
 {
     private Vector3 xp; // previous input
-    private Vector3 y, yd; // state variables
+    public Vector3 y, yd; // state variables
     private float k1, k2, k3;
 
     public Vector3 Value

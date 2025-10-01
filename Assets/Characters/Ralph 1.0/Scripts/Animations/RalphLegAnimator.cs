@@ -169,7 +169,7 @@ public class RalphLegAnimator : BaseRalphAnimator
         Ralph.ConnectorExtension = remappedToeLift;
 
         // Calculate Yaw with added offset, max at rest
-        CalculateYaw();
+        //CalculateYaw();
 
         // Ground targeting
         Vector3 sourceDisp = Source.HeelBase.position - Source.UpperLeg.position;
@@ -204,7 +204,7 @@ public class RalphLegAnimator : BaseRalphAnimator
         SetZRotation(Ralph.LowerLeg, -angle2 * Mathf.Rad2Deg + Ralph.initialLowerPitch);
 
         // Calculate Tilt
-        CalculateTilt();
+        //CalculateTilt();
     }
 
     private void CalculateTilt()
@@ -240,9 +240,9 @@ public class RalphLegAnimator : BaseRalphAnimator
     }
     private void CalculateYaw()
     {
-        //Vector3 hipToKnee = Source.UpperLeg.position - Source.LowerLeg.position + Source.LowerLeg.forward;
-        //float x = Vector3.Dot(hipToKnee, -Source.UpperLeg.right);
-        //float y = Vector3.Dot(hipToKnee, Source.UpperLeg.forward);
+        //Vector3 hipToKnee = Source.LowerLeg.position - Source.UpperLeg.position + Source.UpperLeg.forward;
+        //float x = Vector3.Dot(hipToKnee, Ralph.Hips.forward);
+        //float y = Mathf.Abs(Vector3.Dot(hipToKnee, Ralph.Hips.right));
         //float rawYaw = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
         float rawYaw = (Source.Hips.InverseTransformDirection(Source.UpperLeg.up)).y >= 0 ? Source.UpperLeg.localEulerAngles.y - 180f : Source.UpperLeg.localEulerAngles.y;
         //float rawYaw = Source.UpperLeg.localEulerAngles.y;
@@ -255,7 +255,7 @@ public class RalphLegAnimator : BaseRalphAnimator
 
             
         SetZRotation(Ralph.Connector, weightedYaw);
-        //Debug.Log("Name: " + name + ", " + rawYaw);
+        //Debug.Log("Name: " + name + ", " + rawYaw + ", " + new Vector2(x, y));
 
     }
     private void SetXRotation(Transform transform, float rotation)
