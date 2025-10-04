@@ -120,13 +120,15 @@ public class RalphLegAnimator : BaseRalphAnimator
     public GenericArmature Source;
     [Header("Ralph")]
     public RalphArmature Ralph;
+    public bool IsGrounded = false;
+    public bool IsFalling = false;
 
     private float _sourceLegLength;
     private float _ralphLegLength;
     private float _scaleRatio = 1f;
     public Vector3 TargetOffset = Vector3.zero;
     [HideInInspector] public Vector3 DirectTarget = Vector3.zero;
-    [HideInInspector] public Vector3 AdjustedTarget = Vector3.zero;
+    [HideInInspector] public Vector3 GroundedTarget = Vector3.zero;
     public Vector3 ActiveTarget = Vector3.zero;
 
     // Foot base
@@ -160,10 +162,9 @@ public class RalphLegAnimator : BaseRalphAnimator
 
     private float _smoothedRaycastDistance = 0f;
     private bool _validTarget = true;
+    private float _groundedTransition = 0f;
     public override void ManualUpdate()
     {
-        //Debug.DrawRay(Ralph.Connector.position, Ralph.UpperLegTilt.up * 100, Color.red);
-
         // Connector movement
         float remappedToeLift = math.remap(-0.05f, 0.05f, -0.015f, 0.015f, Source.ToeLift);
         Ralph.ConnectorExtension = remappedToeLift;
@@ -182,14 +183,32 @@ public class RalphLegAnimator : BaseRalphAnimator
 
         DirectTarget = targetDisp + Ralph.Connector.position + Source.UpperLeg.rotation * TargetOffset;
         _raycastStartPos = DirectTarget + Ralph.Anchor.forward * _ralphLegLength / 2;
-        _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength / 2, GroundLayers);
-
-        if (_groundDetected) _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, hitInfo.distance, 12f * Time.deltaTime);
-        else _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength / 2, 12f * Time.deltaTime);
-        AdjustedTarget = _raycastStartPos - Ralph.Anchor.forward * _smoothedRaycastDistance + Ralph.Anchor.forward * 0.01f;
 
 
-        ActiveTarget = _groundDetected ? AdjustedTarget : DirectTarget;
+        // Find 2 seperate truths and lerp between them
+        //Debug.Log(name + ", " + (Source.Toe.position.y - Source.Hips.parent.position.y));
+        // Foot grounded
+        if (Source.Toe.position.y - Source.Hips.parent.position.y < 0.02f)
+            _groundedTransition = Mathf.Lerp(_groundedTransition, 1, 12f * Time.deltaTime);
+        else
+            _groundedTransition = Mathf.Lerp(_groundedTransition, 0, 12f * Time.deltaTime);
+
+        _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength * 0.66f, GroundLayers);
+        //Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit extendedHitInfo, _ralphLegLength, GroundLayers);
+
+        if (!_groundDetected && !IsGrounded && !IsFalling) 
+            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.1f, 6f * Time.deltaTime);
+        else if (!_groundDetected && !IsGrounded && IsFalling) 
+            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.66f, 6f * Time.deltaTime);
+        else if (_groundDetected)
+            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, hitInfo.distance, 24f * Time.deltaTime);
+
+        GroundedTarget = _raycastStartPos - Ralph.Anchor.forward * _smoothedRaycastDistance + Ralph.Anchor.forward * 0.01f;
+
+
+        //ActiveTarget = _groundDetected ? GroundedTarget : DirectTarget;
+        ActiveTarget = Vector3.Lerp(DirectTarget, GroundedTarget, _groundedTransition);
+        //ActiveTarget = GroundedTarget;
         SetZRotation(Ralph.UpperLegPitch, 0);
 
         // IK Logic
@@ -202,9 +221,6 @@ public class RalphLegAnimator : BaseRalphAnimator
         // Set joint rotations on plane
         SetZRotation(Ralph.UpperLegPitch, -angle1 * Mathf.Rad2Deg + Ralph.initialUpperPitch);
         SetZRotation(Ralph.LowerLeg, -angle2 * Mathf.Rad2Deg + Ralph.initialLowerPitch);
-
-        // Calculate Tilt
-        //CalculateTilt();
     }
 
     private void CalculateTilt()
@@ -290,11 +306,12 @@ public class RalphLegAnimator : BaseRalphAnimator
         else
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(_raycastStartPos, DirectTarget);
+            Vector3 disp = DirectTarget - _raycastStartPos;
+            Gizmos.DrawRay(_raycastStartPos, disp * 1.32f);
             if (_groundDetected)
             {
                 Gizmos.color = new Color(0f,1f,0f,0.5f);
-                Gizmos.DrawSphere(AdjustedTarget, 0.0125f * _ralphLegLength);
+                Gizmos.DrawSphere(GroundedTarget, 0.0125f * _ralphLegLength);
             }
         }
 

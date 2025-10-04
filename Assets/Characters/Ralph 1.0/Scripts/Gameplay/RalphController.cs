@@ -108,6 +108,7 @@ public class RalphController : MonoBehaviour
 #endif
     [Header("References")]
     public Animator Animator;
+    public RalphProxyAnimator ProxyAnimator;
     private CharacterController _controller;
     private StarterAssetsInputs _input;
     private GameObject _mainCamera;
@@ -204,6 +205,11 @@ public class RalphController : MonoBehaviour
         if (_hasAnimator)
         {
             Animator.SetBool(_animIDGrounded, Grounded);
+        }
+
+        if (ProxyAnimator)
+        {
+            ProxyAnimator.IsGrounded = Grounded;
         }
     }
 
@@ -312,7 +318,10 @@ public class RalphController : MonoBehaviour
                 Animator.SetBool(_animIDJump, false);
                 Animator.SetBool(_animIDFreeFall, false);
             }
-
+            if (ProxyAnimator)
+            {
+                ProxyAnimator.IsFalling = false;
+            }
 
 
             // Jump
@@ -355,6 +364,10 @@ public class RalphController : MonoBehaviour
                 if (_hasAnimator)
                 {
                     Animator.SetBool(_animIDFreeFall, true);
+                }
+                if (ProxyAnimator)
+                {
+                    ProxyAnimator.IsFalling = true;
                 }
             }
 

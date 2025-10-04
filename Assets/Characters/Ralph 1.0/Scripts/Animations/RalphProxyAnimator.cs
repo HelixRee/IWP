@@ -27,16 +27,26 @@ public class RalphProxyAnimator : MonoBehaviour
         }
     }
     public LayerMask GroundLayers;
+    public bool IsGrounded = true;
+    public bool IsFalling = true;
     public List<BaseRalphAnimator> updateOrder = new();
 
     public Armature Source;
     public Armature Ralph;
+
+    [Header("Hip Animation")]
+    public FollowObject HipFollower;
+    public Transform RealHips;
+
+    [Header("Leg Animators")]
+    public List<RalphLegAnimator> LegAnimators = new();
 
     private float _scaleRatio = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        HipFollower.ManualInit();
         _scaleRatio = Ralph.GetPelvisOffset().magnitude / Source.GetPelvisOffset().magnitude;
         Ralph.CaptureInitialOffset();
 
@@ -47,6 +57,8 @@ public class RalphProxyAnimator : MonoBehaviour
 
     void LateUpdate()
     {
+        LegAnimators.ForEach(item => { item.IsGrounded = IsGrounded; item.IsFalling = IsFalling; });
+        HipFollower.ManualUpdate();
         UpdateRootMotion();
 
 
@@ -57,6 +69,12 @@ public class RalphProxyAnimator : MonoBehaviour
     void UpdateRootMotion()
     {
         Ralph.SetPelvisOffset(Source.GetPelvisOffset() * _scaleRatio);
+
+        Vector3 clampedPosition = HipFollower.Target.position;
+        Vector3 disp = HipFollower.transform.position - HipFollower.Target.position;
+        clampedPosition += Vector3.Dot(Vector3.up, disp) * Vector3.up;
+
+        RealHips.position = clampedPosition;
         //Ralph.Pelvis.rotation = Source.Pelvis.rotation * Ralph._pelvisRotation;
     }
 
