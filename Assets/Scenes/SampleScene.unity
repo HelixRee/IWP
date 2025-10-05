@@ -2417,7 +2417,7 @@ GameObject:
   - component: {fileID: 203494444}
   - component: {fileID: 203494443}
   - component: {fileID: 203494442}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65102,7 +65102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101275148}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.53534204, y: -0.46062562, z: 0.5378364, w: 0.46039662}
+  m_LocalRotation: {x: -0.53534216, y: -0.4606256, z: 0.5378364, w: 0.46039653}
   m_LocalPosition: {x: -0.000014841146, y: 9.685763e-10, z: -0.0031089091}
   m_LocalScale: {x: 1.0000001, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -65129,11 +65129,11 @@ RotationConstraint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101275148}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Weight: 0.117
-  m_RotationAtRest: {x: 0.14570852, y: -89.85871, z: 98.72652}
-  m_RotationOffset: {x: -0.13298811, y: 89.85026, z: 10.379919}
+  m_RotationAtRest: {x: 0.14570852, y: -89.85871, z: 98.72654}
+  m_RotationOffset: {x: -0.13299537, y: 89.85026, z: 10.37994}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
