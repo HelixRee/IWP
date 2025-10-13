@@ -10,6 +10,7 @@ namespace StarterAssets
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
+		public bool willJump;
 		public bool jump;
 		public bool jumpHeld;
 		public bool sprint;
@@ -67,7 +68,7 @@ namespace StarterAssets
 		{
 			//Debug.Log("Jump Pressed");
 			if (newJumpState)
-				jump = newJumpState;
+				willJump = newJumpState;
 			jumpHeld = newJumpState;
 		}
 
@@ -84,6 +85,11 @@ namespace StarterAssets
 		private void SetCursorState(bool newState)
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+		}
+
+		public void TriggerJump()
+		{
+			jump = true;
 		}
 	}
 	

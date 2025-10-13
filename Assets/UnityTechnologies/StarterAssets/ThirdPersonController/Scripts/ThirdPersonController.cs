@@ -300,7 +300,7 @@ namespace StarterAssets
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_input.willJump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -312,7 +312,7 @@ namespace StarterAssets
                     }
                 }
 
-                // jump timeout
+                // willJump timeout
                 if (_jumpTimeoutDelta >= 0.0f)
                 {
                     _jumpTimeoutDelta -= Time.deltaTime;
@@ -320,7 +320,7 @@ namespace StarterAssets
             }
             else
             {
-                // reset the jump timeout timer
+                // reset the willJump timeout timer
                 _jumpTimeoutDelta = JumpTimeout;
 
                 // fall timeout
@@ -337,8 +337,8 @@ namespace StarterAssets
                     }
                 }
 
-                // if we are not grounded, do not jump
-                _input.jump = false;
+                // if we are not grounded, do not willJump
+                _input.willJump = false;
             }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)

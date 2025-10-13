@@ -188,20 +188,29 @@ public class RalphLegAnimator : BaseRalphAnimator
         // Find 2 seperate truths and lerp between them
         //Debug.Log(name + ", " + (Source.Toe.position.y - Source.Hips.parent.position.y));
         // Foot grounded
-        if (Source.Toe.position.y - Source.Hips.parent.position.y < 0.02f)
+        if (Source.Toe.position.y - Source.Hips.parent.position.y < 0.02f && IsGrounded)
             _groundedTransition = Mathf.Lerp(_groundedTransition, 1, 12f * Time.deltaTime);
         else
             _groundedTransition = Mathf.Lerp(_groundedTransition, 0, 12f * Time.deltaTime);
 
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength * 0.66f, GroundLayers);
+
+
+        // Ground locking
+        if (_groundDetected)
+            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, hitInfo.distance, 24f * Time.deltaTime);
+        else
+            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.66f, 6f * Time.deltaTime);
+
+        _smoothedRaycastDistance = _groundDetected ? hitInfo.distance : _ralphLegLength * 0.66f;
         //Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit extendedHitInfo, _ralphLegLength, GroundLayers);
 
-        if (!_groundDetected && !IsGrounded && !IsFalling) 
-            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.1f, 6f * Time.deltaTime);
-        else if (!_groundDetected && !IsGrounded && IsFalling) 
-            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.66f, 6f * Time.deltaTime);
-        else if (_groundDetected)
-            _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, hitInfo.distance, 24f * Time.deltaTime);
+        // willJump cheat
+        //if (!_groundDetected && !IsGrounded && !IsFalling) 
+        //    _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.1f, 6f * Time.deltaTime);
+        //else if (!_groundDetected && !IsGrounded && IsFalling) 
+        //    _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.66f, 6f * Time.deltaTime);
+        //else if (_groundDetected)
 
         GroundedTarget = _raycastStartPos - Ralph.Anchor.forward * _smoothedRaycastDistance + Ralph.Anchor.forward * 0.01f;
 

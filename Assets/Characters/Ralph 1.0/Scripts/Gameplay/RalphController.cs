@@ -315,7 +315,7 @@ public class RalphController : MonoBehaviour
             // update animator if using character
             if (_hasAnimator)
             {
-                Animator.SetBool(_animIDJump, false);
+                //Animator.SetBool(_animIDJump, false);
                 Animator.SetBool(_animIDFreeFall, false);
             }
             if (ProxyAnimator)
@@ -330,17 +330,13 @@ public class RalphController : MonoBehaviour
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity * GravityJumpMultiplier);
 
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    Animator.SetBool(_animIDJump, true);
-                }
+
 
                 // activate jumping flag
                 _jumpActive = true;
             }
 
-            // jump timeout
+            // willJump timeout
             if (_jumpTimeoutDelta >= 0.0f)
             {
                 _jumpTimeoutDelta -= Time.deltaTime;
@@ -350,7 +346,7 @@ public class RalphController : MonoBehaviour
         }
         else
         {
-            // reset the jump timeout timer
+            // reset the willJump timeout timer
             _jumpTimeoutDelta = JumpTimeout;
 
             // fall timeout
@@ -371,10 +367,11 @@ public class RalphController : MonoBehaviour
                 }
             }
 
-            // if we are not grounded, do not jump
+            // if we are not grounded, do not willJump
+            _input.willJump = false;
             _input.jump = false;
 
-            // if jump is not held anymore cancel all future jump inputs until grounded
+            // if willJump is not held anymore cancel all future willJump inputs until grounded
             if (!_input.jumpHeld)
                 _jumpActive = false;
             if (!_jumpActive)
@@ -394,6 +391,12 @@ public class RalphController : MonoBehaviour
             _verticalVelocity = GroundedGravity;
         }
         //Debug.Log(_verticalVelocity);
+
+        // update animator if using character
+        if (_hasAnimator)
+        {
+            Animator.SetBool(_animIDJump, _input.willJump);
+        }
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
