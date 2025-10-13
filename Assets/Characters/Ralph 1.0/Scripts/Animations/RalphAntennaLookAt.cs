@@ -15,9 +15,9 @@ public class RalphAntennaLookAt : BaseRalphAnimator
 
     public override void ManualUpdate()
     {
-        transform.up = Source.position - transform.position;
-        transform.Rotate(Vector3.up, 90);
-         
+        transform.LookAt(Source, -Vector3.right);
+        transform.Rotate(Vector3.right, 90);
+
         transform.localRotation = Quaternion.Slerp(_initialRotation, transform.localRotation, Weight);
     }
 
