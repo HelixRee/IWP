@@ -202,7 +202,10 @@ public class RalphLegAnimator : BaseRalphAnimator
         else
             _smoothedRaycastDistance = Mathf.Lerp(_smoothedRaycastDistance, _ralphLegLength * 0.66f, 6f * Time.deltaTime);
 
-        _smoothedRaycastDistance = _groundDetected ? hitInfo.distance : _ralphLegLength * 0.66f;
+        //_smoothedRaycastDistance = _groundDetected ? hitInfo.distance : _ralphLegLength * 0.66f;
+
+
+
         //Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit extendedHitInfo, _ralphLegLength, GroundLayers);
 
         // willJump cheat

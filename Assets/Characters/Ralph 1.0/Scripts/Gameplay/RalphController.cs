@@ -341,7 +341,7 @@ public class RalphController : MonoBehaviour
             {
                 _jumpTimeoutDelta -= Time.deltaTime;
             }
-            if (!_input.jump)
+            if (!_input.willJump)
                 _input.jumpHeld = false;
         }
         else
