@@ -1,4 +1,5 @@
 using StarterAssets;
+using TMPro;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
@@ -325,12 +326,12 @@ public class RalphController : MonoBehaviour
 
 
             // Jump
-            if (_input.jumpHeld && _jumpTimeoutDelta <= 0.0f)
+            if (_input.jump && _jumpTimeoutDelta <= 0.0f)
             {
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity * GravityJumpMultiplier);
 
-
+                //_input.willJump = false;
 
                 // activate jumping flag
                 _jumpActive = true;
@@ -341,8 +342,8 @@ public class RalphController : MonoBehaviour
             {
                 _jumpTimeoutDelta -= Time.deltaTime;
             }
-            if (!_input.jump)
-                _input.jumpHeld = false;
+            //if (!_input.jump)
+            //    _input.jumpHeld = false;
         }
         else
         {
@@ -368,14 +369,14 @@ public class RalphController : MonoBehaviour
             }
 
             // if we are not grounded, do not willJump
-            _input.willJump = false;
             _input.jump = false;
+            _input.willJump = false; // Coyote time here
 
             // if willJump is not held anymore cancel all future willJump inputs until grounded
             if (!_input.jumpHeld)
                 _jumpActive = false;
-            if (!_jumpActive)
-                _input.jumpHeld = false;
+            //if (!_jumpActive)
+            //    _input.jumpHeld = false;
         }
 
         // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
@@ -395,7 +396,7 @@ public class RalphController : MonoBehaviour
         // update animator if using character
         if (_hasAnimator)
         {
-            Animator.SetBool(_animIDJump, _input.jump);
+            Animator.SetBool(_animIDJump, _input.willJump);
         }
     }
 
