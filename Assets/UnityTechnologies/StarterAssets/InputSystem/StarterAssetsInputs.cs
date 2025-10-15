@@ -67,8 +67,10 @@ namespace StarterAssets
 		public void JumpInput(bool newJumpState)
 		{
 			//Debug.Log("Jump Pressed");
+			//if (newJumpState)
+			//	willJump = newJumpState;
 			if (newJumpState)
-				willJump = newJumpState;
+				jump = newJumpState;
 			jumpHeld = newJumpState;
 		}
 
@@ -89,7 +91,7 @@ namespace StarterAssets
 
 		public void TriggerJump()
 		{
-			jump = true;
+			//jump = true;
 		}
 	}
 	

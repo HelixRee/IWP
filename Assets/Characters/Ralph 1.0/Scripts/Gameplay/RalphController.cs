@@ -341,7 +341,7 @@ public class RalphController : MonoBehaviour
             {
                 _jumpTimeoutDelta -= Time.deltaTime;
             }
-            if (!_input.willJump)
+            if (!_input.jump)
                 _input.jumpHeld = false;
         }
         else
@@ -395,7 +395,7 @@ public class RalphController : MonoBehaviour
         // update animator if using character
         if (_hasAnimator)
         {
-            Animator.SetBool(_animIDJump, _input.willJump);
+            Animator.SetBool(_animIDJump, _input.jump);
         }
     }
 
