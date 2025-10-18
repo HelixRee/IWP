@@ -302,8 +302,6 @@ public class RalphController : MonoBehaviour
             Animator.SetFloat(_animIDSpeedX, Mathf.Lerp(Animator.GetFloat(_animIDSpeedX), relativeVel.x, 12f * Time.deltaTime));
             if (Animator.GetFloat(_animIDSpeedX) < 0.001f) Animator.SetFloat(_animIDSpeedX, 0f);
             if (Animator.GetFloat(_animIDSpeedZ) < 0.001f) Animator.SetFloat(_animIDSpeedZ, 0f);
-            //Debug.Log(relativeVel);
-            //Animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
         }
     }
     private void DriftPrevention()
