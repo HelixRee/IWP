@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 628a86a18a0be954d95aaf05c5ceb494
+guid: 789cab952677e7f44af5070bc8381e11
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jump Falling Down
+      name: Forward Jump Start R
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 17
-      lastFrame: 18
+      firstFrame: 0
+      lastFrame: 6
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

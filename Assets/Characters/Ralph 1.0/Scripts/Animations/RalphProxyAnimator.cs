@@ -68,6 +68,7 @@ public class RalphProxyAnimator : MonoBehaviour
 
     void UpdateRootMotion()
     {
+        Source.Pelvis.localPosition = Vector3.ClampMagnitude(Source.Pelvis.localPosition, 1f);
         Ralph.SetPelvisOffset(Source.GetPelvisOffset() * _scaleRatio);
 
         Vector3 clampedPosition = HipFollower.Target.position;

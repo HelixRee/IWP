@@ -298,8 +298,9 @@ public class RalphController : MonoBehaviour
         if (_hasAnimator)
         {
             Vector3 relativeVel = _controller.transform.InverseTransformDirection(_controller.velocity);
-            Animator.SetFloat(_animIDSpeedZ, Mathf.Lerp(Animator.GetFloat(_animIDSpeedZ), relativeVel.z, 12f * Time.deltaTime));
             Animator.SetFloat(_animIDSpeedX, Mathf.Lerp(Animator.GetFloat(_animIDSpeedX), relativeVel.x, 12f * Time.deltaTime));
+            Animator.SetFloat(_animIDSpeedZ, Mathf.Lerp(Animator.GetFloat(_animIDSpeedZ), relativeVel.z, 12f * Time.deltaTime));
+            //Animator.SetFloat(_animIDSpeedZ, 1);
             if (Animator.GetFloat(_animIDSpeedX) < 0.001f) Animator.SetFloat(_animIDSpeedX, 0f);
             if (Animator.GetFloat(_animIDSpeedZ) < 0.001f) Animator.SetFloat(_animIDSpeedZ, 0f);
         }
