@@ -1328,7 +1328,7 @@ MonoBehaviour:
   GroundedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}
   footBaseScalar: 1.4
-  stepDepthScalar: 0.85
+  stepDepthScalar: 1.3
   TiltRange: {x: 8, y: -45}
 --- !u!1 &89612130
 GameObject:
@@ -63412,7 +63412,7 @@ MonoBehaviour:
   GroundedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}
   footBaseScalar: 1.4
-  stepDepthScalar: 0.85
+  stepDepthScalar: 1.3
   TiltRange: {x: 45, y: -8}
 --- !u!43 &1940452214
 Mesh:

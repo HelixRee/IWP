@@ -34,8 +34,8 @@ ModelImporter:
       name: Forward Jump Falling Down R
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 10
-      lastFrame: 16
+      firstFrame: 11
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
