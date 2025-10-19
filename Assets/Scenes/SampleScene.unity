@@ -1332,6 +1332,9 @@ MonoBehaviour:
   TiltRange: {x: 8, y: -45}
   onLegGrounded:
     m_PersistentCalls:
+      m_Calls: []
+  onLegStopGrounded:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2105405176}
         m_TargetAssemblyTypeName: RalphController, Assembly-CSharp
@@ -1343,7 +1346,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &89612130
 GameObject:
@@ -63431,6 +63434,9 @@ MonoBehaviour:
   TiltRange: {x: 45, y: -8}
   onLegGrounded:
     m_PersistentCalls:
+      m_Calls: []
+  onLegStopGrounded:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2105405176}
         m_TargetAssemblyTypeName: RalphController, Assembly-CSharp
@@ -63442,7 +63448,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!43 &1940452214
 Mesh:

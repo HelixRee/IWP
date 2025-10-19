@@ -147,6 +147,7 @@ public class RalphLegAnimator : BaseRalphAnimator
     private float _lowerLegLength = 0f;
 
     public UnityEvent onLegGrounded;
+    public UnityEvent onLegStopGrounded;
     public override void ManualInit()
     {
         Source.Init();
@@ -204,7 +205,11 @@ public class RalphLegAnimator : BaseRalphAnimator
         else
         {
             _groundedTransition = Mathf.Lerp(_groundedTransition, 0, 12f * Time.deltaTime);
-            _legGrounded = false;
+            if (_legGrounded)
+            {
+                onLegStopGrounded.Invoke();
+                _legGrounded = false;
+            }
         }
 
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength * 0.66f, GroundLayers);
