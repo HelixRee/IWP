@@ -1,6 +1,7 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RalphLegAnimator : BaseRalphAnimator
 {
@@ -144,6 +145,8 @@ public class RalphLegAnimator : BaseRalphAnimator
 
     private float _upperLegLength = 0f;
     private float _lowerLegLength = 0f;
+
+    public UnityEvent onLegGrounded;
     public override void ManualInit()
     {
         Source.Init();
@@ -163,6 +166,7 @@ public class RalphLegAnimator : BaseRalphAnimator
     private float _smoothedRaycastDistance = 0f;
     private bool _validTarget = true;
     private float _groundedTransition = 0f;
+    private bool _legGrounded = false;
     public override void ManualUpdate()
     {
         // Connector movement
@@ -189,9 +193,19 @@ public class RalphLegAnimator : BaseRalphAnimator
         //Debug.Log(name + ", " + (Source.Toe.position.y - Source.Hips.parent.position.y));
         // Foot grounded
         if (Source.Toe.position.y - Source.Hips.parent.position.y < 0.02f && IsGrounded)
+        {
+            if (!_legGrounded)
+            {
+                onLegGrounded.Invoke();
+                _legGrounded = true;
+            }
             _groundedTransition = Mathf.Lerp(_groundedTransition, 1, 12f * Time.deltaTime);
+        }
         else
+        {
             _groundedTransition = Mathf.Lerp(_groundedTransition, 0, 12f * Time.deltaTime);
+            _legGrounded = false;
+        }
 
         _groundDetected = Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit hitInfo, _ralphLegLength * 0.66f, GroundLayers);
 

@@ -103,6 +103,7 @@ public class RalphController : MonoBehaviour
     private int _animIDGrounded;
     private int _animIDJump;
     private int _animIDFreeFall;
+    private int _animIDLeftFootFlag;
 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
@@ -189,6 +190,7 @@ public class RalphController : MonoBehaviour
         _animIDGrounded = Animator.StringToHash("Grounded");
         _animIDJump = Animator.StringToHash("Jump");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
+        _animIDLeftFootFlag = Animator.StringToHash("isOnLeftFoot");
     }
 
     private void GroundedCheck()
@@ -426,7 +428,10 @@ public class RalphController : MonoBehaviour
             new Vector3(transform.position.x + offset.x, transform.position.y - GroundedOffset, transform.position.z + offset.z),
             GroundedRadius);
     }
-
+    public void OnStep(bool isLeft)
+    {
+        Animator.SetBool(_animIDLeftFootFlag, isLeft);
+    }
     //private void OnFootstep(AnimationEvent animationEvent)
     //{
     //    if (animationEvent.animatorClipInfo.weight > 0.5f)

@@ -8,4 +8,9 @@ public class RalphAnimationEventHolder : MonoBehaviour
     {
         _onJumpStart.Invoke();
     }
+
+    //public void OnStepLeft()
+    //{
+    //    Debug.Log("Ahhhhh");
+    //}
 }
