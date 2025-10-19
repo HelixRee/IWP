@@ -59281,7 +59281,7 @@ MonoBehaviour:
   Target: {fileID: 1898278898}
   LockPosition: 0
   Frequency: 3
-  Damping: 0.5
+  Damping: 0.3
   Readiness: 2
   MaxDistance: 0.05
   DistanceAnchor: {fileID: 0}
