@@ -140,7 +140,10 @@ public class RalphController : MonoBehaviour
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
     }
-
+    private void OnValidate()
+    {
+        _controller = GetComponent<CharacterController>();
+    }
     private void Start()
     {
         //Time.timeScale = 0.2f;
@@ -165,7 +168,17 @@ public class RalphController : MonoBehaviour
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
-
+    private Vector3 _groundNormal = Vector3.zero;
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // Access information about the collision
+        _groundNormal = hit.normal;
+        _groundNormal.y = 0;
+        //Debug.Log("Hit object: " + hit.normal);
+        //Debug.Log("Hit object: " + hit.gameObject.name);
+        //Debug.Log("Hit normal: " + hit.normal);
+        //Debug.Log("Hit point: " + hit.point);
+    }
     private void Update()
     {
         if (!Animator)
@@ -175,6 +188,7 @@ public class RalphController : MonoBehaviour
 
         JumpAndGravity();
         GroundedCheck();
+        Slide();
         Move();
     }
 
@@ -236,7 +250,11 @@ public class RalphController : MonoBehaviour
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
     }
-
+    private void Slide()
+    {
+        if (!Grounded || _groundNormal.magnitude < 0.3f) return;
+        //_controller.Move(_groundNormal * Time.deltaTime);
+    }
     private void Move()
     {
         // set handTarget speed based on move speed, sprint speed and if sprint is pressed

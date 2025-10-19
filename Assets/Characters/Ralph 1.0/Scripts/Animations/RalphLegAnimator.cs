@@ -224,7 +224,6 @@ public class RalphLegAnimator : BaseRalphAnimator
         //_smoothedRaycastDistance = _groundDetected ? hitInfo.distance : _ralphLegLength * 0.66f;
 
 
-
         //Physics.Raycast(_raycastStartPos, -Ralph.Anchor.forward, out RaycastHit extendedHitInfo, _ralphLegLength, GroundLayers);
 
         // willJump cheat
@@ -239,6 +238,8 @@ public class RalphLegAnimator : BaseRalphAnimator
 
         //ActiveTarget = _groundDetected ? GroundedTarget : DirectTarget;
         ActiveTarget = Vector3.Lerp(DirectTarget, GroundedTarget, _groundedTransition);
+        CalculateTilt();
+
         //ActiveTarget = GroundedTarget;
         SetZRotation(Ralph.UpperLegPitch, 0);
 
