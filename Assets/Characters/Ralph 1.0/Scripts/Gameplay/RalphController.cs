@@ -171,9 +171,12 @@ public class RalphController : MonoBehaviour
     private Vector3 _groundNormal = Vector3.zero;
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        // Access information about the collision
-        _groundNormal = hit.normal;
-        _groundNormal.y = 0;
+        
+        // Cancel velocity when hitting head
+        if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
+            _verticalVelocity = 0f;
+        //_groundNormal = hit.normal;
+        //_groundNormal.y = 0;
         //Debug.Log("Hit object: " + hit.normal);
         //Debug.Log("Hit object: " + hit.gameObject.name);
         //Debug.Log("Hit normal: " + hit.normal);
@@ -188,7 +191,7 @@ public class RalphController : MonoBehaviour
 
         JumpAndGravity();
         GroundedCheck();
-        Slide();
+        //Slide();
         Move();
     }
 
@@ -252,7 +255,7 @@ public class RalphController : MonoBehaviour
     }
     private void Slide()
     {
-        if (!Grounded || _groundNormal.magnitude < 0.3f) return;
+        //if (!Grounded || _groundNormal.magnitude < 0.3f) return;
         //_controller.Move(_groundNormal * Time.deltaTime);
     }
     private void Move()
