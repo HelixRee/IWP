@@ -2266,7 +2266,7 @@ Transform:
   m_GameObject: {fileID: 557697440}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.97513914, y: 0.57, z: -2.309318}
+  m_LocalPosition: {x: 0.9, y: 0.57, z: 0.009}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11371,7 +11371,7 @@ PrefabInstance:
       objectReference: {fileID: 1267214842}
     - target: {fileID: 7196166127029774567, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: _cycleHue
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7436171251605984466, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15952,7 +15952,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1245904487}
 --- !u!33 &1751135231
