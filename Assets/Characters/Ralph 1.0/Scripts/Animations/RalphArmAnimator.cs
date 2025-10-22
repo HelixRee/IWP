@@ -99,7 +99,7 @@ public class RalphArmAnimator : BaseRalphAnimator
 
     public override void ManualUpdate()
     {
-        //UpdateHandLogic();
+        UpdateHandLogic();
         UpdateHandIK();
     }
 
@@ -122,6 +122,17 @@ public class RalphArmAnimator : BaseRalphAnimator
 
         Gizmos.color = _validTarget ? new Color(0f,1f,0f,0.5f) : new Color(1f, 0f, 0f, 0.5f);
         Gizmos.DrawSphere(currentHandTarget, _lowerArmLength * 0.1f);
+
+        Gizmos.color = new Color(1, 1, 0, 0.5f);
+        Gizmos.DrawSphere(overrideHandTarget, _lowerArmLength * 0.1f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, -transform.parent.right * _totalArmLength);
+        //Vector3 dir = (-transform.parent.right + transform.parent.forward).normalized;
+        //Gizmos.DrawRay(transform.position, dir * _totalArmLength);
+
+        //Gizmos.DrawRay(transform.position, (overrideHandTarget - transform.position).normalized * _totalArmLength);
+        Gizmos.DrawRay(transform.position, _prevAuxCastDir * _totalArmLength);
     }
 
     private void OnDrawGizmosSelected()
@@ -129,9 +140,6 @@ public class RalphArmAnimator : BaseRalphAnimator
         //Gizmos.color = new Color(0, 1, 0, 0.5f);
         //Gizmos.DrawRay(transform.position, transform.parent.forward * _totalArmLength);
         //Vector3 cubeSize = new Vector3(armLength, 0.2f, armLength);
-
-
-
 
         //Matrix4x4 matrix = transform.localToWorldMatrix;
         //matrix.SetTRS(transform.position, transform.parent.rotation, Vector3.one);
@@ -141,42 +149,88 @@ public class RalphArmAnimator : BaseRalphAnimator
         //Gizmos.matrix = Matrix4x4.identity;
 
 
-
-
         // Target logic
         //Gizmos.color = new Color(1, 0, 0, 0.5f);
 
-
-
-
     }
-
+    private bool _auxCast = false;
+    private Vector3 _auxCastDir = Vector3.zero;
+    private Vector3 _prevAuxCastDir = Vector3.zero;
     private void UpdateHandLogic()
     {
         int offsetMult = isLeft ? -1 : 1;
-        Collider[] colliders = Physics.OverlapBox(
-            transform.position
-            + transform.parent.forward * offsetMult * _totalArmLength / 4f
-            - transform.parent.right * _totalArmLength / 2f,
-            _colliderSize * 0.5f,
-            transform.parent.rotation,
-            GroundLayers.value);
+        //Collider[] colliders = Physics.OverlapBox(
+        //    transform.position
+        //    + transform.parent.forward * offsetMult * _totalArmLength / 4f
+        //    - transform.parent.right * _totalArmLength / 2f,
+        //    _colliderSize * 0.5f,
+        //    transform.parent.rotation,
+        //    GroundLayers.value);
+        Physics.Raycast(
+            transform.position, 
+            -transform.parent.right, 
+            out RaycastHit hitInfo, 
+            _totalArmLength, 
+            GroundLayers.value, 
+            QueryTriggerInteraction.Ignore);
 
-        if (colliders.Length > 0)
+        if (hitInfo.collider != null)
         {
             overrideAnimation = true;
-            foreach (Collider collider in colliders)
-            {
-                //Gizmos.DrawSphere(collider.ClosestPoint(transform.position), 0.1f);
-                overrideHandTarget = collider.ClosestPoint(transform.position);
-            }
+            overrideHandTarget = hitInfo.point + transform.parent.right * 0.05f;
+            //overrideHandTarget = hitInfo.point + hitInfo.normal * 0.05f;
+            _auxCast = false;
         }
         else
+        {
+            //// If override animation cancelled save direction and keep a raycast at that angle
+            //if (ShouldCancelOverride())
+            //{
+            //    _auxCastDir = _prevAuxCastDir;
+            //    _auxCast = true;
+            //}
+            //else
+            //{
+            //    _prevAuxCastDir = (overrideHandTarget - transform.position).normalized;
+            //}
+
+            ////Vector3 dir = (overrideHandTarget - transform.parent.right * 0.05f - transform.position).normalized;
+            ////Vector3 dir = (-transform.parent.right + transform.parent.forward).normalized;
+            //if (_auxCast)
+            //{
+            //    Physics.Raycast(
+            //        transform.position,
+            //        _auxCastDir,
+            //        out hitInfo,
+            //        _totalArmLength,
+            //        GroundLayers.value,
+            //        QueryTriggerInteraction.Ignore);
+            //    if (hitInfo.collider != null)
+            //    {
+            //        overrideAnimation = true;
+            //        overrideHandTarget = hitInfo.point - _auxCastDir * 0.05f;
+            //    }
+            //}
+
+        }
+
+        // If dot shows that position is no longer infront of player, cancel the connection
+        if (!overrideAnimation) return;
+        if (ShouldCancelOverride())
         {
             overrideAnimation = false;
         }
     }
+    private bool ShouldCancelOverride()
+    {
+        Vector3 disp = overrideHandTarget - transform.position;
+        float fwdDot = Vector3.Dot(disp.normalized, -transform.parent.right);
+        float rightDot = Vector3.Dot(disp.normalized, transform.parent.forward * offsetMult);
+        //Debug.Log("Forward: " + fwdDot + ", Right: " + rightDot + ", " + name);
 
+        return (fwdDot < 0.1f || rightDot < -0.15f);
+    }
+    public float debugAngle;
     private void UpdateHandIK()
     {
         float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 8;
@@ -194,6 +248,18 @@ public class RalphArmAnimator : BaseRalphAnimator
         currentHandTarget = Vector3.Lerp(handTarget, overrideHandTarget, overrideTransition);
 
         Vector3 currentSourceAnchorToEndDir = (currentHandTarget - Ralph.Anchor.position).normalized;
+        {
+            Vector3 targetDisp = currentHandTarget - Ralph.Anchor.position;
+            float x = Vector3.Dot(targetDisp, Ralph.Anchor.parent.forward);
+            float y = Vector3.Dot(targetDisp, -Ralph.Anchor.parent.right);
+
+            float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
+            sourceAnchorToElbowDir = Quaternion.Euler(0f, -angle, 0f) * sourceAnchorToElbowDir;
+            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
+            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
+            debugAngle = angle;
+            //Debug.Log(-angle + ", " + name);
+        }
 
         // Find arm rotation plane
         Vector3 armPlaneNormal = Vector3.Cross(currentSourceAnchorToEndDir, sourceAnchorToElbowDir);
@@ -228,8 +294,9 @@ public class RalphArmAnimator : BaseRalphAnimator
 
             float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
             //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
-            Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
-            Debug.Log(-angle + ", " + name);
+            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
+            debugAngle = angle;
+            //Debug.Log(-angle + ", " + name);
         }
     }
 }
