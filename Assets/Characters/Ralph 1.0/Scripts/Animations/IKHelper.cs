@@ -132,7 +132,11 @@ public class SODVec3
     public Vector3 Value
     {
         get { return y; }
-        set { y = value; }
+        set { y = value;}
+    }
+    public Vector3 AbsValue
+    {
+        set { y = value; xp = value; yd = Vector3.zero; }
     }
     public SODVec3(Vector3 x0, float f = 1, float z = 0.5f, float r = 2)
     {

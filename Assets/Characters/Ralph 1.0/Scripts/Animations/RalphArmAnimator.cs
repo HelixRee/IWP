@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class RalphArmAnimator : BaseRalphAnimator
@@ -56,7 +57,7 @@ public class RalphArmAnimator : BaseRalphAnimator
     public TransformGroup Source;
     [Header("Ralph")]
     public Vector3 handTarget;
-    public Vector3 overrideHandTarget;
+    public SODVec3 overrideHandTarget;
     public Vector3 currentHandTarget;
     public bool overrideAnimation = false;
     public float overrideTransition = 0;
@@ -95,6 +96,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         _colliderSize = new Vector3(_totalArmLength / 2, 0.2f, _totalArmLength / 2);
 
         _scaleRatio = ralphLength / sourceLength;
+        overrideHandTarget = new(Vector3.zero);
     }
 
     public override void ManualUpdate()
@@ -124,12 +126,12 @@ public class RalphArmAnimator : BaseRalphAnimator
         Gizmos.DrawSphere(currentHandTarget, _lowerArmLength * 0.1f);
 
         Gizmos.color = new Color(1, 1, 0, 0.5f);
-        Gizmos.DrawSphere(overrideHandTarget, _lowerArmLength * 0.1f);
+        Gizmos.DrawSphere(overrideHandTarget.Value, _lowerArmLength * 0.1f);
 
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, -transform.parent.right * _totalArmLength);
-        //Vector3 dir = (-transform.parent.right + transform.parent.forward).normalized;
-        //Gizmos.DrawRay(transform.position, dir * _totalArmLength);
+        Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
+        Gizmos.DrawRay(transform.position, dir * _totalArmLength);
 
         //Gizmos.DrawRay(transform.position, (overrideHandTarget - transform.position).normalized * _totalArmLength);
         Gizmos.DrawRay(transform.position, _prevAuxCastDir * _totalArmLength);
@@ -153,66 +155,75 @@ public class RalphArmAnimator : BaseRalphAnimator
         //Gizmos.color = new Color(1, 0, 0, 0.5f);
 
     }
-    private bool _auxCast = false;
-    private Vector3 _auxCastDir = Vector3.zero;
+    //private bool _auxCast = false;
+    //private Vector3 _auxCastDir = Vector3.zero;
     private Vector3 _prevAuxCastDir = Vector3.zero;
+    private Vector3 _tempHandTarget = Vector3.zero;
     private void UpdateHandLogic()
     {
         int offsetMult = isLeft ? -1 : 1;
-        //Collider[] colliders = Physics.OverlapBox(
-        //    transform.position
-        //    + transform.parent.forward * offsetMult * _totalArmLength / 4f
-        //    - transform.parent.right * _totalArmLength / 2f,
-        //    _colliderSize * 0.5f,
-        //    transform.parent.rotation,
-        //    GroundLayers.value);
+
         Physics.Raycast(
-            transform.position, 
-            -transform.parent.right, 
-            out RaycastHit hitInfo, 
-            _totalArmLength, 
-            GroundLayers.value, 
+            transform.position,
+            _prevAuxCastDir,
+            out RaycastHit hitInfo,
+            _totalArmLength,
+            GroundLayers.value,
             QueryTriggerInteraction.Ignore);
+        if (hitInfo.collider == null)
+        {
+
+            Vector3 dir = (currentHandTarget - transform.position);
+            dir = (dir - dir.normalized * 0.05f).normalized;
+            _prevAuxCastDir = dir;
+            Physics.Raycast(
+                transform.position,
+                _prevAuxCastDir,
+                out hitInfo,
+                _totalArmLength,
+                GroundLayers.value,
+                QueryTriggerInteraction.Ignore);
+        }
 
         if (hitInfo.collider != null)
         {
             overrideAnimation = true;
-            overrideHandTarget = hitInfo.point + transform.parent.right * 0.05f;
-            //overrideHandTarget = hitInfo.point + hitInfo.normal * 0.05f;
-            _auxCast = false;
+            overrideHandTarget.AbsValue = hitInfo.point - _prevAuxCastDir * 0.05f;
         }
-        else
+        bool invalidTarget = ShouldCancelOverride();
+        if (invalidTarget) hitInfo = new RaycastHit();
+
+        if (hitInfo.collider == null)
         {
-            //// If override animation cancelled save direction and keep a raycast at that angle
-            //if (ShouldCancelOverride())
-            //{
-            //    _auxCastDir = _prevAuxCastDir;
-            //    _auxCast = true;
-            //}
-            //else
-            //{
-            //    _prevAuxCastDir = (overrideHandTarget - transform.position).normalized;
-            //}
+            Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
 
-            ////Vector3 dir = (overrideHandTarget - transform.parent.right * 0.05f - transform.position).normalized;
-            ////Vector3 dir = (-transform.parent.right + transform.parent.forward).normalized;
-            //if (_auxCast)
-            //{
-            //    Physics.Raycast(
-            //        transform.position,
-            //        _auxCastDir,
-            //        out hitInfo,
-            //        _totalArmLength,
-            //        GroundLayers.value,
-            //        QueryTriggerInteraction.Ignore);
-            //    if (hitInfo.collider != null)
-            //    {
-            //        overrideAnimation = true;
-            //        overrideHandTarget = hitInfo.point - _auxCastDir * 0.05f;
-            //    }
-            //}
-
+            Physics.Raycast(
+                transform.position,
+                dir,
+                out hitInfo,
+                _totalArmLength,
+                GroundLayers.value,
+                QueryTriggerInteraction.Ignore);
+            if (hitInfo.collider != null)
+                _prevAuxCastDir = dir;
+                //_prevAuxCastDir = Vector3.Lerp(_prevAuxCastDir, dir, 6f * Time.deltaTime);
         }
+
+        if (hitInfo.collider == null)
+        {
+            Vector3 dir = -transform.parent.right;
+
+            Physics.Raycast(
+                transform.position,
+                dir,
+                out hitInfo,
+                _totalArmLength,
+                GroundLayers.value,
+                QueryTriggerInteraction.Ignore);
+            if (hitInfo.collider != null)
+                _prevAuxCastDir = dir;
+        }
+
 
         // If dot shows that position is no longer infront of player, cancel the connection
         if (!overrideAnimation) return;
@@ -223,12 +234,12 @@ public class RalphArmAnimator : BaseRalphAnimator
     }
     private bool ShouldCancelOverride()
     {
-        Vector3 disp = overrideHandTarget - transform.position;
+        Vector3 disp = overrideHandTarget.Value - transform.position;
         float fwdDot = Vector3.Dot(disp.normalized, -transform.parent.right);
         float rightDot = Vector3.Dot(disp.normalized, transform.parent.forward * offsetMult);
         //Debug.Log("Forward: " + fwdDot + ", Right: " + rightDot + ", " + name);
 
-        return (fwdDot < 0.1f || rightDot < -0.15f);
+        return (fwdDot < 0.1f || rightDot < -0.15f || disp.magnitude > _totalArmLength);
     }
     public float debugAngle;
     private void UpdateHandIK()
@@ -245,7 +256,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         // Set proxy end position to match animation
         handTarget = Ralph.Anchor.position + _sourceAnchorToEndDir * _ralphAnchorToEndDist;
 
-        currentHandTarget = Vector3.Lerp(handTarget, overrideHandTarget, overrideTransition);
+        currentHandTarget = Vector3.Lerp(handTarget, overrideHandTarget.Value, overrideTransition);
 
         Vector3 currentSourceAnchorToEndDir = (currentHandTarget - Ralph.Anchor.position).normalized;
         {
