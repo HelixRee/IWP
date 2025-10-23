@@ -161,6 +161,8 @@ public class RalphArmAnimator : BaseRalphAnimator
     private Vector3 _tempHandTarget = Vector3.zero;
     private void UpdateHandLogic()
     {
+        if (!IsGrounded)
+            return;
         int offsetMult = isLeft ? -1 : 1;
 
         Physics.Raycast(
@@ -246,7 +248,7 @@ public class RalphArmAnimator : BaseRalphAnimator
     {
         float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 8;
         //Debug.Log(3f * distanceMult + " : " + name);
-        overrideTransition = Mathf.Lerp(overrideTransition, overrideAnimation ? 1 : 0, 3f * distanceMult * Time.deltaTime);
+        overrideTransition = Mathf.Lerp(overrideTransition, (overrideAnimation && IsGrounded) ? 1 : 0, 3f * distanceMult * Time.deltaTime);
 
         // Calculate direction and position of end
         _sourceAnchorToEndDir = (Source.End.position - Source.Anchor.position).normalized;

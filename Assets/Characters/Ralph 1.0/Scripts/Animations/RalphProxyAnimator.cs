@@ -57,12 +57,12 @@ public class RalphProxyAnimator : MonoBehaviour
 
     void LateUpdate()
     {
-        LegAnimators.ForEach(item => { item.IsGrounded = IsGrounded; item.IsFalling = IsFalling; });
         HipFollower.ManualUpdate();
         UpdateRootMotion();
 
 
         // Update child scripts
+        updateOrder.ForEach(item => { item.IsGrounded = IsGrounded; item.IsFalling = IsFalling; });
         updateOrder.ForEach(item => { if (item.enabled) item.ManualUpdate(); });
     }
 

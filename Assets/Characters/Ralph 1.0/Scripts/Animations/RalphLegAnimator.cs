@@ -121,8 +121,6 @@ public class RalphLegAnimator : BaseRalphAnimator
     public GenericArmature Source;
     [Header("Ralph")]
     public RalphArmature Ralph;
-    public bool IsGrounded = false;
-    public bool IsFalling = false;
 
     private float _sourceLegLength;
     private float _ralphLegLength;
