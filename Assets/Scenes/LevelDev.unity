@@ -11428,6 +11428,18 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 262
       objectReference: {fileID: 0}
+    - target: {fileID: 3086770018267946252, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
+      propertyPath: Damping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086770018267946252, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
+      propertyPath: Frequency
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3086770018267946252, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
+      propertyPath: Readiness
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3165426371113913800, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -11466,7 +11478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7196166127029774567, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: _randomiseHueOnStart
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7436171251605984466, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: m_LocalPosition.x

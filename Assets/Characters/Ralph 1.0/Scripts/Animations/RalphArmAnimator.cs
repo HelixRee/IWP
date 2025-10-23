@@ -189,8 +189,12 @@ public class RalphArmAnimator : BaseRalphAnimator
 
         if (hitInfo.collider != null)
         {
-            overrideAnimation = true;
-            overrideHandTarget.AbsValue = hitInfo.point - _prevAuxCastDir * 0.05f;
+            float dot = Vector3.Dot(hitInfo.normal, -_prevAuxCastDir);
+            if (dot > 0.5f)
+            {
+                overrideAnimation = true;
+                overrideHandTarget.AbsValue = hitInfo.point - _prevAuxCastDir * 0.05f;
+            }
         }
         bool invalidTarget = ShouldCancelOverride();
         if (invalidTarget) hitInfo = new RaycastHit();
