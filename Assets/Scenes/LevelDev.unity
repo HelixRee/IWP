@@ -11309,6 +11309,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 2062216139}
+    - target: {fileID: 323829921579375363, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
+      propertyPath: m_Radius
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1639228846981789591, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -11339,11 +11343,11 @@ PrefabInstance:
       objectReference: {fileID: 770420785}
     - target: {fileID: 6922700527532823399, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: GroundedOffset
-      value: -0.24
+      value: -0.26
       objectReference: {fileID: 0}
     - target: {fileID: 6922700527532823399, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: GroundedRadius
-      value: 0.25
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6922700527532823399, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: LockCameraPosition

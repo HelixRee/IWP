@@ -95,7 +95,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         _colliderSize = new Vector3(_totalArmLength / 2, 0.2f, _totalArmLength / 2);
 
         _scaleRatio = ralphLength / sourceLength;
-        overrideHandTarget = new(Vector3.zero);
+        overrideHandTarget = new(Vector3.zero, 3, 0.5f, 2);
     }
 
     public override void ManualUpdate()
@@ -237,8 +237,12 @@ public class RalphArmAnimator : BaseRalphAnimator
             float dot = Vector3.Dot(hitInfo.normal, -_auxCastDir);
             if (dot > 0.5f)
             {
+                if (!overrideAnimation)
+                    overrideHandTarget.AbsValue = hitInfo.point - _auxCastDir * 0.05f;
+                else
+                    overrideHandTarget.Update(Time.deltaTime, hitInfo.point - _auxCastDir * 0.05f);
+
                 overrideAnimation = true;
-                overrideHandTarget.AbsValue = hitInfo.point - _auxCastDir * 0.05f;
             }
             else
                 _auxCastDir = prevAuxCastDir;
