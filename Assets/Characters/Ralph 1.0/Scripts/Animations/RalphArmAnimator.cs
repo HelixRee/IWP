@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class RalphArmAnimator : BaseRalphAnimator
@@ -158,37 +157,29 @@ public class RalphArmAnimator : BaseRalphAnimator
     //private bool _auxCast = false;
     //private Vector3 _auxCastDir = Vector3.zero;
     private Vector3 _prevAuxCastDir = Vector3.zero;
-    private Vector3 _tempHandTarget = Vector3.zero;
+    private Vector3 _localAuxCastDir = Vector3.zero;
     private void UpdateHandLogic()
     {
         if (!IsGrounded)
             return;
         int offsetMult = isLeft ? -1 : 1;
 
-        Physics.Raycast(
-            transform.position,
-            _prevAuxCastDir,
-            out RaycastHit hitInfo,
-            _totalArmLength,
-            GroundLayers.value,
-            QueryTriggerInteraction.Ignore);
+        RaycastHit hitInfo;
+        Raycast(_prevAuxCastDir, out hitInfo);
+        // If no more wall to follow keep hand position at previous position
         if (hitInfo.collider == null)
         {
 
-            Vector3 dir = (currentHandTarget - transform.position);
+            Vector3 dir = (overrideHandTarget.Value - transform.position);
             dir = (dir - dir.normalized * 0.05f).normalized;
             _prevAuxCastDir = dir;
-            Physics.Raycast(
-                transform.position,
-                _prevAuxCastDir,
-                out hitInfo,
-                _totalArmLength,
-                GroundLayers.value,
-                QueryTriggerInteraction.Ignore);
+            _localAuxCastDir = dir;
+            Raycast(_prevAuxCastDir, out hitInfo);
         }
 
         if (hitInfo.collider != null)
         {
+            // Check if surface is perpendicular to arm
             float dot = Vector3.Dot(hitInfo.normal, -_prevAuxCastDir);
             if (dot > 0.5f)
             {
@@ -203,13 +194,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         {
             Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
 
-            Physics.Raycast(
-                transform.position,
-                dir,
-                out hitInfo,
-                _totalArmLength,
-                GroundLayers.value,
-                QueryTriggerInteraction.Ignore);
+            Raycast(dir, out hitInfo);
             if (hitInfo.collider != null)
                 _prevAuxCastDir = dir;
                 //_prevAuxCastDir = Vector3.Lerp(_prevAuxCastDir, dir, 6f * Time.deltaTime);
@@ -219,13 +204,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         {
             Vector3 dir = -transform.parent.right;
 
-            Physics.Raycast(
-                transform.position,
-                dir,
-                out hitInfo,
-                _totalArmLength,
-                GroundLayers.value,
-                QueryTriggerInteraction.Ignore);
+            Raycast(dir, out hitInfo);
             if (hitInfo.collider != null)
                 _prevAuxCastDir = dir;
         }
@@ -238,6 +217,16 @@ public class RalphArmAnimator : BaseRalphAnimator
             overrideAnimation = false;
         }
     }
+    private bool Raycast(Vector3 direction, out RaycastHit hitInfo)
+    {
+        return Physics.Raycast(
+            transform.position,
+            direction,
+            out hitInfo,
+            _totalArmLength,
+            GroundLayers.value,
+            QueryTriggerInteraction.Ignore);
+    }
     private bool ShouldCancelOverride()
     {
         Vector3 disp = overrideHandTarget.Value - transform.position;
@@ -247,7 +236,7 @@ public class RalphArmAnimator : BaseRalphAnimator
 
         return (fwdDot < 0.1f || rightDot < -0.15f || disp.magnitude > _totalArmLength);
     }
-    public float debugAngle;
+    //public float debugAngle;
     private void UpdateHandIK()
     {
         float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 8;
@@ -274,7 +263,7 @@ public class RalphArmAnimator : BaseRalphAnimator
             sourceAnchorToElbowDir = Quaternion.Euler(0f, -angle, 0f) * sourceAnchorToElbowDir;
             //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
             //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
-            debugAngle = angle;
+            //debugAngle = angle;
             //Debug.Log(-angle + ", " + name);
         }
 
@@ -304,16 +293,16 @@ public class RalphArmAnimator : BaseRalphAnimator
             Ralph.End.localEulerAngles = angles;
         }
 
-        {
-            Vector3 targetDisp = currentHandTarget - Ralph.Anchor.position;
-            float x = Vector3.Dot(targetDisp, Ralph.Anchor.parent.forward);
-            float y = Vector3.Dot(targetDisp, -Ralph.Anchor.parent.right);
+        //{
+        //    Vector3 targetDisp = currentHandTarget - Ralph.Anchor.position;
+        //    float x = Vector3.Dot(targetDisp, Ralph.Anchor.parent.forward);
+        //    float y = Vector3.Dot(targetDisp, -Ralph.Anchor.parent.right);
 
-            float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
-            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
-            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
-            debugAngle = angle;
-            //Debug.Log(-angle + ", " + name);
-        }
+        //    float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
+        //    //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
+        //    //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
+        //    //debugAngle = angle;
+        //    //Debug.Log(-angle + ", " + name);
+        //}
     }
 }
