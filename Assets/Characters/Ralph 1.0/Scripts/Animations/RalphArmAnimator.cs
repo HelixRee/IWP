@@ -138,7 +138,6 @@ public class RalphArmAnimator : BaseRalphAnimator
         Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
         Gizmos.DrawRay(transform.position, dir * _totalArmLength);
 
-        //Gizmos.DrawRay(transform.position, (overrideHandTarget - transform.position).normalized * _totalArmLength);
         Gizmos.DrawRay(transform.position, _auxCastDir * _totalArmLength);
     }
 
@@ -160,8 +159,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         //Gizmos.color = new Color(1, 0, 0, 0.5f);
 
     }
-    //private bool _auxCast = false;
-    //private Vector3 _auxCastDir = Vector3.zero;
+
     private Vector3 _auxCastDir = Vector3.zero;
     private Vector3 _targetAuxCastDir = Vector3.zero;
     private RaycastHit hitInfo;
@@ -174,10 +172,9 @@ public class RalphArmAnimator : BaseRalphAnimator
         PrimaryRaycast();
         bool invalidTarget = ShouldCancelOverride();
         if (invalidTarget) hitInfo = new RaycastHit();
-        //bool flagForRetry = hitInfo.collider == null;
+
         bool inRange = false;
-        //if (flagForRetry)
-        //    _auxCastDir = Vector3.Lerp(_auxCastDir, _targetAuxCastDir, 1f * Time.deltaTime);
+
         if (hitInfo.collider == null)
         {
             Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
@@ -188,7 +185,6 @@ public class RalphArmAnimator : BaseRalphAnimator
                 inRange = true;
                 _targetAuxCastDir = dir;
             }
-                //_auxCastDir = Vector3.Lerp(_auxCastDir, dir, 6f * Time.deltaTime);
         }
 
         if (hitInfo.collider == null)
@@ -202,8 +198,7 @@ public class RalphArmAnimator : BaseRalphAnimator
                 _targetAuxCastDir = dir;
             }
         }
-        //if (flagForRetry)
-        //    PrimaryRaycast();
+
         if (inRange)
         {
             Vector3 startAuxCastDir = _auxCastDir;
@@ -213,7 +208,6 @@ public class RalphArmAnimator : BaseRalphAnimator
                 PrimaryRaycast();
                 if (!ShouldCancelOverride()) break;
             }
-            //Debug.Log(i);
         }
         // If dot shows that position is no longer infront of player, cancel the connection
         if (!overrideAnimation) return;
@@ -295,10 +289,6 @@ public class RalphArmAnimator : BaseRalphAnimator
 
             float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
             sourceAnchorToElbowDir = Quaternion.Euler(0f, -angle, 0f) * sourceAnchorToElbowDir;
-            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
-            //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
-            //debugAngle = angle;
-            //Debug.Log(-angle + ", " + name);
         }
 
         // Find arm rotation plane
@@ -326,17 +316,5 @@ public class RalphArmAnimator : BaseRalphAnimator
             angles.x = angles.z = 0;
             Ralph.End.localEulerAngles = angles;
         }
-
-        //{
-        //    Vector3 targetDisp = currentHandTarget - Ralph.Anchor.position;
-        //    float x = Vector3.Dot(targetDisp, Ralph.Anchor.parent.forward);
-        //    float y = Vector3.Dot(targetDisp, -Ralph.Anchor.parent.right);
-
-        //    float angle = Vector2.SignedAngle(Vector2.up, new Vector2(x, y));
-        //    //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, isLeft ? -90 : 90, overrideTransition));
-        //    //Ralph.Anchor.Rotate(Vector3.right, Mathf.Lerp(0, -angle, overrideTransition));
-        //    //debugAngle = angle;
-        //    //Debug.Log(-angle + ", " + name);
-        //}
     }
 }
