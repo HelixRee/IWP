@@ -407,6 +407,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 285589432081699295}
   LockPosition: 0
@@ -626,6 +628,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Bones:
   - {fileID: 2748111124209943858}
   - {fileID: 6605048681369517348}
@@ -646,6 +650,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Source: {fileID: 7768118992909094211}
   Weight: 0.502
 --- !u!1 &586460106478069476
@@ -1515,6 +1521,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 2079166063218841554}
   LockPosition: 0
@@ -10251,7 +10259,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 241
+  m_VersionIndex: 265
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19065,7 +19073,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 241
+  m_VersionIndex: 265
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19439,6 +19447,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 283274369224911194}
   LockPosition: 0
@@ -20435,6 +20445,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 8014437211804217163}
   LockPosition: 0
@@ -21059,6 +21071,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Weight: 0.404
   HeadTarget: {fileID: 7875445475974881798}
   ChildAnimations:
@@ -22181,6 +22195,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Source:
     Hips: {fileID: 6811462000426403301}
     UpperLeg: {fileID: 7206530469005849306}
@@ -22200,13 +22216,11 @@ MonoBehaviour:
     initialLowerPitch: 0
     Foot: {fileID: 4577293162142870697}
     _connectorExtension: 0
-  IsGrounded: 0
-  IsFalling: 0
   TargetOffset: {x: 0.02, y: -0.045, z: 0}
   DirectTarget: {x: 0, y: 0, z: 0}
   GroundedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}
-  footBaseScalar: 1.4
+  footBaseScalar: 1
   stepDepthScalar: 1.3
   TiltRange: {x: 8, y: -45}
   onLegGrounded:
@@ -23418,7 +23432,7 @@ GameObject:
   m_Layer: 3
   m_Name: Head Target Follower
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -23452,12 +23466,14 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 4519397290005522721}
   LockPosition: 0
-  Frequency: 5
-  Damping: 0.7
-  Readiness: 2
+  Frequency: 3
+  Damping: 0.5
+  Readiness: 1
   MaxDistance: 0.1
   DistanceAnchor: {fileID: 0}
   AnchorMaxDistance: 0.1
@@ -23770,6 +23786,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 2089711335100504299}
   LockPosition: 0
@@ -32388,7 +32406,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 241
+  m_VersionIndex: 265
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -34382,15 +34400,22 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Source:
     Anchor: {fileID: 4972096935409914274}
     Elbow: {fileID: 8325615581863476323}
     End: {fileID: 5720033320455984985}
   handTarget: {x: 0, y: 0, z: 0}
+  currentHandTarget: {x: 0, y: 0, z: 0}
+  overrideAnimation: 0
+  overrideTransition: 0
+  isLeft: 1
   Ralph:
     Anchor: {fileID: 5604182713748911940}
     Elbow: {fileID: 9025559125634614341}
     End: {fileID: 3054319822685266804}
+  debugAngle: 0
 --- !u!1 &5171825425375574999
 GameObject:
   m_ObjectHideFlags: 0
@@ -36164,15 +36189,22 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Source:
     Anchor: {fileID: 5050925416131206559}
     Elbow: {fileID: 3949262979541743410}
     End: {fileID: 930111942606208338}
   handTarget: {x: 0, y: 0, z: 0}
+  currentHandTarget: {x: 0, y: 0, z: 0}
+  overrideAnimation: 0
+  overrideTransition: 0
+  isLeft: 0
   Ralph:
     Anchor: {fileID: 6448711681231501723}
     Elbow: {fileID: 1276340242957764809}
     End: {fileID: 3566257193632263069}
+  debugAngle: 0
 --- !u!1 &6316539074844684010
 GameObject:
   m_ObjectHideFlags: 0
@@ -36252,6 +36284,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 7312356275651978092}
   LockPosition: 0
@@ -36680,6 +36714,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   ChildAnimations:
   - {fileID: 8287980015666950494}
   PackMount: {fileID: 6338668737096842747}
@@ -36898,6 +36934,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   ControlPointL: {fileID: 7405647649208317391}
   ControlPointR: {fileID: 2160713620696692763}
   childAnimations:
@@ -37960,6 +37998,7 @@ MonoBehaviour:
   - {fileID: 1194286610500362712}
   - {fileID: 4742710704946810320}
   - {fileID: 657142920450095028}
+  - {fileID: 3086770018267946252}
   - {fileID: 7303453420818697479}
   - {fileID: 472540772877067362}
   - {fileID: 5627240987988698575}
@@ -38231,6 +38270,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   _unparentOnAwake: 1
   Target: {fileID: 2262323648928848546}
   LockPosition: 0
@@ -38449,6 +38490,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   Source:
     Hips: {fileID: 6811462000426403301}
     UpperLeg: {fileID: 3952383394080095385}
@@ -38468,13 +38511,11 @@ MonoBehaviour:
     initialLowerPitch: 0
     Foot: {fileID: 9142271669140106773}
     _connectorExtension: 0
-  IsGrounded: 0
-  IsFalling: 0
   TargetOffset: {x: -0.02, y: -0.045, z: 0}
   DirectTarget: {x: 0, y: 0, z: 0}
   GroundedTarget: {x: 0, y: 0, z: 0}
   ActiveTarget: {x: 0, y: 0, z: 0}
-  footBaseScalar: 1.4
+  footBaseScalar: 1
   stepDepthScalar: 1.3
   TiltRange: {x: 45, y: -8}
   onLegGrounded:
@@ -48245,7 +48286,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 241
+  m_VersionIndex: 265
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -48763,12 +48804,12 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 0.6
-  m_Radius: 0.12
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.15
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 0.31, z: 0.04}
+  m_Center: {x: 0, y: 0.31, z: -0.08}
 --- !u!114 &6922700527532823399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49327,6 +49368,8 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 0
+  IsGrounded: 0
+  IsFalling: 0
   ControlPointL: {fileID: 9030826567167490631}
   ControlPointR: {fileID: 3762184626582725670}
   childAnimations:
