@@ -123,7 +123,10 @@ public class RalphArmAnimator : BaseRalphAnimator
 
         Gizmos.color = _validTarget ? new Color(0f,1f,0f,0.5f) : new Color(1f, 0f, 0f, 0.5f);
         Gizmos.DrawSphere(handTarget, _lowerArmLength * 0.1f);
+    }
 
+    private void OnDrawGizmosSelected()
+    {
         if (overrideAnimation)
         {
             Gizmos.color = new Color(1, 1, 0, 0.5f);
@@ -139,25 +142,6 @@ public class RalphArmAnimator : BaseRalphAnimator
         Gizmos.DrawRay(transform.position, dir * _totalArmLength);
 
         Gizmos.DrawRay(transform.position, _auxCastDir * _totalArmLength);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        //Gizmos.color = new Color(0, 1, 0, 0.5f);
-        //Gizmos.DrawRay(transform.position, transform.parent.forward * _totalArmLength);
-        //Vector3 cubeSize = new Vector3(armLength, 0.2f, armLength);
-
-        //Matrix4x4 matrix = transform.localToWorldMatrix;
-        //matrix.SetTRS(transform.position, transform.parent.rotation, Vector3.one);
-        //Gizmos.matrix = matrix;
-        //Gizmos.DrawCube(Vector3.forward * offsetMult * _totalArmLength / 4f - Vector3.right * _totalArmLength / 2f, _colliderSize);
-
-        //Gizmos.matrix = Matrix4x4.identity;
-
-
-        // Target logic
-        //Gizmos.color = new Color(1, 0, 0, 0.5f);
-
     }
 
     private Vector3 _auxCastDir = Vector3.zero;
