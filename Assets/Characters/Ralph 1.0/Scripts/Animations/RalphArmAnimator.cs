@@ -122,10 +122,16 @@ public class RalphArmAnimator : BaseRalphAnimator
         Ralph.DrawArmature();
 
         Gizmos.color = _validTarget ? new Color(0f,1f,0f,0.5f) : new Color(1f, 0f, 0f, 0.5f);
-        Gizmos.DrawSphere(currentHandTarget, _lowerArmLength * 0.1f);
+        Gizmos.DrawSphere(handTarget, _lowerArmLength * 0.1f);
 
-        Gizmos.color = new Color(1, 1, 0, 0.5f);
-        Gizmos.DrawSphere(overrideHandTarget.Value, _lowerArmLength * 0.1f);
+        if (overrideAnimation)
+        {
+            Gizmos.color = new Color(1, 1, 0, 0.5f);
+            Gizmos.DrawSphere(overrideHandTarget.Value, _lowerArmLength * 0.1f);
+
+        }
+        Gizmos.color = new Color(0, 0, 1, 0.5f);
+        Gizmos.DrawSphere(currentHandTarget, _lowerArmLength * 0.1f);
 
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, -transform.parent.right * _totalArmLength);
@@ -133,7 +139,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         Gizmos.DrawRay(transform.position, dir * _totalArmLength);
 
         //Gizmos.DrawRay(transform.position, (overrideHandTarget - transform.position).normalized * _totalArmLength);
-        Gizmos.DrawRay(transform.position, _prevAuxCastDir * _totalArmLength);
+        Gizmos.DrawRay(transform.position, _auxCastDir * _totalArmLength);
     }
 
     private void OnDrawGizmosSelected()
@@ -156,48 +162,33 @@ public class RalphArmAnimator : BaseRalphAnimator
     }
     //private bool _auxCast = false;
     //private Vector3 _auxCastDir = Vector3.zero;
-    private Vector3 _prevAuxCastDir = Vector3.zero;
-    private Vector3 _localAuxCastDir = Vector3.zero;
+    private Vector3 _auxCastDir = Vector3.zero;
+    private Vector3 _targetAuxCastDir = Vector3.zero;
+    private RaycastHit hitInfo;
     private void UpdateHandLogic()
     {
         if (!IsGrounded)
             return;
         int offsetMult = isLeft ? -1 : 1;
-
-        RaycastHit hitInfo;
-        Raycast(_prevAuxCastDir, out hitInfo);
-        // If no more wall to follow keep hand position at previous position
-        if (hitInfo.collider == null)
-        {
-
-            Vector3 dir = (overrideHandTarget.Value - transform.position);
-            dir = (dir - dir.normalized * 0.05f).normalized;
-            _prevAuxCastDir = dir;
-            _localAuxCastDir = dir;
-            Raycast(_prevAuxCastDir, out hitInfo);
-        }
-
-        if (hitInfo.collider != null)
-        {
-            // Check if surface is perpendicular to arm
-            float dot = Vector3.Dot(hitInfo.normal, -_prevAuxCastDir);
-            if (dot > 0.5f)
-            {
-                overrideAnimation = true;
-                overrideHandTarget.AbsValue = hitInfo.point - _prevAuxCastDir * 0.05f;
-            }
-        }
+        hitInfo = new RaycastHit();
+        PrimaryRaycast();
         bool invalidTarget = ShouldCancelOverride();
         if (invalidTarget) hitInfo = new RaycastHit();
-
+        //bool flagForRetry = hitInfo.collider == null;
+        bool inRange = false;
+        //if (flagForRetry)
+        //    _auxCastDir = Vector3.Lerp(_auxCastDir, _targetAuxCastDir, 1f * Time.deltaTime);
         if (hitInfo.collider == null)
         {
             Vector3 dir = (-transform.parent.right + transform.parent.forward * offsetMult * 3).normalized;
 
             Raycast(dir, out hitInfo);
             if (hitInfo.collider != null)
-                _prevAuxCastDir = dir;
-                //_prevAuxCastDir = Vector3.Lerp(_prevAuxCastDir, dir, 6f * Time.deltaTime);
+            {
+                inRange = true;
+                _targetAuxCastDir = dir;
+            }
+                //_auxCastDir = Vector3.Lerp(_auxCastDir, dir, 6f * Time.deltaTime);
         }
 
         if (hitInfo.collider == null)
@@ -206,16 +197,59 @@ public class RalphArmAnimator : BaseRalphAnimator
 
             Raycast(dir, out hitInfo);
             if (hitInfo.collider != null)
-                _prevAuxCastDir = dir;
+            {
+                inRange = true;
+                _targetAuxCastDir = dir;
+            }
         }
-
-
+        //if (flagForRetry)
+        //    PrimaryRaycast();
+        if (inRange)
+        {
+            Vector3 startAuxCastDir = _auxCastDir;
+            for (float i = 1; i < 16; i++)
+            {
+                _auxCastDir = Vector3.Lerp(startAuxCastDir, _targetAuxCastDir, i / 16f);
+                PrimaryRaycast();
+                if (!ShouldCancelOverride()) break;
+            }
+            //Debug.Log(i);
+        }
         // If dot shows that position is no longer infront of player, cancel the connection
         if (!overrideAnimation) return;
         if (ShouldCancelOverride())
         {
             overrideAnimation = false;
         }
+    }
+    private void PrimaryRaycast()
+    {
+        Vector3 prevAuxCastDir = _auxCastDir;
+        Raycast(_auxCastDir, out hitInfo);
+        // If no more wall to follow keep hand position at previous position
+        if (hitInfo.collider == null)
+        {
+
+            Vector3 dir = (overrideHandTarget.Value - transform.position);
+            dir = (dir - dir.normalized * 0.05f).normalized;
+            Raycast(dir, out hitInfo);
+            if (hitInfo.collider != null)
+                _auxCastDir = dir;
+        }
+
+        if (hitInfo.collider != null)
+        {
+            // Check if surface is perpendicular to arm
+            float dot = Vector3.Dot(hitInfo.normal, -_auxCastDir);
+            if (dot > 0.5f)
+            {
+                overrideAnimation = true;
+                overrideHandTarget.AbsValue = hitInfo.point - _auxCastDir * 0.05f;
+            }
+            else
+                _auxCastDir = prevAuxCastDir;
+        }
+
     }
     private bool Raycast(Vector3 direction, out RaycastHit hitInfo)
     {
@@ -239,7 +273,7 @@ public class RalphArmAnimator : BaseRalphAnimator
     //public float debugAngle;
     private void UpdateHandIK()
     {
-        float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 8;
+        float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 4;
         //Debug.Log(3f * distanceMult + " : " + name);
         overrideTransition = Mathf.Lerp(overrideTransition, (overrideAnimation && IsGrounded) ? 1 : 0, 3f * distanceMult * Time.deltaTime);
 

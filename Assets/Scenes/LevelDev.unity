@@ -11347,7 +11347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6922700527532823399, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: LockCameraPosition
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7080669931745581820, guid: fc56b06f98a571947a27db78779b66d9, type: 3}
       propertyPath: m_Mesh
