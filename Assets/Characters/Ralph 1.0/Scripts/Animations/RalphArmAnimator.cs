@@ -250,7 +250,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         float rightDot = Vector3.Dot(disp.normalized, transform.parent.forward * offsetMult);
         //Debug.Log("Forward: " + fwdDot + ", Right: " + rightDot + ", " + name);
 
-        return (fwdDot < 0.1f || rightDot < -0.15f || disp.magnitude > _totalArmLength);
+        return (fwdDot < 0.1f || rightDot < -0.15f || disp.magnitude > _totalArmLength || Mathf.Abs(disp.y) > 0.2f);
     }
     //public float debugAngle;
     private void UpdateHandIK()

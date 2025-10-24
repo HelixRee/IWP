@@ -1714,7 +1714,7 @@
     "m_ObjectId": "3aab723d8d5c45949f2a17bdd7aa0784",
     "m_Title": "Base Color",
     "m_Position": {
-        "x": -1427.0,
+        "x": -1426.9998779296875,
         "y": -1404.0
     }
 }
@@ -3629,7 +3629,7 @@
     "m_ObjectId": "bd749781cf78493fa033dc3dbe9ee934",
     "m_Title": "Texture Inputs",
     "m_Position": {
-        "x": -2146.0,
+        "x": -2145.999755859375,
         "y": -879.0
     }
 }
