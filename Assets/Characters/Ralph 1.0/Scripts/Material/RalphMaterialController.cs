@@ -1,10 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class RalphMaterialController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Material _characterMaterial;
+    [SerializeField] private List<GameObject> _headLights = new();
 
+    [Header("Public Members")]
+    [Range(0, 1f)] public float headlightFillAmt = 1f;
 
     [Header("Behaviour")]
     [SerializeField] private bool _randomiseHueOnStart = true;
@@ -12,8 +17,14 @@ public class RalphMaterialController : MonoBehaviour
 
     // ID References
     private int _matHueOffsetID;
+    private int _matHeadlightFillID;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
+    {
+        if (_randomiseHueOnStart)
+            RandomiseHue();
+    }
+    private void OnValidate()
     {
         if (_characterMaterial == null)
         {
@@ -23,14 +34,37 @@ public class RalphMaterialController : MonoBehaviour
 
         // Link ID references
         _matHueOffsetID = Shader.PropertyToID("_Hue_Offset");
-
-        if (_randomiseHueOnStart)
-            RandomiseHue();
+        _matHeadlightFillID = Shader.PropertyToID("_HeadlightFill");
     }
     private void Update()
     {
+        UpdateMaterialProperties();
+        UpdateHeadlightObjects();
+
+        // Gate editor functionality
+        if (!Application.isPlaying) return;
         if (_cycleHue)
             AdvanceHue(Time.deltaTime * 360f);
+    }
+    private void UpdateHeadlightObjects()
+    {
+        for (int i = 0; i < _headLights.Count; i++)
+        {
+            float normalisedPos = (_headLights.Count - i - 1) / (float)_headLights.Count;
+            normalisedPos = Mathf.Max(normalisedPos, 0.01f);
+            if (headlightFillAmt >= normalisedPos)
+            {
+                _headLights[i].SetActive(true);
+            }
+            else
+            {
+                _headLights[i].SetActive(false);
+            }
+        }
+    }
+    private void UpdateMaterialProperties()
+    {
+        _characterMaterial.SetFloat(_matHeadlightFillID, headlightFillAmt);
     }
     public void RandomiseHue()
     {
