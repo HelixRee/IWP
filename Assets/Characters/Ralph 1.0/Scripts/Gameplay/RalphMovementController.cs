@@ -62,30 +62,6 @@ public class RalphMovementController : MonoBehaviour
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
-    [Header("Cinemachine")]
-    [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-    public GameObject CinemachineCameraTarget;
-
-    [Tooltip("How sensitive the camera is to player input")]
-    [Range(0.01f, 10f)]
-    public float Sensitivity = 5.0f;
-
-    [Tooltip("How far in degrees can you move the camera up")]
-    public float TopClamp = 70.0f;
-
-    [Tooltip("How far in degrees can you move the camera down")]
-    public float BottomClamp = -30.0f;
-
-    [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
-    public float CameraAngleOverride = 0.0f;
-
-    [Tooltip("For locking the camera position on all axis")]
-    public bool LockCameraPosition = false;
-
-    // cinemachine
-    private float _cinemachineTargetYaw;
-    private float _cinemachineTargetPitch;
-
     // player
     private float _speed;
     private float _targetRotation = 0.0f;
@@ -147,7 +123,6 @@ public class RalphMovementController : MonoBehaviour
     private void Start()
     {
         //Time.timeScale = 0.2f;
-        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
         if (!Animator)
             _hasAnimator = TryGetComponent(out Animator);
@@ -171,16 +146,9 @@ public class RalphMovementController : MonoBehaviour
     private Vector3 _groundNormal = Vector3.zero;
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        
         // Cancel velocity when hitting head
         if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
             _verticalVelocity = 0f;
-        //_groundNormal = hit.normal;
-        //_groundNormal.y = 0;
-        //Debug.Log("Hit object: " + hit.normal);
-        //Debug.Log("Hit object: " + hit.gameObject.name);
-        //Debug.Log("Hit normal: " + hit.normal);
-        //Debug.Log("Hit point: " + hit.point);
     }
     private void Update()
     {
@@ -193,11 +161,6 @@ public class RalphMovementController : MonoBehaviour
         GroundedCheck();
         //Slide();
         Move();
-    }
-
-    private void LateUpdate()
-    {
-        //CameraRotation();
     }
 
     private void AssignAnimationIDs()
@@ -231,27 +194,6 @@ public class RalphMovementController : MonoBehaviour
         {
             ProxyAnimator.IsGrounded = Grounded;
         }
-    }
-
-    private void CameraRotation()
-    {
-        // if there is an input and camera position is not fixed
-        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-        {
-            //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-
-            _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * Sensitivity;
-            _cinemachineTargetPitch -= _input.look.y * deltaTimeMultiplier * Sensitivity;
-        }
-
-        // clamp our rotations so our values are limited 360 degrees
-        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-        // Cinemachine will follow this handTarget
-        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-            _cinemachineTargetYaw, 0.0f);
     }
     private void Slide()
     {

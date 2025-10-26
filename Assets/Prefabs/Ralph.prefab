@@ -51398,12 +51398,6 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 192
-  CinemachineCameraTarget: {fileID: 8965621961793269076}
-  Sensitivity: 8
-  TopClamp: 70
-  BottomClamp: -30
-  CameraAngleOverride: 0
-  LockCameraPosition: 0
   Animator: {fileID: 8748524197828667478}
   ProxyAnimator: {fileID: 134857862148489981}
 --- !u!114 &7570371324928083956
@@ -51419,7 +51413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CinemachineCameraTarget: {fileID: 8965621961793269076}
-  Sensitivity: 5
+  Sensitivity: 7
   TopClamp: 70
   BottomClamp: -30
   CameraAngleOverride: 0

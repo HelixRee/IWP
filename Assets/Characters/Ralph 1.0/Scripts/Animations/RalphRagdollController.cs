@@ -30,7 +30,10 @@ public class RalphRagdollController : MonoBehaviour
             rb.isKinematic = false;
 
         foreach (Collider collider in _colliders)
+        {
             collider.enabled = true;
+            collider.gameObject.layer = 6;
+        }
 
         _mainBody.AddForce(_characterController.velocity * _launchPower, ForceMode.Impulse);
 

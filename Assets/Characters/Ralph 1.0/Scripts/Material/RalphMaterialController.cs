@@ -69,6 +69,9 @@ public class RalphMaterialController : MonoBehaviour
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+            headlightFillAmt = 0f;
+
         UpdateMaterialProperties();
         UpdateHeadlightObjects();
 
