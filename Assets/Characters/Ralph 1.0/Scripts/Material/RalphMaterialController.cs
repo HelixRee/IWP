@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [ExecuteAlways]
 public class RalphMaterialController : MonoBehaviour
@@ -16,6 +19,7 @@ public class RalphMaterialController : MonoBehaviour
     [SerializeField] private bool _randomiseHueOnStart = true;
     [SerializeField] private bool _cycleHue = true;
 
+    [SerializeField] private Material _activeMaterial;
     // ID References
     private int _matHueOffsetID;
     private int _matHLIntensity1ID;
@@ -26,6 +30,7 @@ public class RalphMaterialController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!Application.isPlaying) return;
         if (_randomiseHueOnStart)
             RandomiseHue();
     }
@@ -37,12 +42,28 @@ public class RalphMaterialController : MonoBehaviour
             enabled = false;
         }
 
+        if (_activeMaterial == null)
+            _activeMaterial = new Material(_characterMaterial);
+        _activeMaterial.name = _characterMaterial.name + " (" + name + ")";
+        //Debug.Log("Refreshed");
+
         // Link ID references
         _matHueOffsetID = Shader.PropertyToID("_Hue_Offset");
         _matHLIntensity1ID = Shader.PropertyToID("_HLIntensity1");
         _matHLIntensity2ID = Shader.PropertyToID("_HLIntensity2");
         _matHLIntensity3ID = Shader.PropertyToID("_HLIntensity3");
         _matHLIntensity4ID = Shader.PropertyToID("_HLIntensity4");
+
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.sharedMaterial == null) continue;
+            if (renderer.sharedMaterial.shader == null) continue;
+            if (renderer.sharedMaterial.shader != _characterMaterial.shader) continue;
+            if (renderer.sharedMaterial == _activeMaterial) continue;
+            renderer.SetMaterials(new List<Material>() { _activeMaterial });
+        }
 
         InitHeadlights();
     }
@@ -79,25 +100,60 @@ public class RalphMaterialController : MonoBehaviour
     }
     private void UpdateMaterialProperties()
     {
-        _characterMaterial.SetFloat(_matHLIntensity1ID, _headLights[0].GetNormalisedIntensity());
-        _characterMaterial.SetFloat(_matHLIntensity2ID, _headLights[1].NormalisedIntensity);
-        _characterMaterial.SetFloat(_matHLIntensity3ID, _headLights[2].NormalisedIntensity);
-        _characterMaterial.SetFloat(_matHLIntensity4ID, _headLights[3].NormalisedIntensity);
+        if (_activeMaterial == null) return;
+        _activeMaterial.SetFloat(_matHLIntensity1ID, _headLights[0].GetNormalisedIntensity());
+        _activeMaterial.SetFloat(_matHLIntensity2ID, _headLights[1].NormalisedIntensity);
+        _activeMaterial.SetFloat(_matHLIntensity3ID, _headLights[2].NormalisedIntensity);
+        _activeMaterial.SetFloat(_matHLIntensity4ID, _headLights[3].NormalisedIntensity);
     }
     public void RandomiseHue()
     {
+        //Debug.Log("Randomised");
+
         float randHue = Random.Range(0f, 360f);
-        _characterMaterial.SetFloat(_matHueOffsetID, randHue);
+        _activeMaterial.SetFloat(_matHueOffsetID, randHue);
     }
 
     public void AdvanceHue(float amount)
     {
-        _characterMaterial.SetFloat(_matHueOffsetID, _characterMaterial.GetFloat(_matHueOffsetID) + amount);
+        _activeMaterial.SetFloat(_matHueOffsetID, _activeMaterial.GetFloat(_matHueOffsetID) + amount);
     }
 
     private void OnDisable()
     {
+        //Debug.Log("Disabled");
+
+        if (_activeMaterial == null) return;
         // Reset hue for editor
-        _characterMaterial.SetFloat(_matHueOffsetID, 0);
+        _activeMaterial.SetFloat(_matHueOffsetID, 0);
+    }
+
+    public void ResetMaterials()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.sharedMaterial == null) continue;
+            if (renderer.sharedMaterial.shader == null) continue;
+            if (renderer.sharedMaterial.shader != _characterMaterial.shader) continue;
+
+            renderer.SetMaterials(new List<Material>() { _characterMaterial });
+        }
+        _activeMaterial = null;
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(RalphMaterialController))]
+public class RalphMaterialControllerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        RalphMaterialController controller = (RalphMaterialController)target;
+        if (GUILayout.Button("Reset")) {
+            controller.ResetMaterials();
+        }
+    }
+}
+#endif

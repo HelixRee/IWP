@@ -75,6 +75,7 @@ public class FollowObject : BaseRalphAnimator
         if (root)
         {
             GameObject wrapperObject = GameObject.Find(root.name + " Follow Objects");
+            if (wrapperObject == null && root.name.Contains(" Follow Objects")) wrapperObject = root.gameObject;
             if (wrapperObject != null)
             {
                 root = wrapperObject.transform;
