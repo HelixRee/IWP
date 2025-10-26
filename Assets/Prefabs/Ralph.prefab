@@ -1768,7 +1768,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &3225229167270924608
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -1785,8 +1785,8 @@ CharacterJoint:
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
-    spring: 0
-    damper: 0
+    spring: 4
+    damper: 10
   m_LowTwistLimit:
     limit: 2.163208
     bounciness: 0
@@ -1796,8 +1796,8 @@ CharacterJoint:
     bounciness: 0
     contactDistance: 0
   m_SwingLimitSpring:
-    spring: 0
-    damper: 0
+    spring: 4
+    damper: 10
   m_Swing1Limit:
     limit: 3
     bounciness: 0
@@ -10362,7 +10362,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 316
+  m_VersionIndex: 463
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19176,7 +19176,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 316
+  m_VersionIndex: 463
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19356,7 +19356,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &5422642239679131669
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -22071,7 +22071,7 @@ GameObject:
   - component: {fileID: 1487603344926992995}
   - component: {fileID: 7036487502295718084}
   - component: {fileID: 318813731139062010}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Body Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23269,7 +23269,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 30
+  m_VersionIndex: 165
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -24428,7 +24428,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &1298615212286171439
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -24445,8 +24445,8 @@ CharacterJoint:
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
-    spring: 0
-    damper: 0
+    spring: 4
+    damper: 10
   m_LowTwistLimit:
     limit: 2.163208
     bounciness: 0
@@ -24456,8 +24456,8 @@ CharacterJoint:
     bounciness: 0
     contactDistance: 0
   m_SwingLimitSpring:
-    spring: 0
-    damper: 0
+    spring: 4
+    damper: 10
   m_Swing1Limit:
     limit: 3
     bounciness: 0
@@ -24562,7 +24562,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_CenterOfMass: {x: -0.06, y: 0.15, z: 0}
+  m_CenterOfMass: {x: 0, y: 0.15, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -24577,7 +24577,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!1 &3529680173617900051
 GameObject:
   m_ObjectHideFlags: 0
@@ -25420,7 +25420,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &5107305319910715693
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -34135,7 +34135,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 316
+  m_VersionIndex: 463
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -36196,7 +36196,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &2238575593889772629
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -36214,7 +36214,7 @@ CharacterJoint:
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
     spring: 4
-    damper: 0
+    damper: 10
   m_LowTwistLimit:
     limit: -78.05633
     bounciness: 0
@@ -36225,7 +36225,7 @@ CharacterJoint:
     contactDistance: 0
   m_SwingLimitSpring:
     spring: 4
-    damper: 0
+    damper: 10
   m_Swing1Limit:
     limit: 54.11252
     bounciness: 0
@@ -38106,7 +38106,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &3162176103697889686
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -38124,7 +38124,7 @@ CharacterJoint:
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
     spring: 4
-    damper: 0
+    damper: 10
   m_LowTwistLimit:
     limit: -78.05633
     bounciness: 0
@@ -38135,7 +38135,7 @@ CharacterJoint:
     contactDistance: 0
   m_SwingLimitSpring:
     spring: 4
-    damper: 0
+    damper: 10
   m_Swing1Limit:
     limit: 54.11252
     bounciness: 0
@@ -38732,7 +38732,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &4286340873795236338
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -40489,7 +40489,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!144 &5779262916827408114
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -40796,7 +40796,7 @@ GameObject:
   - component: {fileID: 7162026953929263550}
   - component: {fileID: 5748438760904591251}
   - component: {fileID: 8241676044307484857}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Basket Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41030,7 +41030,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 35
+  m_VersionIndex: 167
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -50821,7 +50821,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 316
+  m_VersionIndex: 463
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -51315,11 +51315,11 @@ GameObject:
   - component: {fileID: 7436171251605984466}
   - component: {fileID: 323829921579375363}
   - component: {fileID: 6922700527532823399}
+  - component: {fileID: 7570371324928083956}
   - component: {fileID: 5892331809406182455}
   - component: {fileID: 4393493773238383708}
   - component: {fileID: 7196166127029774567}
   - component: {fileID: 1469323367938802649}
-  - component: {fileID: 7570371324928083956}
   m_Layer: 3
   m_Name: Ralph
   m_TagString: Untagged
@@ -51406,6 +51406,24 @@ MonoBehaviour:
   LockCameraPosition: 0
   Animator: {fileID: 8748524197828667478}
   ProxyAnimator: {fileID: 134857862148489981}
+--- !u!114 &7570371324928083956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8648348613872386671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 705fe20ca202cc64f8565141367f2f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CinemachineCameraTarget: {fileID: 8965621961793269076}
+  Sensitivity: 5
+  TopClamp: 70
+  BottomClamp: -30
+  CameraAngleOverride: 0
+  LockCameraPosition: 0
 --- !u!114 &5892331809406182455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51551,6 +51569,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bed69b60308c942b82e87886251138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mainBody: {fileID: 5790597887521647066}
+  _characterController: {fileID: 323829921579375363}
+  _launchPower: 50
   _rigidbodies:
   - {fileID: 5790597887521647066}
   - {fileID: 6125645044762594842}
@@ -51599,30 +51620,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5892331809406182455}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4393493773238383708}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 665585328312212603}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
@@ -51647,24 +51644,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7570371324928083956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8648348613872386671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 705fe20ca202cc64f8565141367f2f0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CinemachineCameraTarget: {fileID: 8965621961793269076}
-  Sensitivity: 5
-  TopClamp: 70
-  BottomClamp: -30
-  CameraAngleOverride: 0
-  LockCameraPosition: 0
 --- !u!1 &8648786716657117758
 GameObject:
   m_ObjectHideFlags: 0
