@@ -133,7 +133,15 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _HLIntensity1: 1
+    - _HLIntensity2: 1
+    - _HLIntensity3: 1
+    - _HLIntensity4: 1
     - _HeadlightFill: 1
+    - _HeadlightFill1: 1
+    - _HeadlightFill2: 1
+    - _HeadlightFill3: 1
+    - _HeadlightFill4: 1
     - _Hue_Offset: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
