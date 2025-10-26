@@ -197,7 +197,7 @@ public class RalphMovementController : MonoBehaviour
 
     private void LateUpdate()
     {
-        CameraRotation();
+        //CameraRotation();
     }
 
     private void AssignAnimationIDs()
