@@ -409,6 +409,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 285589432081699295}
   LockPosition: 0
@@ -630,6 +631,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Bones:
   - {fileID: 2748111124209943858}
   - {fileID: 6605048681369517348}
@@ -652,6 +654,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Source: {fileID: 7768118992909094211}
   Weight: 0.502
 --- !u!1 &586460106478069476
@@ -1524,6 +1527,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 2079166063218841554}
   LockPosition: 0
@@ -19450,6 +19454,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 283274369224911194}
   LockPosition: 0
@@ -20448,6 +20453,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 8014437211804217163}
   LockPosition: 0
@@ -21074,6 +21080,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Weight: 0.404
   HeadTarget: {fileID: 7875445475974881798}
   ChildAnimations:
@@ -22198,6 +22205,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Source:
     Hips: {fileID: 6811462000426403301}
     UpperLeg: {fileID: 7206530469005849306}
@@ -23469,6 +23477,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 4519397290005522721}
   LockPosition: 0
@@ -23789,6 +23798,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 2089711335100504299}
   LockPosition: 0
@@ -34403,6 +34413,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Source:
     Anchor: {fileID: 4972096935409914274}
     Elbow: {fileID: 8325615581863476323}
@@ -36191,6 +36202,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Source:
     Anchor: {fileID: 5050925416131206559}
     Elbow: {fileID: 3949262979541743410}
@@ -36285,6 +36297,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 7312356275651978092}
   LockPosition: 0
@@ -36715,6 +36728,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   ChildAnimations:
   - {fileID: 8287980015666950494}
   PackMount: {fileID: 6338668737096842747}
@@ -36935,6 +36949,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   ControlPointL: {fileID: 7405647649208317391}
   ControlPointR: {fileID: 2160713620696692763}
   childAnimations:
@@ -38306,6 +38321,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   _unparentOnAwake: 1
   Target: {fileID: 2262323648928848546}
   LockPosition: 0
@@ -38526,6 +38542,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   Source:
     Hips: {fileID: 6811462000426403301}
     UpperLeg: {fileID: 3952383394080095385}
@@ -49471,6 +49488,7 @@ MonoBehaviour:
     m_Bits: 0
   IsGrounded: 0
   IsFalling: 0
+  UseGravity: 0
   ControlPointL: {fileID: 9030826567167490631}
   ControlPointR: {fileID: 3762184626582725670}
   childAnimations:

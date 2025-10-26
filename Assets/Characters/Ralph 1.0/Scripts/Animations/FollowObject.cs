@@ -34,7 +34,7 @@ public class FollowObject : BaseRalphAnimator
             return;
         }
 
-        Vector3 newPos = smoothedPosition.Update(Time.deltaTime, Target.position);
+        Vector3 newPos = smoothedPosition.Update(Time.deltaTime, Target.position + (UseGravity ? Vector3.down * MaxDistance : Vector3.zero));
 
         CalculateDistanceAnchor(Target, MaxDistance, ref newPos);
         if (DistanceAnchor)

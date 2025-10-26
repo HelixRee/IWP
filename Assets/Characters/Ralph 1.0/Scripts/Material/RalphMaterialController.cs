@@ -42,7 +42,7 @@ public class RalphMaterialController : MonoBehaviour
             enabled = false;
         }
 
-        if (_activeMaterial == null)
+        if (_activeMaterial == null || _activeMaterial.name != _characterMaterial.name + " (" + name + ")")
             _activeMaterial = new Material(_characterMaterial);
         _activeMaterial.name = _characterMaterial.name + " (" + name + ")";
         //Debug.Log("Refreshed");
