@@ -54,7 +54,7 @@ public class RalphMovementController : MonoBehaviour
     public bool Grounded = true;
 
     [Tooltip("Useful for rough ground")]
-    public float GroundedOffset = -0.14f;
+    public Vector3 GroundCheckOffset = Vector3.zero;
 
     [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
     public float GroundedRadius = 0.28f;
@@ -77,6 +77,8 @@ public class RalphMovementController : MonoBehaviour
     private int _animIDSpeedZ;
     private int _animIDSpeedX;
     private int _animIDGrounded;
+    private int _animIDFallTrigger;
+    private int _animIDJumpTrigger;
     private int _animIDJump;
     private int _animIDFreeFall;
     private int _animIDLeftFootFlag;
@@ -171,6 +173,8 @@ public class RalphMovementController : MonoBehaviour
         _animIDJump = Animator.StringToHash("Jump");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
         _animIDLeftFootFlag = Animator.StringToHash("isOnLeftFoot");
+        _animIDFallTrigger = Animator.StringToHash("fallTrigger");
+        _animIDJumpTrigger = Animator.StringToHash("jumpTrigger");
     }
 
     private void GroundedCheck()
@@ -179,8 +183,11 @@ public class RalphMovementController : MonoBehaviour
         Vector3 offset = Vector3.zero;
         if (_controller) offset = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up) * _controller.center;
 
-        Vector3 spherePosition = new Vector3(transform.position.x + offset.x, transform.position.y - GroundedOffset,
+        Vector3 spherePosition = new Vector3(transform.position.x + offset.x, transform.position.y,
             transform.position.z + offset.z);
+        spherePosition += transform.localRotation * GroundCheckOffset;
+
+        bool prevGrounded = Grounded;
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
             QueryTriggerInteraction.Ignore);
 
@@ -188,6 +195,12 @@ public class RalphMovementController : MonoBehaviour
         if (_hasAnimator)
         {
             Animator.SetBool(_animIDGrounded, Grounded);
+            if (!Grounded && prevGrounded && !_input.willJump)
+            {
+                Animator.SetTrigger(_animIDFallTrigger);
+                //Debug.Log("Falling");
+            }
+
         }
 
         if (ProxyAnimator)
@@ -265,7 +278,7 @@ public class RalphMovementController : MonoBehaviour
             Vector3 relativeVel = _controller.transform.InverseTransformDirection(_controller.velocity);
             Animator.SetFloat(_animIDSpeedX, Mathf.Lerp(Animator.GetFloat(_animIDSpeedX), relativeVel.x, 12f * Time.deltaTime));
             Animator.SetFloat(_animIDSpeedZ, Mathf.Lerp(Animator.GetFloat(_animIDSpeedZ), relativeVel.z, 12f * Time.deltaTime));
-            //Animator.SetFloat(_animIDSpeedZ, 1);
+            //Animator.SetFloat(_animIDSpeedZ, 3);
             if (Animator.GetFloat(_animIDSpeedX) < 0.001f) Animator.SetFloat(_animIDSpeedX, 0f);
             if (Animator.GetFloat(_animIDSpeedZ) < 0.001f) Animator.SetFloat(_animIDSpeedZ, 0f);
         }
@@ -275,8 +288,20 @@ public class RalphMovementController : MonoBehaviour
         if (_speed < 0.01f) _speed = 0f;
     }
     private bool _jumpActive = false;
+    private bool _jumpTriggered = false;
     private void JumpAndGravity()
     {
+        if (!Grounded)
+            _input.willJump = false;
+        if (_input.willJump)
+        {
+            if (!_jumpTriggered)
+                Animator.SetTrigger(_animIDJumpTrigger);
+            _jumpTriggered = true;
+
+        }
+        else
+            _jumpTriggered = false;
         if (Grounded)
         {
             // reset the fall timeout timer
@@ -356,7 +381,7 @@ public class RalphMovementController : MonoBehaviour
         }
 
         // stop our velocity dropping infinitely when grounded
-        if (_verticalVelocity < 0.0f && Grounded)
+        if (_verticalVelocity < 0.0f && (Grounded || _controller.isGrounded))
         {
             _verticalVelocity = GroundedGravity;
         }
@@ -388,7 +413,7 @@ public class RalphMovementController : MonoBehaviour
         if (_controller) offset = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up) * _controller.center;
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
         Gizmos.DrawSphere(
-            new Vector3(transform.position.x + offset.x, transform.position.y - GroundedOffset, transform.position.z + offset.z),
+            new Vector3(transform.position.x + offset.x, transform.position.y, transform.position.z + offset.z) + transform.localRotation * GroundCheckOffset,
             GroundedRadius);
     }
     public void OnStep(bool isLeft)
