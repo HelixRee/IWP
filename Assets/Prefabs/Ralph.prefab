@@ -10362,7 +10362,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 463
+  m_VersionIndex: 514
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -19176,7 +19176,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 463
+  m_VersionIndex: 514
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -23269,7 +23269,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 165
+  m_VersionIndex: 216
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -34135,7 +34135,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 463
+  m_VersionIndex: 514
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -40087,7 +40087,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7604742147526084443}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56dc155be8c3e3048909f4731fcd425f, type: 3}
   m_Name: 
@@ -41030,7 +41030,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 167
+  m_VersionIndex: 218
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -50821,7 +50821,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 463
+  m_VersionIndex: 514
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -51393,13 +51393,15 @@ MonoBehaviour:
   JumpTimeout: 0.05
   FallTimeout: 0.05
   Grounded: 1
-  GroundCheckOffset: {x: 0, y: 0, z: 0}
-  GroundedRadius: 0.3
+  GroundCheckOffset: {x: 0, y: 0.1, z: 0.1}
+  GroundedRadius: 0.14
   GroundLayers:
     serializedVersion: 2
     m_Bits: 192
   Animator: {fileID: 8748524197828667478}
   ProxyAnimator: {fileID: 134857862148489981}
+  _slideActive: 0
+  currentlyOverlapping: 0
 --- !u!114 &7570371324928083956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51565,7 +51567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainBody: {fileID: 5790597887521647066}
   _characterController: {fileID: 323829921579375363}
-  _launchPower: 50
+  _launchPower: 2
   _rigidbodies:
   - {fileID: 5790597887521647066}
   - {fileID: 6125645044762594842}
@@ -51637,6 +51639,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1982015980663434526}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &8648786716657117758
 GameObject:
