@@ -146,11 +146,26 @@ public class RalphMovementController : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
     private Vector3 _groundNormal = Vector3.zero;
+    private bool _slideActive = false;
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (Mathf.Abs(hit.normal.y) < 1)
+        {
+            //Debug.Log("Slide: " + hit.moveLength);
+            Debug.DrawRay(hit.controller.center + transform.position, hit.moveDirection * hit.moveLength, Color.magenta);
+            Debug.DrawRay(hit.point, hit.normal, Color.cyan);
+            _groundNormal = hit.normal;
+            _slideActive = true;
+
+        }
+        else
+            _slideActive = false;
         // Cancel velocity when hitting head
-        if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
-            _verticalVelocity = 0f;
+        //if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
+        //{
+        //    Debug.Log("HeadHitter");
+        //    _verticalVelocity = 0f;
+        //}
     }
     private void Update()
     {
@@ -161,7 +176,7 @@ public class RalphMovementController : MonoBehaviour
 
         JumpAndGravity();
         GroundedCheck();
-        //Slide();
+        Slide();
         Move();
     }
 
@@ -208,8 +223,19 @@ public class RalphMovementController : MonoBehaviour
             ProxyAnimator.IsGrounded = Grounded;
         }
     }
+    private Vector3 _slideVelocity = Vector3.zero;
     private void Slide()
     {
+        if (_slideActive)
+        {
+            Vector3 normal = _groundNormal;
+            normal.y = 0;
+            //_controller.Move(_groundNormal * Time.deltaTime);
+            //_controller.
+            _slideVelocity = _groundNormal;
+        }
+        else
+            _slideVelocity = Vector3.zero;
         //if (!Grounded || _groundNormal.magnitude < 0.3f) return;
         //_controller.Move(_groundNormal * Time.deltaTime);
     }
