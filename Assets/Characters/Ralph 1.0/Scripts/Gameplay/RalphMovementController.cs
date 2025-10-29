@@ -167,6 +167,8 @@ public class RalphMovementController : MonoBehaviour
         {
             Debug.Log("HeadHitter");
             _verticalVelocity = 0f;
+            //_input.willJump = false;
+            //_input.jump = false;
         }
     }
     private void Update()
@@ -316,12 +318,18 @@ public class RalphMovementController : MonoBehaviour
     {
         if (!Grounded)
             _input.willJump = false;
+        if (Physics.CheckSphere(transform.position + transform.rotation * _controller.center + Vector3.up * 0.07f, _controller.radius - 0.05f, GroundLayers))
+        {
+            Debug.Log("FUCK YOU AQIL");
+            _input.willJump = false;
+            _input.jump = false;
+        }
+
         if (_input.willJump)
         {
             if (!_jumpTriggered)
                 Animator.SetTrigger(_animIDJumpTrigger);
             _jumpTriggered = true;
-
         }
         else
             _jumpTriggered = false;
@@ -438,6 +446,8 @@ public class RalphMovementController : MonoBehaviour
         Gizmos.DrawSphere(
             new Vector3(transform.position.x + offset.x, transform.position.y, transform.position.z + offset.z) + transform.localRotation * GroundCheckOffset,
             GroundedRadius);
+
+        //Gizmos.DrawSphere(transform.position + _controller.center + Vector3.up * 0.07f, _controller.radius - 0.05f);
     }
     public void OnStep(bool isLeft)
     {
