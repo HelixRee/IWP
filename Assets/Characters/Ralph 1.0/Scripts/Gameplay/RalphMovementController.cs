@@ -145,10 +145,12 @@ public class RalphMovementController : MonoBehaviour
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
-    private Vector3 _testVec = Vector3.zero;
+    private Vector3 _slideVelocity = Vector3.zero;
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (Mathf.Abs(hit.normal.y) < 1 && !Grounded)
+        //Debug.Log("Hi");
+
+        if ((hit.normal.y < 1 && hit.normal.y > 0 && !Grounded) || (hit.normal.y > -1 && hit.normal.y < 0))
         {
             Debug.DrawRay(hit.controller.center + transform.position, hit.moveDirection, Color.magenta);
             Debug.DrawRay(hit.point, hit.normal, Color.cyan);
@@ -156,14 +158,15 @@ public class RalphMovementController : MonoBehaviour
             normal.y = 0;
             Debug.DrawRay(transform.position, normal, Color.magenta);
 
-            _testVec = normal.normalized;
+            _slideVelocity = normal.normalized;
         }
         else
-            _testVec = Vector3.zero;
+            _slideVelocity = Vector3.zero;
 
 
         // Cancel velocity when hitting head
-        if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
+        //if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
+        if (Vector3.Angle(hit.normal, Vector3.down) < 30 && hit.moveLength < 0.1f && _verticalVelocity > 0)
         {
             Debug.Log("HeadHitter");
             _verticalVelocity = 0f;
@@ -229,13 +232,15 @@ public class RalphMovementController : MonoBehaviour
     }
     private void Slide()
     {
-        if (_testVec != Vector3.zero)
+        if (_slideVelocity != Vector3.zero)
         {
+            //Debug.Log("Slide");
+
             _controller.enabled = false;
-            transform.position += _testVec * Time.deltaTime;
+            transform.position += _slideVelocity * Time.deltaTime;
             _controller.enabled = true;
 
-            _testVec = Vector3.zero;
+            _slideVelocity = Vector3.zero;
         }
     }
     private void Move()
@@ -320,7 +325,7 @@ public class RalphMovementController : MonoBehaviour
             _input.willJump = false;
         if (Physics.CheckSphere(transform.position + transform.rotation * _controller.center + Vector3.up * 0.07f, _controller.radius - 0.05f, GroundLayers))
         {
-            Debug.Log("FUCK YOU AQIL");
+            //Debug.Log("FUCK YOU AQIL");
             _input.willJump = false;
             _input.jump = false;
         }
@@ -333,6 +338,7 @@ public class RalphMovementController : MonoBehaviour
         }
         else
             _jumpTriggered = false;
+
         if (Grounded)
         {
             // reset the fall timeout timer
