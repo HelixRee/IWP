@@ -51400,8 +51400,6 @@ MonoBehaviour:
     m_Bits: 192
   Animator: {fileID: 8748524197828667478}
   ProxyAnimator: {fileID: 134857862148489981}
-  _slideActive: 0
-  currentlyOverlapping: 0
 --- !u!114 &7570371324928083956
 MonoBehaviour:
   m_ObjectHideFlags: 0

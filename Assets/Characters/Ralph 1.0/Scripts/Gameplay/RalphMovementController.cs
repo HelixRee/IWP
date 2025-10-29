@@ -145,49 +145,32 @@ public class RalphMovementController : MonoBehaviour
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
-    private Vector3 _groundNormal = Vector3.zero;
     private Vector3 _testVec = Vector3.zero;
-    public bool _slideActive = false;
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (Mathf.Abs(hit.normal.y) < 1 && !Grounded)
         {
-            //Debug.Log("Slide: " + hit.moveLength);
-            Debug.DrawRay(hit.controller.center + transform.position, hit.moveDirection * hit.moveLength, Color.magenta);
+            Debug.DrawRay(hit.controller.center + transform.position, hit.moveDirection, Color.magenta);
             Debug.DrawRay(hit.point, hit.normal, Color.cyan);
-            _groundNormal = hit.normal;
-            _slideActive = true;
             Vector3 normal = hit.normal;
             normal.y = 0;
             Debug.DrawRay(transform.position, normal, Color.magenta);
 
-            //_testVec = hit.moveDirection * hit.moveLength;
             _testVec = normal.normalized;
-            //_controller.enabled = false;
-            //_controller.transform.position += hit.moveDirection * hit.moveLength;
-            //_controller.enabled = true;
         }
         else
-        {
-            _slideActive = false;
             _testVec = Vector3.zero;
-        }
+
+
         // Cancel velocity when hitting head
-        //if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
-        //{
-        //    Debug.Log("HeadHitter");
-        //    _verticalVelocity = 0f;
-        //}
+        if (hit.point.y > _controller.bounds.max.y && hit.moveLength < 0.1f && _verticalVelocity > 0)
+        {
+            Debug.Log("HeadHitter");
+            _verticalVelocity = 0f;
+        }
     }
-    public bool currentlyOverlapping = false;
     private void Update()
     {
-        //Debug.DrawRay(transform.position + _controller.center, Vector3.forward * _controller.radius, Color.magenta);
-        //currentlyOverlapping = Physics.CheckCapsule(transform.position + _controller.center, transform.position + _controller.center, _controller.radius, GroundLayers);
-        //if (!currentlyOverlapping)
-        //    _slideActive = false;
-
-
         if (!Animator)
             _hasAnimator = TryGetComponent(out Animator);
         else
@@ -197,16 +180,6 @@ public class RalphMovementController : MonoBehaviour
         GroundedCheck();
         Slide();
         Move();
-
-        if (_slideActive)
-        {
-            //_controller.Move(_testVec * Time.deltaTime);
-            _controller.enabled = false;
-            transform.position += _testVec * Time.deltaTime;
-            _controller.enabled = true;
-
-            _slideActive = false;
-        }
     }
 
     private void AssignAnimationIDs()
@@ -252,21 +225,16 @@ public class RalphMovementController : MonoBehaviour
             ProxyAnimator.IsGrounded = Grounded;
         }
     }
-    private Vector3 _slideVelocity = Vector3.zero;
     private void Slide()
     {
-        if (_slideActive)
+        if (_testVec != Vector3.zero)
         {
-            Vector3 normal = _groundNormal;
-            normal.y = 0;
-            //_controller.Move(_groundNormal * Time.deltaTime);
-            //_controller.
-            _slideVelocity = _groundNormal;
+            _controller.enabled = false;
+            transform.position += _testVec * Time.deltaTime;
+            _controller.enabled = true;
+
+            _testVec = Vector3.zero;
         }
-        else
-            _slideVelocity = Vector3.zero;
-        //if (!Grounded || _groundNormal.magnitude < 0.3f) return;
-        //_controller.Move(_groundNormal * Time.deltaTime);
     }
     private void Move()
     {
