@@ -26,7 +26,16 @@ public class RalphHeadlightBehaviour : MonoBehaviour
     [Space(10)]
     [Range(0, 1f)] public float Visibility;
     [Range(0, 1f)] public float NormalisedLength;
+    private void Start()
+    {
+        Validate();
+    }
+
     private void OnValidate()
+    {
+        Validate();
+    }
+    private void Validate()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
         if (_meshRenderer == null)
