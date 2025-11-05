@@ -36157,6 +36157,9 @@ MonoBehaviour:
   IsGrounded: 0
   IsFalling: 0
   UseGravity: 0
+  _groundLayers:
+    serializedVersion: 2
+    m_Bits: 0
   Source:
     Anchor: {fileID: 4972096935409914274}
     Elbow: {fileID: 8325615581863476323}
@@ -38067,6 +38070,9 @@ MonoBehaviour:
   IsGrounded: 0
   IsFalling: 0
   UseGravity: 0
+  _groundLayers:
+    serializedVersion: 2
+    m_Bits: 0
   Source:
     Anchor: {fileID: 5050925416131206559}
     Elbow: {fileID: 3949262979541743410}

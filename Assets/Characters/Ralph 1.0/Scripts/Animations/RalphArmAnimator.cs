@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RalphArmAnimator : BaseRalphAnimator
 {
+    [SerializeField] private LayerMask _groundLayers;
     [Serializable]
     public class TransformGroup
     {
@@ -240,7 +241,7 @@ public class RalphArmAnimator : BaseRalphAnimator
             direction,
             out hitInfo,
             _totalArmLength,
-            GroundLayers.value,
+            _groundLayers.value,
             QueryTriggerInteraction.Ignore);
     }
     private bool ShouldCancelOverride()
