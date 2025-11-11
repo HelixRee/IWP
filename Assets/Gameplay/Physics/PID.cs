@@ -1,16 +1,55 @@
 using UnityEngine;
 
-public class PID : MonoBehaviour
+[System.Serializable]
+public class PID
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public float pFactor, iFactor, dFactor;
+
+    float integral;
+    float lastError;
+
+
+    public PID(float pFactor, float iFactor, float dFactor)
     {
-        
+        this.pFactor = pFactor;
+        this.iFactor = iFactor;
+        this.dFactor = dFactor;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public float Update(float setpoint, float actual, float timeFrame)
     {
-        
+        float present = setpoint - actual;
+        integral += present * timeFrame;
+        float deriv = (present - lastError) / timeFrame;
+        lastError = present;
+        return present * pFactor + integral * iFactor + deriv * dFactor;
+    }
+}
+
+[System.Serializable]
+public class PIDVec3
+{
+    public float pFactor, iFactor, dFactor;
+
+    Vector3 integral;
+    Vector3 lastError;
+
+
+    public PIDVec3(float pFactor, float iFactor, float dFactor)
+    {
+        this.pFactor = pFactor;
+        this.iFactor = iFactor;
+        this.dFactor = dFactor;
+    }
+
+
+    public Vector3 Update(Vector3 setpoint, Vector3 actual, float timeFrame)
+    {
+        Vector3 present = setpoint - actual;
+        integral += present * timeFrame;
+        Vector3 deriv = (present - lastError) / timeFrame;
+        lastError = present;
+        return present * pFactor + integral * iFactor + deriv * dFactor;
     }
 }
