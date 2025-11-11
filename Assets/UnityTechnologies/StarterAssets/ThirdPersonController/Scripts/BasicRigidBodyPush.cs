@@ -32,4 +32,12 @@ public class BasicRigidBodyPush : MonoBehaviour
 		// Apply the push and take strength into account
 		body.AddForce(pushDir * strength, ForceMode.Impulse);
 	}
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Rigidbody body = collision.collider.attachedRigidbody;
+        if (body == null || body.isKinematic) return;
+
+		body.AddForce(collision.impulse, ForceMode.Impulse);
+    }
 }
