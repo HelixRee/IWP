@@ -32,8 +32,8 @@ public class PIDVec3
 {
     public float pFactor, iFactor, dFactor;
 
-    Vector3 integral;
-    Vector3 lastError;
+    public Vector3 integral;
+    public Vector3 lastError;
 
 
     public PIDVec3(float pFactor, float iFactor, float dFactor)

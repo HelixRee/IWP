@@ -17,12 +17,15 @@ public class LitterPickupManager : MonoBehaviour
     }
     private void CreateLitter(Collider other)
     {
-        Debug.Log(other.name);
-        Debug.Log(other.tag);
+        //Debug.Log(other.name);
+        //Debug.Log(other.tag);
         if (!other.CompareTag("Litter")) return;
 
         GameObject go = other.gameObject;
         go.tag = "Untagged";
+        
+        SphereCollider sphereCollider = go.GetComponent<SphereCollider>();
+        //sphereCollider.enabled = false;
 
         Rigidbody rb = go.AddComponent<Rigidbody>();
         rb.mass = 0.1f;
