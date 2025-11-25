@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class LitterPickupManager : MonoBehaviour
 {
+    [SerializeField] private InventoryManager _inventorySystemReference;
     private SphereCollider _sphereCollider;
     private void Start()
     {
@@ -27,14 +28,17 @@ public class LitterPickupManager : MonoBehaviour
         SphereCollider sphereCollider = go.GetComponent<SphereCollider>();
         //sphereCollider.enabled = false;
 
-        Rigidbody rb = go.AddComponent<Rigidbody>();
+        Rigidbody rb = go.GetComponent<Rigidbody>();
         rb.mass = 0.1f;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        //rb.useGravity = false;
+        rb.useGravity = false;
         //rb.isKinematic = true;
 
-        LitterFlightBehaviour flightScript = go.AddComponent<LitterFlightBehaviour>();
+        LitterFlightBehaviour flightScript = go.GetComponent<LitterFlightBehaviour>();
+        flightScript.enabled = true;
         flightScript.target = transform;
+
+        flightScript.inventoryManager = _inventorySystemReference;
     }
 
 }
