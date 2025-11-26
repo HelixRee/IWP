@@ -6,7 +6,13 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform _realPackMount;
     [SerializeField] private Transform _simulatedPackMount;
 
+    private float _prevPackMountY;
+
     private List<(GameObject simulatedObject, GameObject realObject)> objectPairs = new();
+    private void Start()
+    {
+        _prevPackMountY = _realPackMount.transform.position.y;
+    }
     public GameObject CreateObject(GameObject litterObject)
     {
         LitterFlightBehaviour flightScript = litterObject.GetComponent<LitterFlightBehaviour>();
@@ -31,6 +37,14 @@ public class InventoryManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        float verticalVel = (_realPackMount.transform.position.y - _prevPackMountY) / Time.deltaTime;
+        foreach (var objectPair in objectPairs) 
+        {
+            objectPair.simulatedObject.GetComponent<Rigidbody>().AddForce(Vector3.up *  -verticalVel * 0.1f, ForceMode.Force);
+        }
+
+
+        _prevPackMountY = _realPackMount.transform.position.y;
         foreach (var objectPair in objectPairs)
         {
             Vector3 offset = objectPair.simulatedObject.transform.position - _simulatedPackMount.position;
