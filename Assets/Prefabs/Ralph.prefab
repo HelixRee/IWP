@@ -51390,7 +51390,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 0.8
   SprintSpeed: 3
+  EndsSpeedLimit: {x: 0, y: 0}
+  SidesSpeedLimit: {x: 0, y: 0}
   RotationSmoothTime: 0.12
+  AffectRotation: 1
   SpeedChangeRate: 10
   JumpHeight: 0.75
   Gravity: -15
@@ -51442,6 +51445,7 @@ MonoBehaviour:
   jump: 0
   jumpHeld: 0
   sprint: 0
+  aiming: 0
   analogMovement: 1
   cursorLocked: 1
   cursorInputForLook: 1

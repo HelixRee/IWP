@@ -19,10 +19,13 @@ public class RalphMovementController : MonoBehaviour
 
     [Tooltip("Sprint speed of the character in m/s")]
     public float SprintSpeed = 5.335f;
+    public Vector2 EndsSpeedLimit = Vector2.zero;
+    public Vector2 SidesSpeedLimit = Vector2.zero;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
     public float RotationSmoothTime = 0.12f;
+    public bool AffectRotation = true;
 
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
@@ -82,6 +85,7 @@ public class RalphMovementController : MonoBehaviour
     private int _animIDJump;
     private int _animIDFreeFall;
     private int _animIDLeftFootFlag;
+    private int _animIDThrowingFlag;
 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
@@ -197,6 +201,7 @@ public class RalphMovementController : MonoBehaviour
         _animIDLeftFootFlag = Animator.StringToHash("isOnLeftFoot");
         _animIDFallTrigger = Animator.StringToHash("fallTrigger");
         _animIDJumpTrigger = Animator.StringToHash("jumpTrigger");
+        _animIDThrowingFlag = Animator.StringToHash("isThrowing");
     }
 
     private void GroundedCheck()
@@ -281,6 +286,7 @@ public class RalphMovementController : MonoBehaviour
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+        AffectRotation = !_input.aiming;
 
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is a move input rotate player when the player is moving
@@ -288,7 +294,21 @@ public class RalphMovementController : MonoBehaviour
         {
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                               _mainCamera.transform.eulerAngles.y;
-            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+
+            if (AffectRotation)
+            {
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                    RotationSmoothTime);
+
+                // rotate to face input direction relative to camera position
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
+        }
+        if (!AffectRotation && _input.aiming)
+        {
+            float cameraRotation = _mainCamera.transform.eulerAngles.y;
+
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, cameraRotation, ref _rotationVelocity,
                 RotationSmoothTime);
 
             // rotate to face input direction relative to camera position
@@ -296,10 +316,17 @@ public class RalphMovementController : MonoBehaviour
         }
         DriftPrevention();
 
-        Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+        Vector3 targetDirection = (Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward).normalized;
+        Vector3 relativeDirection = transform.InverseTransformVector(targetDirection);
+        float speedLimit = 0f;
+        speedLimit += relativeDirection.x > 0 ? Mathf.Lerp(0, SidesSpeedLimit.y, relativeDirection.x) : Mathf.Lerp(0, -SidesSpeedLimit.x, -relativeDirection.x);
+        speedLimit += relativeDirection.z > 0 ? Mathf.Lerp(0, EndsSpeedLimit.y, relativeDirection.z) : Mathf.Lerp(0, -EndsSpeedLimit.x, -relativeDirection.z);
+
+        Debug.Log(speedLimit);
+        float clampedSpeed = Mathf.Clamp(_speed, 0, speedLimit);
 
         // move the player
-        _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+        _controller.Move(targetDirection * (clampedSpeed * Time.deltaTime) +
                          new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
         // update animator if using character
@@ -308,9 +335,11 @@ public class RalphMovementController : MonoBehaviour
             Vector3 relativeVel = _controller.transform.InverseTransformDirection(_controller.velocity);
             Animator.SetFloat(_animIDSpeedX, Mathf.Lerp(Animator.GetFloat(_animIDSpeedX), relativeVel.x, 12f * Time.deltaTime));
             Animator.SetFloat(_animIDSpeedZ, Mathf.Lerp(Animator.GetFloat(_animIDSpeedZ), relativeVel.z, 12f * Time.deltaTime));
+
+            Animator.SetBool(_animIDThrowingFlag, _input.aiming);
             //Animator.SetFloat(_animIDSpeedZ, 3);
-            if (Animator.GetFloat(_animIDSpeedX) < 0.001f) Animator.SetFloat(_animIDSpeedX, 0f);
-            if (Animator.GetFloat(_animIDSpeedZ) < 0.001f) Animator.SetFloat(_animIDSpeedZ, 0f);
+            //if (Animator.GetFloat(_animIDSpeedX) < 0.001f) Animator.SetFloat(_animIDSpeedX, 0f);
+            //if (Animator.GetFloat(_animIDSpeedZ) < 0.001f) Animator.SetFloat(_animIDSpeedZ, 0f);
         }
     }
     private void DriftPrevention()
