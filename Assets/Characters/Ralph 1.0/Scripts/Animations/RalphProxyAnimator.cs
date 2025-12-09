@@ -29,6 +29,7 @@ public class RalphProxyAnimator : MonoBehaviour
     public LayerMask GroundLayers;
     public bool IsGrounded = true;
     public bool IsFalling = true;
+    public bool IsAiming = false;
     public List<BaseRalphAnimator> updateOrder = new();
 
     public Armature Source;
@@ -40,7 +41,8 @@ public class RalphProxyAnimator : MonoBehaviour
 
     [Header("Leg Animators")]
     public List<RalphLegAnimator> LegAnimators = new();
-
+    [Header("Arm Animators")]
+    public List<RalphArmAnimator> ArmAnimators = new();
     private float _scaleRatio = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -62,6 +64,7 @@ public class RalphProxyAnimator : MonoBehaviour
 
 
         // Update child scripts
+        ArmAnimators.ForEach(item => item.isAiming = IsAiming);
         updateOrder.ForEach(item => { item.IsGrounded = IsGrounded; item.IsFalling = IsFalling; });
         updateOrder.ForEach(item => { if (item.enabled) item.ManualUpdate(); });
     }

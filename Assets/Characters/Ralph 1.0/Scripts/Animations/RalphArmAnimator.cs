@@ -57,10 +57,10 @@ public class RalphArmAnimator : BaseRalphAnimator
     public TransformGroup Source;
     [Header("Ralph")]
     public Vector3 handTarget;
-    public SODVec3 overrideHandTarget;
+    public SODVec3 terrainHandTarget;
     public Vector3 currentHandTarget;
-    public bool overrideAnimation = false;
-    public float overrideTransition = 0;
+    public bool terrainAnimation = false;
+    public float terrainTransition = 0;
     public bool isLeft = false;
     int offsetMult => isLeft ? -1 : 1;
     public TransformGroup Ralph;
@@ -80,6 +80,13 @@ public class RalphArmAnimator : BaseRalphAnimator
 
     // Arm world interaction
     private Vector3 _colliderSize;
+
+    [Header("Throw")]
+    [SerializeField] private Transform _throwIdle;
+    public Vector3 aimTargetOffset = Vector3.zero;
+    public float aimTransition = 0f;
+    public bool isAiming = false;
+    public bool wasAiming = false;
     private void OnValidate()
     {
         ManualInit();
@@ -96,15 +103,33 @@ public class RalphArmAnimator : BaseRalphAnimator
         _colliderSize = new Vector3(_totalArmLength / 2, 0.2f, _totalArmLength / 2);
 
         _scaleRatio = ralphLength / sourceLength;
-        overrideHandTarget = new(Vector3.zero, 3, 0.5f, 2);
+        terrainHandTarget = new(Vector3.zero, 2, 0.7f, 2);
+        terrainHandTarget.AbsValue = new Vector3(1, 1, 1);
     }
 
     public override void ManualUpdate()
     {
+        //Debug.Log(terrainHandTarget.Value);
+
+        if (_throwIdle != null)
+            UpdateThrowLogic();
+        //if (!isAiming)
         UpdateHandLogic();
+
         UpdateHandIK();
     }
-
+    private void UpdateThrowLogic()
+    {
+        if (isAiming)
+        {
+            aimTransition = Mathf.Lerp(aimTransition, 1, Time.deltaTime * 12f);
+        }
+        else
+        {
+            aimTransition = Mathf.Lerp(aimTransition, 0, Time.deltaTime * 12f);
+        }
+        wasAiming = isAiming;
+    }
     private void SetZRotation(Transform transform, float rotation)
     {
         Vector3 angles = transform.localEulerAngles;
@@ -128,10 +153,10 @@ public class RalphArmAnimator : BaseRalphAnimator
 
     private void OnDrawGizmosSelected()
     {
-        if (overrideAnimation)
+        if (terrainAnimation)
         {
             Gizmos.color = new Color(1, 1, 0, 0.5f);
-            Gizmos.DrawSphere(overrideHandTarget.Value, _lowerArmLength * 0.1f);
+            Gizmos.DrawSphere(terrainHandTarget.Value, _lowerArmLength * 0.1f);
 
         }
         Gizmos.color = new Color(0, 0, 1, 0.5f);
@@ -195,10 +220,10 @@ public class RalphArmAnimator : BaseRalphAnimator
             }
         }
         // If dot shows that position is no longer infront of player, cancel the connection
-        if (!overrideAnimation) return;
+        if (!terrainAnimation) return;
         if (ShouldCancelOverride())
         {
-            overrideAnimation = false;
+            terrainAnimation = false;
         }
     }
     private void PrimaryRaycast()
@@ -209,7 +234,7 @@ public class RalphArmAnimator : BaseRalphAnimator
         if (hitInfo.collider == null)
         {
 
-            Vector3 dir = (overrideHandTarget.Value - transform.position);
+            Vector3 dir = (terrainHandTarget.Value - transform.position);
             dir = (dir - dir.normalized * 0.05f).normalized;
             Raycast(dir, out hitInfo);
             if (hitInfo.collider != null)
@@ -222,12 +247,12 @@ public class RalphArmAnimator : BaseRalphAnimator
             float dot = Vector3.Dot(hitInfo.normal, -_auxCastDir);
             if (dot > 0.5f)
             {
-                if (!overrideAnimation)
-                    overrideHandTarget.AbsValue = hitInfo.point - _auxCastDir * 0.05f;
+                if (!terrainAnimation)
+                    terrainHandTarget.AbsValue = hitInfo.point - _auxCastDir * 0.05f;
                 else
-                    overrideHandTarget.Update(Time.deltaTime, hitInfo.point - _auxCastDir * 0.05f);
+                    terrainHandTarget.Update(Time.deltaTime, hitInfo.point - _auxCastDir * 0.05f);
 
-                overrideAnimation = true;
+                terrainAnimation = true;
             }
             else
                 _auxCastDir = prevAuxCastDir;
@@ -246,7 +271,7 @@ public class RalphArmAnimator : BaseRalphAnimator
     }
     private bool ShouldCancelOverride()
     {
-        Vector3 disp = overrideHandTarget.Value - transform.position;
+        Vector3 disp = terrainHandTarget.Value - transform.position;
         float fwdDot = Vector3.Dot(disp.normalized, -transform.parent.right);
         float rightDot = Vector3.Dot(disp.normalized, transform.parent.forward * offsetMult);
         //Debug.Log("Forward: " + fwdDot + ", Right: " + rightDot + ", " + name);
@@ -258,7 +283,7 @@ public class RalphArmAnimator : BaseRalphAnimator
     {
         float distanceMult = 1 + (handTarget - currentHandTarget).magnitude * 4;
         //Debug.Log(3f * distanceMult + " : " + name);
-        overrideTransition = Mathf.Lerp(overrideTransition, (overrideAnimation && IsGrounded) ? 1 : 0, 3f * distanceMult * Time.deltaTime);
+        terrainTransition = Mathf.Lerp(terrainTransition, (terrainAnimation && IsGrounded) ? 1 : 0, 3f * distanceMult * Time.deltaTime);
 
         // Calculate direction and position of end
         _sourceAnchorToEndDir = (Source.End.position - Source.Anchor.position).normalized;
@@ -268,7 +293,9 @@ public class RalphArmAnimator : BaseRalphAnimator
         // Set proxy end position to match animation
         handTarget = Ralph.Anchor.position + _sourceAnchorToEndDir * _ralphAnchorToEndDist;
 
-        currentHandTarget = Vector3.Lerp(handTarget, overrideHandTarget.Value, overrideTransition);
+        currentHandTarget = Vector3.Lerp(handTarget, terrainHandTarget.Value, terrainTransition);
+        if (_throwIdle)
+            currentHandTarget = Vector3.Lerp(currentHandTarget, _throwIdle.position + aimTargetOffset, aimTransition);
 
         Vector3 currentSourceAnchorToEndDir = (currentHandTarget - Ralph.Anchor.position).normalized;
         {

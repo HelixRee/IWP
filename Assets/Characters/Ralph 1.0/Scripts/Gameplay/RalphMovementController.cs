@@ -185,6 +185,8 @@ public class RalphMovementController : MonoBehaviour
         else
             _hasAnimator = true;
 
+        ProxyAnimator.IsAiming = _input.aiming;
+
         JumpAndGravity();
         GroundedCheck();
         Slide();
@@ -322,7 +324,7 @@ public class RalphMovementController : MonoBehaviour
         speedLimit += relativeDirection.x > 0 ? Mathf.Lerp(0, SidesSpeedLimit.y, relativeDirection.x) : Mathf.Lerp(0, -SidesSpeedLimit.x, -relativeDirection.x);
         speedLimit += relativeDirection.z > 0 ? Mathf.Lerp(0, EndsSpeedLimit.y, relativeDirection.z) : Mathf.Lerp(0, -EndsSpeedLimit.x, -relativeDirection.z);
 
-        Debug.Log(speedLimit);
+        //Debug.Log(speedLimit);
         float clampedSpeed = Mathf.Clamp(_speed, 0, speedLimit);
 
         // move the player

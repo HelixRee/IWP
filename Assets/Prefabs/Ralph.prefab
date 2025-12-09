@@ -36173,6 +36173,9 @@ MonoBehaviour:
     Anchor: {fileID: 5604182713748911940}
     Elbow: {fileID: 9025559125634614341}
     End: {fileID: 3054319822685266804}
+  _throwIdle: {fileID: 0}
+  isAiming: 0
+  wasAiming: 0
 --- !u!54 &6125645044762594842
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38086,6 +38089,9 @@ MonoBehaviour:
     Anchor: {fileID: 6448711681231501723}
     Elbow: {fileID: 1276340242957764809}
     End: {fileID: 3566257193632263069}
+  _throwIdle: {fileID: 0}
+  isAiming: 0
+  wasAiming: 0
 --- !u!54 &4128552332006053201
 Rigidbody:
   m_ObjectHideFlags: 0
