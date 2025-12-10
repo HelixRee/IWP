@@ -6,10 +6,25 @@ public class InventoryManager : MonoBehaviour
 {
     [SerializeField] private Transform _realPackMount;
     [SerializeField] private Transform _simulatedPackMount;
+    [SerializeField] private BoxCollider _boxCast;
+    [SerializeField] private LayerMask _litterLayer;
 
     private float _prevPackMountY;
     private Dictionary<GameObject, LitterBehaviour> litterBehaviours = new();
+    public static InventoryManager Instance { get; private set; }
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Destroy duplicate instances
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Optional: Persist across scene loads
+        }
+    }
     private void Start()
     {
         _prevPackMountY = _realPackMount.transform.position.y;
@@ -35,7 +50,7 @@ public class InventoryManager : MonoBehaviour
         return simObject;
     }
 
-    public void RemoveLitterSimObject(GameObject simObject)
+    public void RemoveLitterSimObject(GameObject simObject, bool reeableObject = true)
     {
         LitterBehaviour litterScript = litterBehaviours[simObject];
         litterBehaviours.Remove(simObject);
@@ -56,12 +71,26 @@ public class InventoryManager : MonoBehaviour
 
         Collider collider = litterScript.GetComponent<Collider>();
         collider.enabled = true;
-        IEnumerator coroutine;
-        coroutine = WaitAndEnable(litterScript);
-        StartCoroutine(coroutine);
+
+        if (reeableObject)
+        {
+            IEnumerator coroutine;
+            coroutine = WaitAndEnable(litterScript);
+            StartCoroutine(coroutine);
+        }
     }
 
-    private IEnumerator WaitAndEnable(LitterBehaviour litterScript)
+    public LitterBehaviour RemoveTopLitterObject()
+    {
+        RaycastHit hit;
+        if (!Physics.BoxCast(_boxCast.center + _boxCast.transform.position, _boxCast.bounds.extents / 2f, _boxCast.transform.forward, out hit, _boxCast.transform.rotation, 10f, _litterLayer))
+            return null;
+        LitterBehaviour litterScript = litterBehaviours[hit.collider.gameObject];
+        RemoveLitterSimObject(hit.collider.gameObject, false);
+        return litterScript;
+    }
+
+    public IEnumerator WaitAndEnable(LitterBehaviour litterScript)
     {
         yield return new WaitForSeconds(2);
         litterScript.isAsleep = false;

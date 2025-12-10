@@ -44,6 +44,7 @@ public class RalphProxyAnimator : MonoBehaviour
     [Header("Arm Animators")]
     public List<RalphArmAnimator> ArmAnimators = new();
     private float _scaleRatio = 1f;
+    private Vector3 _aimDirection = Vector3.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -56,7 +57,7 @@ public class RalphProxyAnimator : MonoBehaviour
         updateOrder.ForEach(item => item.GroundLayers = GroundLayers);
         updateOrder.ForEach(item => item.ManualInit());
     }
-
+    
     void LateUpdate()
     {
         HipFollower.ManualUpdate();
@@ -64,6 +65,7 @@ public class RalphProxyAnimator : MonoBehaviour
 
 
         // Update child scripts
+        ArmAnimators.ForEach(item => item.throwDirection = _aimDirection);
         ArmAnimators.ForEach(item => item.isAiming = IsAiming);
         updateOrder.ForEach(item => { item.IsGrounded = IsGrounded; item.IsFalling = IsFalling; });
         updateOrder.ForEach(item => { if (item.enabled) item.ManualUpdate(); });
@@ -81,7 +83,10 @@ public class RalphProxyAnimator : MonoBehaviour
         RealHips.position = clampedPosition;
         //Ralph.Pelvis.rotation = Source.Pelvis.rotation * Ralph._pelvisRotation;
     }
-
+    public void SetAimDirection(Vector3 aimDir)
+    {
+        _aimDirection = aimDir;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

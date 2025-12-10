@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class RalphArmAnimator : BaseRalphAnimator
@@ -84,6 +85,9 @@ public class RalphArmAnimator : BaseRalphAnimator
     [Header("Throw")]
     [SerializeField] private Transform _throwIdle;
     public Vector3 aimTargetOffset = Vector3.zero;
+    public Vector3 throwDirection = Vector3.zero;
+    public AnimationCurve throwMotion = new();
+    public float throwStartTimestamp = 0;
     public float aimTransition = 0f;
     public bool isAiming = false;
     public bool wasAiming = false;
@@ -122,13 +126,23 @@ public class RalphArmAnimator : BaseRalphAnimator
     {
         if (isAiming)
         {
+            if (!wasAiming) aimTargetOffset = Vector3.zero;
             aimTransition = Mathf.Lerp(aimTransition, 1, Time.deltaTime * 12f);
         }
         else
         {
-            aimTransition = Mathf.Lerp(aimTransition, 0, Time.deltaTime * 12f);
+            if (wasAiming)
+            {
+                //throwDirection = Camera.main.transform.forward;
+                throwStartTimestamp = Time.time;
+            }
+            if (Time.time > throwStartTimestamp + throwMotion.keys.Last().time)
+                aimTransition = Mathf.Lerp(aimTransition, 0, Time.deltaTime * 12f);
+            aimTargetOffset = throwMotion.Evaluate(Time.time - throwStartTimestamp) * throwDirection;
         }
         wasAiming = isAiming;
+
+
     }
     private void SetZRotation(Transform transform, float rotation)
     {

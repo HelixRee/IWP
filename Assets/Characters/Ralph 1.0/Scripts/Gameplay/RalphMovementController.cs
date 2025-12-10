@@ -186,6 +186,7 @@ public class RalphMovementController : MonoBehaviour
             _hasAnimator = true;
 
         ProxyAnimator.IsAiming = _input.aiming;
+        ProxyAnimator.SetAimDirection(Camera.main.transform.forward);
 
         JumpAndGravity();
         GroundedCheck();

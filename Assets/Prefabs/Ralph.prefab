@@ -36166,14 +36166,24 @@ MonoBehaviour:
     End: {fileID: 5720033320455984985}
   handTarget: {x: 0, y: 0, z: 0}
   currentHandTarget: {x: 0, y: 0, z: 0}
-  overrideAnimation: 0
-  overrideTransition: 0
+  terrainAnimation: 0
+  terrainTransition: 0
   isLeft: 1
   Ralph:
     Anchor: {fileID: 5604182713748911940}
     Elbow: {fileID: 9025559125634614341}
     End: {fileID: 3054319822685266804}
   _throwIdle: {fileID: 0}
+  aimTargetOffset: {x: 0, y: 0, z: 0}
+  throwDirection: {x: 0, y: 0, z: 0}
+  throwMotion:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  throwStartTimestamp: 0
+  aimTransition: 0
   isAiming: 0
   wasAiming: 0
 --- !u!54 &6125645044762594842
@@ -38082,14 +38092,24 @@ MonoBehaviour:
     End: {fileID: 930111942606208338}
   handTarget: {x: 0, y: 0, z: 0}
   currentHandTarget: {x: 0, y: 0, z: 0}
-  overrideAnimation: 0
-  overrideTransition: 0
+  terrainAnimation: 0
+  terrainTransition: 0
   isLeft: 0
   Ralph:
     Anchor: {fileID: 6448711681231501723}
     Elbow: {fileID: 1276340242957764809}
     End: {fileID: 3566257193632263069}
   _throwIdle: {fileID: 0}
+  aimTargetOffset: {x: 0, y: 0, z: 0}
+  throwDirection: {x: 0, y: 0, z: 0}
+  throwMotion:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  throwStartTimestamp: 0
+  aimTransition: 0
   isAiming: 0
   wasAiming: 0
 --- !u!54 &4128552332006053201
@@ -40066,6 +40086,7 @@ MonoBehaviour:
     m_Bits: 320
   IsGrounded: 1
   IsFalling: 1
+  IsAiming: 0
   updateOrder:
   - {fileID: 487030703795848660}
   - {fileID: 5396150502052321112}
@@ -40092,6 +40113,7 @@ MonoBehaviour:
   LegAnimators:
   - {fileID: 1194286610500362712}
   - {fileID: 4742710704946810320}
+  ArmAnimators: []
 --- !u!114 &1982015980663434526
 MonoBehaviour:
   m_ObjectHideFlags: 0
