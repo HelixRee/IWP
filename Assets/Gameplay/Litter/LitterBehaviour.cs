@@ -40,20 +40,20 @@ public class LitterBehaviour : MonoBehaviour
         knot.TangentIn = Vector3.up * 1f;
         path.Add(knot);
 
+        inventoryManager = InventoryManager.Instance;
     }
     private void LateUpdate()
     {
         if (target == null) return;
 
         activeOffset = target.position - startOffset;
-
-        path.Evaluate(Time.time - startTime, out var position, out var tangent, out var normal);
+        path.Evaluate((Time.time - startTime) * 2, out var position, out var tangent, out var normal);
         transform.position = (Vector3)position + activeOffset;
 
         if (Vector3.Distance(transform.position, target.position) < 0.05f)
         {
             enabled = false;
-            inventoryManager.CreateLitterObject(this);
+            InventoryManager.Instance.CreateLitterObject(this);
             Collider collider = GetComponent<Collider>();
             collider.enabled = false;
         }

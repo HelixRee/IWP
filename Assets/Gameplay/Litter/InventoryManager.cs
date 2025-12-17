@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField] private Transform _realPackMount;
     [SerializeField] private Transform _simulatedPackMount;
+    [SerializeField] private RotationConstraint _rotationConstraint;
     [SerializeField] private BoxCollider _boxCast;
     [SerializeField] private LayerMask _litterLayer;
 
     private float _prevPackMountY;
-    private Dictionary<GameObject, LitterBehaviour> litterBehaviours = new();
+    private Dictionary<GameObject, LitterBehaviour> _litterBehaviours = new();
     public static InventoryManager Instance { get; private set; }
 
     private void Awake()
@@ -27,12 +29,21 @@ public class InventoryManager : MonoBehaviour
     }
     private void Start()
     {
+        ConstraintSource constraintSource = new();
+        constraintSource.weight = 1f;
+        constraintSource.sourceTransform = _realPackMount;
+
+        _rotationConstraint.SetSource(0, constraintSource);
+        _rotationConstraint.rotationOffset = Vector3.zero;
+        _rotationConstraint.rotationAtRest = Vector3.zero;
+
+
         _prevPackMountY = _realPackMount.transform.position.y;
     }
     public GameObject CreateLitterObject(LitterBehaviour litterScript)
     {
         GameObject simObject = Instantiate(litterScript.gameObject, transform);
-        litterBehaviours.Add(simObject, litterScript);
+        _litterBehaviours.Add(simObject, litterScript);
         litterScript.simulatedObject = simObject;
 
         Rigidbody rb = simObject.GetComponent<Rigidbody>();
@@ -52,8 +63,8 @@ public class InventoryManager : MonoBehaviour
 
     public void RemoveLitterSimObject(GameObject simObject, bool reeableObject = true)
     {
-        LitterBehaviour litterScript = litterBehaviours[simObject];
-        litterBehaviours.Remove(simObject);
+        LitterBehaviour litterScript = _litterBehaviours[simObject];
+        _litterBehaviours.Remove(simObject);
 
         Destroy(simObject);
         litterScript.simulatedObject = null;
@@ -85,7 +96,7 @@ public class InventoryManager : MonoBehaviour
         RaycastHit hit;
         if (!Physics.BoxCast(_boxCast.center + _boxCast.transform.position, _boxCast.bounds.extents / 2f, _boxCast.transform.forward, out hit, _boxCast.transform.rotation, 10f, _litterLayer))
             return null;
-        LitterBehaviour litterScript = litterBehaviours[hit.collider.gameObject];
+        LitterBehaviour litterScript = _litterBehaviours[hit.collider.gameObject];
         RemoveLitterSimObject(hit.collider.gameObject, false);
         return litterScript;
     }
@@ -99,14 +110,14 @@ public class InventoryManager : MonoBehaviour
     private void LateUpdate()
     {
         float verticalVel = (_realPackMount.transform.position.y - _prevPackMountY) / Time.deltaTime;
-        foreach (var litterScript in litterBehaviours)
+        foreach (var litterScript in _litterBehaviours)
         {
-            litterScript.Value.simulatedObject.GetComponent<Rigidbody>().AddForce(Vector3.up * -verticalVel * 0.1f, ForceMode.Force);
+            litterScript.Value.simulatedObject.GetComponent<Rigidbody>().AddForce(Vector3.up * -verticalVel * 0.3f, ForceMode.Force);
         }
 
 
         _prevPackMountY = _realPackMount.transform.position.y;
-        foreach (var litterScript in litterBehaviours)
+        foreach (var litterScript in _litterBehaviours)
         {
             Vector3 offset = litterScript.Value.simulatedObject.transform.position - _simulatedPackMount.position;
             litterScript.Value.gameObject.transform.position = _realPackMount.position + offset;

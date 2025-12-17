@@ -235,6 +235,9 @@ public class RalphMovementController : MonoBehaviour
 
         if (ProxyAnimator)
         {
+            if (!ProxyAnimator.IsGrounded && Grounded)
+                BroadcastMessage("OnLand", _controller.velocity.y);
+
             ProxyAnimator.IsGrounded = Grounded;
         }
     }

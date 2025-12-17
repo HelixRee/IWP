@@ -37,6 +37,7 @@ public class RalphProxyAnimator : MonoBehaviour
 
     [Header("Hip Animation")]
     public FollowObject HipFollower;
+    private Vector3 _hipPreviousPosiion = Vector3.zero;
     public Transform RealHips;
 
     [Header("Leg Animators")]
@@ -52,6 +53,7 @@ public class RalphProxyAnimator : MonoBehaviour
         HipFollower.ManualInit();
         _scaleRatio = Ralph.GetPelvisOffset().magnitude / Source.GetPelvisOffset().magnitude;
         Ralph.CaptureInitialOffset();
+        _hipPreviousPosiion = HipFollower.transform.position;
 
         // Initalise child scripts
         updateOrder.ForEach(item => item.GroundLayers = GroundLayers);
@@ -60,6 +62,10 @@ public class RalphProxyAnimator : MonoBehaviour
     
     void LateUpdate()
     {
+        if (_hipPreviousPosiion.y < HipFollower.transform.position.y)
+            BroadcastMessage("OnLandRecover");
+
+        _hipPreviousPosiion = HipFollower.transform.position;
         HipFollower.ManualUpdate();
         UpdateRootMotion();
 
