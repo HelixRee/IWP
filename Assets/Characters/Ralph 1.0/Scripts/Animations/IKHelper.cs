@@ -132,6 +132,7 @@ public class SODVec3
     public Vector3 Value
     {
         get { return y; }
+        set { y = value; }
     }
     public Vector3 AbsValue
     {

@@ -110,6 +110,8 @@ public class RalphProxyAnimator : MonoBehaviour
     private void DrawGizmoToParent(Transform child)
     {
         if (child.name == "Main") return;
+        if (child == null) return;
+        if (child.parent == null) return;
         Gizmos.DrawLine(child.position, child.parent.position);
         DrawGizmoToParent(child.parent);
     }

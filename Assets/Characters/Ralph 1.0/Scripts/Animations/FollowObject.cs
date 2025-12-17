@@ -40,7 +40,7 @@ public class FollowObject : BaseRalphAnimator
         if (DistanceAnchor)
             CalculateDistanceAnchor(DistanceAnchor, AnchorMaxDistance, ref newPos);
 
-        smoothedPosition.AbsValue = newPos;
+        smoothedPosition.Value = newPos;
         transform.position = newPos;
     }
 
