@@ -7,7 +7,7 @@ public class InventoryManager : MonoBehaviour
 {
     [SerializeField] private Transform _realPackMount;
     [SerializeField] private Transform _simulatedPackMount;
-    [SerializeField] private RotationConstraint _rotationConstraint;
+    [SerializeField] private Transform _kinematicProxy;
     [SerializeField] private BoxCollider _boxCast;
     [SerializeField] private LayerMask _litterLayer;
 
@@ -29,16 +29,11 @@ public class InventoryManager : MonoBehaviour
     }
     private void Start()
     {
-        ConstraintSource constraintSource = new();
-        constraintSource.weight = 1f;
-        constraintSource.sourceTransform = _realPackMount;
-
-        _rotationConstraint.SetSource(0, constraintSource);
-        _rotationConstraint.rotationOffset = Vector3.zero;
-        _rotationConstraint.rotationAtRest = Vector3.zero;
-
-
         _prevPackMountY = _realPackMount.transform.position.y;
+    }
+    private void Update()
+    {
+        _kinematicProxy.transform.rotation = _realPackMount.transform.rotation;
     }
     public GameObject CreateLitterObject(LitterBehaviour litterScript)
     {
