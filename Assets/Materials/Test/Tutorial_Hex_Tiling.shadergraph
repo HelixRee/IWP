@@ -94,9 +94,6 @@
             "m_Id": "eeda8ca8dc7647af8894bba02770d3e1"
         },
         {
-            "m_Id": "f04fb1cc5dec47b4bc07562b0c974302"
-        },
-        {
             "m_Id": "e231156468b747679996dde6515505c5"
         },
         {
@@ -289,20 +286,6 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "3ad66453b84246b29b7773fd909c0a2e"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "038d1602c62f47afbff6d92131981b05"
-                },
-                "m_SlotId": 3
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "f04fb1cc5dec47b4bc07562b0c974302"
                 },
                 "m_SlotId": 0
             }
@@ -1383,9 +1366,6 @@
                 "m_Id": "eeda8ca8dc7647af8894bba02770d3e1"
             },
             {
-                "m_Id": "f04fb1cc5dec47b4bc07562b0c974302"
-            },
-            {
                 "m_Id": "d7714813b0da4dd6aa9894a491caaf17"
             }
         ]
@@ -1687,30 +1667,6 @@
         "z": 0.0,
         "w": 0.0
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
-    "m_ObjectId": "0b5198d9b60b425a814bea4d94ae3633",
-    "m_Id": 0,
-    "m_DisplayName": "Normal (World Space)",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "NormalWS",
-    "m_StageCapability": 2,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_Labels": [],
-    "m_Space": 2
 }
 
 {
@@ -2523,7 +2479,7 @@
     "m_ObjectId": "2d466abb7c7847c0bd4b463673e8a606",
     "m_Title": "Color",
     "m_Position": {
-        "x": -3040.0,
+        "x": -3039.999755859375,
         "y": -594.0
     }
 }
@@ -2819,17 +2775,17 @@
     "m_Type": "UnityEditor.ShaderGraph.TransformNode",
     "m_ObjectId": "3ad66453b84246b29b7773fd909c0a2e",
     "m_Group": {
-        "m_Id": ""
+        "m_Id": "685ef97c4ab343619c8506795f3c53d8"
     },
     "m_Name": "Transform",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -402.9452819824219,
-            "y": 696.8497314453125,
-            "width": 0.0,
-            "height": 0.0
+            "x": -847.0,
+            "y": 757.0,
+            "width": 212.99993896484376,
+            "height": 157.0
         }
     },
     "m_Slots": [
@@ -2849,7 +2805,7 @@
         "convert"
     ],
     "m_Precision": 0,
-    "m_PreviewExpanded": true,
+    "m_PreviewExpanded": false,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
@@ -3883,8 +3839,8 @@
     "m_ObjectId": "5f706e0308e44f78a94b576a24a4c148",
     "m_Title": "Mask",
     "m_Position": {
-        "x": -3051.0,
-        "y": 106.0
+        "x": -3050.999755859375,
+        "y": 106.0000228881836
     }
 }
 
@@ -4286,7 +4242,7 @@
     "m_Title": "Surfgrad",
     "m_Position": {
         "x": -3042.0,
-        "y": 607.0001220703125
+        "y": 606.9999389648438
     }
 }
 
@@ -8172,40 +8128,6 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Occlusion"
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "f04fb1cc5dec47b4bc07562b0c974302",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.NormalWS",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "0b5198d9b60b425a814bea4d94ae3633"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.NormalWS"
 }
 
 {
