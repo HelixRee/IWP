@@ -80,12 +80,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_c7e00ada730c473cae90516df057effc_Texture_1_Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Secondary_Color:
         m_Texture: {fileID: 2800000, guid: 040d3d758a67e6546bc0fd4b19a70676, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Secondary_Color_RGB_T2:
         m_Texture: {fileID: 2800000, guid: 040d3d758a67e6546bc0fd4b19a70676, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Secondary_Height:
+        m_Texture: {fileID: 2800000, guid: cb503ed5dfb9cdc4398a2275e7c29caa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -128,11 +136,11 @@ Material:
     - _Hex_Debug: 0
     - _Hex_Debug_Opacity: 0.3
     - _Hex_Enable: 1
-    - _Hex_Rotation: 0
+    - _Hex_Rotation: 4.87
     - _Mask_Enable: 1
     - _Metallic: 0
     - _Normal_Enable: 1
-    - _Normal_Intensity: 3.65
+    - _Normal_Intensity: 3.4
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
