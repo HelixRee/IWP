@@ -88,6 +88,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 040d3d758a67e6546bc0fd4b19a70676, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Secondary_Color_RGB:
+        m_Texture: {fileID: 2800000, guid: 040d3d758a67e6546bc0fd4b19a70676, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Secondary_Color_RGB_T2:
         m_Texture: {fileID: 2800000, guid: 040d3d758a67e6546bc0fd4b19a70676, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -140,7 +144,7 @@ Material:
     - _Mask_Enable: 1
     - _Metallic: 0
     - _Normal_Enable: 1
-    - _Normal_Intensity: 3.4
+    - _Normal_Intensity: 100
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -153,6 +157,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _Temp: 0.00006103516
     - _Tiling: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
