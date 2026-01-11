@@ -7,10 +7,10 @@ public class RalphParticleController : MonoBehaviour
     [SerializeField] private List<ParticleSystem> _sparkParticles = new();
     void OnLand(float verticalVelocity)
     {
-        Debug.Log("Landed with a velocity of " + verticalVelocity);
+        //Debug.Log("Landed with a velocity of " + verticalVelocity);
         if (verticalVelocity > -4) return;
         float mult = Mathf.Clamp01(Mathf.Abs((verticalVelocity + 4) / 2f));
-        Debug.Log(mult);
+        //Debug.Log(mult);
         foreach (var particle in _sparkParticles)
         {
             var emissionMod = particle.emission;

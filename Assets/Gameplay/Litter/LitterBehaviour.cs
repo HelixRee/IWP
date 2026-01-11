@@ -33,11 +33,11 @@ public class LitterBehaviour : MonoBehaviour
         BezierKnot knot = new BezierKnot();
         path.SetTangentMode(TangentMode.AutoSmooth);
         knot.Position = transform.position;
-        knot.TangentOut = Vector3.up * 1f;
+        knot.TangentOut = Vector3.up * 0.4f;
         path.Add(knot);
 
         knot.Position = target.position;
-        knot.TangentIn = Vector3.up * 1f;
+        knot.TangentIn = Vector3.up * 0.4f;
         path.Add(knot);
 
         inventoryManager = InventoryManager.Instance;

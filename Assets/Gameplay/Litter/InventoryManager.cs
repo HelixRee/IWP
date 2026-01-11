@@ -98,7 +98,7 @@ public class InventoryManager : MonoBehaviour
 
     public IEnumerator WaitAndEnable(LitterBehaviour litterScript)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.7f);
         litterScript.isAsleep = false;
     }
 
@@ -107,7 +107,7 @@ public class InventoryManager : MonoBehaviour
         float verticalVel = (_realPackMount.transform.position.y - _prevPackMountY) / Time.deltaTime;
         foreach (var litterScript in _litterBehaviours)
         {
-            litterScript.Value.simulatedObject.GetComponent<Rigidbody>().AddForce(Vector3.up * -verticalVel * 0.3f, ForceMode.Force);
+            litterScript.Value.simulatedObject.GetComponent<Rigidbody>().AddForce(Vector3.up * -verticalVel * 0.2f, ForceMode.Force);
         }
 
 
