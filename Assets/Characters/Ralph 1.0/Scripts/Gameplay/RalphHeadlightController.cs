@@ -7,6 +7,7 @@ public class RalphHeadlightController : MonoBehaviour
     private RalphMaterialController _materialController;
 
     [Range(0,360)] public float yaw = 0f;
+    [Range(0,360)] public float pitch = 0f;
     public bool IsDeployed = false;
     [SerializeField] private Transform _brainTransform;
     [SerializeField] private Transform _rotationAnchorTransform;
@@ -36,14 +37,20 @@ public class RalphHeadlightController : MonoBehaviour
     }
     private void Update()
     {
-        yaw = Camera.main.transform.localEulerAngles.y + _yawOffset;
-
+        yaw = Mathf.Atan2(Camera.main.transform.forward.z, -Camera.main.transform.forward.x) * Mathf.Rad2Deg + 180;
+        pitch = Mathf.Atan2(new Vector2(Camera.main.transform.forward.x, Camera.main.transform.forward.z).magnitude, Camera.main.transform.forward.y) * Mathf.Rad2Deg + 180 - 90;
 
 
         _materialController.mainLightAngle = yaw;
         Vector3 angles = _rotationAnchorTransform.localEulerAngles;
         angles.z = yaw + _initialYawOffset;
         _rotationAnchorTransform.localEulerAngles = angles;
+
+
+        //angles = _lightAnchorTransform.localEulerAngles;
+        //angles.x = 90 - pitch;
+        //_lightAnchorTransform.localEulerAngles = angles;
+        _lightAnchorTransform.localRotation = Quaternion.Euler(90 - pitch, 0, 0);
     }
     void LateUpdate()
     {

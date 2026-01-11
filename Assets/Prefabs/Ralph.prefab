@@ -53683,11 +53683,18 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _mainLightPowerCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   headlightFillAmt: 1
   _mainLights:
   - {fileID: 4830407565196313806}
   - {fileID: 6110966961333964034}
   mainLightIntensity: 0
+  mainLightEmissionMult: 1
   mainLightIntensityMult: 1.5
   mainLightAngle: 0
   mainLightPower: 7
@@ -53840,6 +53847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yaw: 0
+  pitch: 0
   IsDeployed: 0
   _brainTransform: {fileID: 1721840311699905403}
   _rotationAnchorTransform: {fileID: 4959637122442900479}
