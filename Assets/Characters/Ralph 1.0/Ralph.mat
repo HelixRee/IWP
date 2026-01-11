@@ -68,6 +68,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 838c6d588d0cd604d8b5e156936132ce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Main_Light_Mask:
+        m_Texture: {fileID: 2800000, guid: 2ada252e40f813347848e637f08551d5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 2800000, guid: a393060c32b64754797a3217de52cade, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -143,6 +147,9 @@ Material:
     - _HeadlightFill3: 1
     - _HeadlightFill4: 1
     - _Hue_Offset: 0
+    - _Main_Light_Angle: 0
+    - _Main_Light_Power: 7
+    - _Main_Light_Range: 10
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005

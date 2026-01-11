@@ -15,6 +15,7 @@ namespace StarterAssets
 		public bool jumpHeld;
 		public bool sprint;
 		public bool aiming;
+		public bool headlight;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -58,8 +59,17 @@ namespace StarterAssets
         {
             AimInput(value.isPressed);
         }
+
+        public void OnHeadlight(InputValue value)
+        {
+            HeadlightInput(value.isPressed);
+        }
 #endif
-		public void AimInput(bool newAimState)
+        public void HeadlightInput(bool newAimState)
+        {
+            headlight = !headlight;
+        }
+        public void AimInput(bool newAimState)
 		{
 			aiming = newAimState;
 		}

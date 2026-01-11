@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using StarterAssets;
+using UnityEngine.Rendering.Universal;
+
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -7,13 +11,30 @@ using UnityEditor;
 [ExecuteAlways]
 public class RalphMaterialController : MonoBehaviour
 {
+    private StarterAssetsInputs _input;
+
+    public bool flagForRefresh = true;
     [Header("References")]
     [SerializeField] private Material _characterMaterial;
     [SerializeField] private List<RalphHeadlightBehaviour> _headLights = new();
     [SerializeField] private AnimationCurve _headlightIntensityCurve = new();
+    [SerializeField] private AnimationCurve _mainLightPowerCurve = new();
 
     [Header("Public Members")]
+    [InspectorName("Headlight Fill Amount")]
     [Range(0, 1f)] public float headlightFillAmt = 1f;
+
+
+    // Main Lights
+    [SerializeField] private List<Light> _mainLights = new();
+    private List<float> _mainLightInitialIntensities = new();
+    [Range(0, 2f)] public float mainLightIntensity = 0f;
+    private float _mainLightEmission = 0f;
+    [Range(0, 10f)] public float mainLightEmissionMult = 1f;
+    [Range(0, 10f)] public float mainLightIntensityMult = 1f;
+    private float _mainLightTimer = 0f;
+    [Range(0, 360f)] public float mainLightAngle = 0f;
+    [Range(1, 10f)] public float mainLightPower = 1f;
 
     [Header("Behaviour")]
     [SerializeField] private bool _randomiseHueOnStart = true;
@@ -26,13 +47,25 @@ public class RalphMaterialController : MonoBehaviour
     private int _matHLIntensity2ID;
     private int _matHLIntensity3ID;
     private int _matHLIntensity4ID;
-
+    private int _mainLightIntensityID;
+    private int _mainLightAngleID;
+    private int _mainLightPowerID;
+    //_Main_Light_Intensity
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (!Application.isPlaying) return;
+        ResetMaterials();
+        OnValidate();
+
         if (_randomiseHueOnStart)
             RandomiseHue();
+
+        _input = GetComponent<StarterAssetsInputs>();
+        _mainLightInitialIntensities.Clear();
+        _mainLights.ForEach(light => _mainLightInitialIntensities.Add(light.intensity));
+        if (!_input.headlight)
+            mainLightIntensity = 0;
     }
     private void OnValidate()
     {
@@ -42,8 +75,12 @@ public class RalphMaterialController : MonoBehaviour
             enabled = false;
         }
 
-        if (_activeMaterial == null || _activeMaterial.name != _characterMaterial.name + " (" + name + ")")
+        if (_activeMaterial == null || _activeMaterial.name != _characterMaterial.name + " (" + name + ")" || flagForRefresh)
+        {
+            flagForRefresh = false;
             _activeMaterial = new Material(_characterMaterial);
+        }
+        //_activeMaterial = new Material(_characterMaterial);
         _activeMaterial.name = _characterMaterial.name + " (" + name + ")";
         //Debug.Log("Refreshed");
 
@@ -53,6 +90,9 @@ public class RalphMaterialController : MonoBehaviour
         _matHLIntensity2ID = Shader.PropertyToID("_HLIntensity2");
         _matHLIntensity3ID = Shader.PropertyToID("_HLIntensity3");
         _matHLIntensity4ID = Shader.PropertyToID("_HLIntensity4");
+        _mainLightIntensityID = Shader.PropertyToID("_Main_Light_Intensity");
+        _mainLightAngleID = Shader.PropertyToID("_Main_Light_Angle");
+        _mainLightPowerID = Shader.PropertyToID("_Main_Light_Power");
 
 
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
@@ -64,13 +104,14 @@ public class RalphMaterialController : MonoBehaviour
             if (renderer.sharedMaterial == _activeMaterial) continue;
             renderer.SetMaterials(new List<Material>() { _activeMaterial });
         }
-
+        
         InitHeadlights();
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
             headlightFillAmt = 0f;
+        mainLightPower = _mainLightPowerCurve.Evaluate(Time.time);
 
         UpdateMaterialProperties();
         UpdateHeadlightObjects();
@@ -79,6 +120,29 @@ public class RalphMaterialController : MonoBehaviour
         if (!Application.isPlaying) return;
         if (_cycleHue)
             AdvanceHue(Time.deltaTime * 360f);
+    }
+    private void LateUpdate()
+    {
+        if (!Application.isPlaying) return;
+        if (_input.headlight)
+        {
+            _mainLightTimer += Time.deltaTime * 2;
+            float lightIntensity = _headlightIntensityCurve.Evaluate(1 - _mainLightTimer);
+            mainLightIntensity = lightIntensity * mainLightIntensityMult;
+            _mainLightEmission = lightIntensity * mainLightEmissionMult;
+        }
+        else
+        {
+            _mainLightTimer = 0;
+            mainLightIntensity = Mathf.Lerp(mainLightIntensity, 0, Time.deltaTime * 12f);
+        }
+        _mainLightTimer = Mathf.Clamp01(_mainLightTimer);
+        for (int i = 0; i < _mainLights.Count; i++)
+        {
+            _mainLights[i].intensity = mainLightIntensity * _mainLightInitialIntensities[i];
+        }
+        
+
     }
     private void InitHeadlights()
     {
@@ -108,6 +172,10 @@ public class RalphMaterialController : MonoBehaviour
         _activeMaterial.SetFloat(_matHLIntensity2ID, _headLights[1].NormalisedIntensity);
         _activeMaterial.SetFloat(_matHLIntensity3ID, _headLights[2].NormalisedIntensity);
         _activeMaterial.SetFloat(_matHLIntensity4ID, _headLights[3].NormalisedIntensity);
+        _activeMaterial.SetFloat(_mainLightIntensityID, _mainLightEmission);
+        _activeMaterial.SetFloat(_mainLightPowerID, mainLightPower);
+        _activeMaterial.SetFloat(_mainLightAngleID, mainLightAngle);
+
     }
     public void RandomiseHue()
     {
