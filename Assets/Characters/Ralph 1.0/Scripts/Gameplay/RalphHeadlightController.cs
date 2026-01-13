@@ -32,12 +32,12 @@ public class RalphHeadlightController : MonoBehaviour
         }
 
         _initialOffset = _brainTransform.localPosition.z;
-        _initialYawOffset = _rotationAnchorTransform.localEulerAngles.z;
+        _initialYawOffset = _rotationAnchorTransform.localEulerAngles.z - transform.eulerAngles.y;
         _currentOffset = new SODFloat(_initialOffset, 3, 0.9f, 1);
     }
     private void Update()
     {
-        yaw = Mathf.Atan2(Camera.main.transform.forward.z, -Camera.main.transform.forward.x) * Mathf.Rad2Deg + 180;
+        yaw = Mathf.Atan2(Camera.main.transform.forward.z, -Camera.main.transform.forward.x) * Mathf.Rad2Deg + 180 - transform.eulerAngles.y;
         pitch = Mathf.Atan2(new Vector2(Camera.main.transform.forward.x, Camera.main.transform.forward.z).magnitude, Camera.main.transform.forward.y) * Mathf.Rad2Deg + 180 - 90;
 
 

@@ -58,6 +58,7 @@ public class InventoryManager : MonoBehaviour
 
     public void RemoveLitterSimObject(GameObject simObject, bool reeableObject = true)
     {
+        if (!_litterBehaviours.ContainsKey(simObject)) return;
         LitterBehaviour litterScript = _litterBehaviours[simObject];
         _litterBehaviours.Remove(simObject);
 
