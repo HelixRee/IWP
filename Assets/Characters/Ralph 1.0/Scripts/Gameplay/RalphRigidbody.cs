@@ -11,6 +11,7 @@ public class RalphRigidbody : MonoBehaviour
             {
                 hit.rigidbody.AddForceAtPosition(Vector3.down * _mass, hit.point);
                 Debug.Log("test");
+                hit.controller.Move(hit.rigidbody.GetPointVelocity(hit.point) * Time.fixedDeltaTime);
             }
         }
         //hit.rigidbody.AddForce()
