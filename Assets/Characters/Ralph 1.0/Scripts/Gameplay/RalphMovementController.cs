@@ -71,6 +71,7 @@ public class RalphMovementController : MonoBehaviour
     private float _rotationVelocity;
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
+    private Vector3 _externalVelocity = Vector3.zero;
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -241,6 +242,11 @@ public class RalphMovementController : MonoBehaviour
             ProxyAnimator.IsGrounded = Grounded;
         }
     }
+
+    public void AddVel(Vector3 vel)
+    {
+        _externalVelocity += vel;
+    }
     private void Slide()
     {
         if (_slideVelocity != Vector3.zero)
@@ -331,10 +337,15 @@ public class RalphMovementController : MonoBehaviour
         //Debug.Log(speedLimit);
         float clampedSpeed = Mathf.Clamp(_speed, 0, speedLimit);
 
+
+
+        // add external velocity
         // move the player
         _controller.Move(targetDirection * (clampedSpeed * Time.deltaTime) +
-                         new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                         new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime +
+                         _externalVelocity * Time.deltaTime);
 
+        _externalVelocity = Vector3.zero;
         // update animator if using character
         if (_hasAnimator)
         {
