@@ -13,7 +13,7 @@ public class RalphRigidbody : MonoBehaviour
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (Vector3.Dot((hit.point - hit.collider.bounds.center), Vector3.down) < 0.9f)
+        if (hit.moveDirection.y < -0.5f)
         {
             if (hit.rigidbody != null)
             {
@@ -30,25 +30,45 @@ public class RalphRigidbody : MonoBehaviour
                 //hit.controller.Move(hit.rigidbody.GetPointVelocity(hit.point));
             }
         }
+        else
+        {
+            if (hit.rigidbody != null)
+            {
+                Vector3 resultantForce = Vector3.zero;
+                resultantForce += (_mass * 0.5f) * (hit.moveDirection * hit.moveLength * hit.moveLength);
+
+                hit.rigidbody.AddForceAtPosition(resultantForce, hit.point);
+                Debug.Log(hit.moveDirection + ", " + hit.moveLength + ", " + resultantForce);
+            }
+        }
         //hit.rigidbody.AddForce()
     }
     Vector3 vel = Vector3.one;
     private void OnTriggerStay(Collider other)
     {
         //Debug.Log(other.name);
-        if (other.TryGetComponent<Rigidbody>(out Rigidbody rigidbody)) 
+        if (other.TryGetComponent(out Rigidbody rigidbody)) 
         {
+            //Vector3 resultantForce = Vector3.zero;
+            ////resultantForce += (_mass * 0.5f) * (_controller.velocity.normalized * _controller.velocity.sqrMagnitude);
+            //resultantForce += transform.forward * _temp;
+
+            //Debug.Log("Pushing " + other.name);
+            ////rigidbody.AddForce(resultantForce);
+            ////rigidbody.AddForceAtPosition(resultantForce, other.transform.position);
+            ////rigidbody.AddForce(resultantForce, ForceMode.Force);
+            //rigidbody.linearVelocity = resultantForce;
             //_controller.Move(rigidbody.GetPointVelocity(transform.position) * Time.fixedDeltaTime);
             //_controller.Move(Vector3.zero);
-            vel = rigidbody.GetPointVelocity(transform.position);
-            //vel = rigidbody.GetPointVelocity(transform.position) * 0.15f;
+            //vel = rigidbody.GetPointVelocity(transform.position);
+            ////vel = rigidbody.GetPointVelocity(transform.position) * 0.15f;
 
-            Vector3 tempVel = new Vector3(-vel.x, vel.y, -vel.z);
-            //_movement.AddVel(tempVel * Time.deltaTime * _temp);
-            //if (vel.magnitude < 0.1) return;
-            //_movement.AddVel(vel);
-            //_controller.mo += vel * Time.deltaTime;
-            Debug.Log(vel);
+            //Vector3 tempVel = new Vector3(-vel.x, vel.y, -vel.z);
+            ////_movement.AddVel(tempVel * Time.deltaTime * _temp);
+            ////if (vel.magnitude < 0.1) return;
+            ////_movement.AddVel(vel);
+            ////_controller.mo += vel * Time.deltaTime;
+            //Debug.Log(vel);
             //hit.controller.Move(hit.rigidbody.GetPointVelocity(hit.point));
         }
     }
