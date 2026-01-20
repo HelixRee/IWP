@@ -32,7 +32,7 @@ public class RalphHeadlightController : MonoBehaviour
         }
 
         _initialOffset = _brainTransform.localPosition.z;
-        _initialYawOffset = _rotationAnchorTransform.localEulerAngles.z - transform.eulerAngles.y;
+        _initialYawOffset = _rotationAnchorTransform.localEulerAngles.z;
         _currentOffset = new SODFloat(_initialOffset, 3, 0.9f, 1);
     }
     private void Update()
