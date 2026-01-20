@@ -13,6 +13,7 @@ public class LitterBehaviour : MonoBehaviour
     public bool isAsleep = false;
 
     private Rigidbody rb;
+    private Collider _collider;
     public Transform target;
     private float startTime;
 
@@ -25,6 +26,7 @@ public class LitterBehaviour : MonoBehaviour
         gameObject.tag = "Litter";
 
         rb = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
         //rb.linearVelocity = Vector3.zero;
         rb.useGravity = false;
         rb.isKinematic = true;
@@ -41,6 +43,13 @@ public class LitterBehaviour : MonoBehaviour
         path.Add(knot);
 
         inventoryManager = InventoryManager.Instance;
+
+        _collider.enabled = false;
+    }
+    private void OnDisable()
+    {
+        if (_collider != null)
+            _collider.enabled = true;
     }
     private void LateUpdate()
     {

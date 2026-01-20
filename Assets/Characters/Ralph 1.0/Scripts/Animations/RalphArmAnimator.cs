@@ -195,9 +195,11 @@ public class RalphArmAnimator : BaseRalphAnimator
         hitInfo = new RaycastHit();
         PrimaryRaycast();
         bool invalidTarget = ShouldCancelOverride();
+        bool inRange = hitInfo.collider != null;
         if (invalidTarget) hitInfo = new RaycastHit();
 
-        bool inRange = false;
+
+
 
         if (hitInfo.collider == null)
         {
@@ -222,7 +224,17 @@ public class RalphArmAnimator : BaseRalphAnimator
                 _targetAuxCastDir = dir;
             }
         }
+        //if (hitInfo.collider == null)
+        //{
+        //    Vector3 dir = handTarget - transform.position;
 
+        //    Raycast(dir, out hitInfo);
+        //    if (hitInfo.collider != null)
+        //    {
+        //        inRange = true;
+        //        _targetAuxCastDir = dir;
+        //    }
+        //}
         if (inRange)
         {
             Vector3 startAuxCastDir = _auxCastDir;
@@ -233,6 +245,8 @@ public class RalphArmAnimator : BaseRalphAnimator
                 if (!ShouldCancelOverride()) break;
             }
         }
+        else
+            terrainAnimation = false;
         // If dot shows that position is no longer infront of player, cancel the connection
         if (!terrainAnimation) return;
         if (ShouldCancelOverride())
