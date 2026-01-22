@@ -97,15 +97,15 @@ public class RalphArmAnimator : BaseRalphAnimator
     }
     public override void ManualInit()
     {
-        float ralphLength = Vector3.Magnitude(Ralph.Anchor.position - Ralph.End.position);
-        float sourceLength = Vector3.Magnitude(Source.Anchor.position - Source.End.position);
-
+        float ralphLength = Vector3.Magnitude(Ralph.Anchor.position - Ralph.Elbow.position);
+        float sourceLength = Vector3.Magnitude(Source.Anchor.position - Source.Elbow.position);
+        //Debug.Log(ralphLength + ", " + sourceLength);
         // Measure arm lengths
         _upperArmLength = Vector3.Distance(Ralph.Anchor.position, Ralph.Elbow.position);
         _lowerArmLength = Vector3.Distance(Ralph.Elbow.position, Ralph.End.position);
         _totalArmLength = _lowerArmLength + _upperArmLength;
         _colliderSize = new Vector3(_totalArmLength / 2, 0.2f, _totalArmLength / 2);
-
+        
         _scaleRatio = ralphLength / sourceLength;
         terrainHandTarget = new(Vector3.zero, 2, 0.7f, 2);
         terrainHandTarget.AbsValue = new Vector3(1, 1, 1);

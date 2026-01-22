@@ -69,6 +69,10 @@ namespace StarterAssets
         {
             headlight = !headlight;
         }
+        public void RawHeadlightInput(bool newHeadlightState)
+        {
+            headlight = newHeadlightState;
+        }
         public void AimInput(bool newAimState)
 		{
 			aiming = newAimState;

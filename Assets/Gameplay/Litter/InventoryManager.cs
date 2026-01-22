@@ -24,7 +24,7 @@ public class InventoryManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Optional: Persist across scene loads
+            //DontDestroyOnLoad(gameObject); // Optional: Persist across scene loads
         }
     }
     private void Start()

@@ -1275,7 +1275,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 126
+  m_VersionIndex: 228
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2018,7 +2018,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 134
+  m_VersionIndex: 236
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -12033,7 +12033,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 736
+  m_VersionIndex: 838
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -20847,7 +20847,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 736
+  m_VersionIndex: 838
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -24974,7 +24974,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 438
+  m_VersionIndex: 540
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -35905,7 +35905,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 736
+  m_VersionIndex: 838
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -39529,7 +39529,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6039774069071472640}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -43279,7 +43279,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 440
+  m_VersionIndex: 542
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -53070,7 +53070,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 736
+  m_VersionIndex: 838
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -53812,7 +53812,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 4.25
+      value: 2.0996902
       inSlope: 0.001299822
       outSlope: 0.001299822
       tangentMode: 0
@@ -53820,8 +53820,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.14772016
     - serializedVersion: 3
-      time: 0.57897615
-      value: 4.25
+      time: 0.28720626
+      value: 2.0996902
       inSlope: 0.0065206843
       outSlope: 0.0065206843
       tangentMode: 0
@@ -53829,17 +53829,17 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.9764996
     - serializedVersion: 3
-      time: 1.0144113
-      value: 3.8
-      inSlope: -0.007907331
-      outSlope: -0.007907331
+      time: 0.50320774
+      value: 1.8216518
+      inSlope: -0.009848893
+      outSlope: -0.009848893
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.4566134
-      value: 4.25
+      time: 0.722566
+      value: 2.0996902
       inSlope: -0.0012220235
       outSlope: -0.0012220235
       tangentMode: 0
@@ -53849,15 +53849,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 1
     m_RotationOrder: 4
+  headlightDecayTime: 60
   headlightFillAmt: 1
   _mainLights:
   - {fileID: 4830407565196313806}
   - {fileID: 6110966961333964034}
   mainLightIntensity: 0
-  mainLightEmissionMult: 10
+  mainLightEmissionMult: 2
   mainLightIntensityMult: 1.5
   mainLightAngle: 0
-  mainLightPower: 4.2494926
+  mainLightPower: 2.0994835
   _randomiseHueOnStart: 1
   _cycleHue: 0
   _activeMaterial: {fileID: 0}
@@ -53873,6 +53874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bed69b60308c942b82e87886251138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deathDelay: 3
   _mainBody: {fileID: 5790597887521647066}
   _characterController: {fileID: 323829921579375363}
   _launchPower: 2
@@ -53960,6 +53962,66 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 3428046573289795216}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4393493773238383708}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5892331809406182455}
+        m_TargetAssemblyTypeName: StarterAssets.StarterAssetsInputs, Assembly-CSharp
+        m_MethodName: RawHeadlightInput
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3611512330858600996}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2806361633340503721}
+        m_TargetAssemblyTypeName: UnityEngine.Collider, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3611512330858600996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54012,7 +54074,6 @@ MonoBehaviour:
   _brainTransform: {fileID: 1721840311699905403}
   _rotationAnchorTransform: {fileID: 4959637122442900479}
   _lightAnchorTransform: {fileID: 3354525040312412069}
-  _yawOffset: -90
   _deploymentOffset: -0.000244
 --- !u!114 &3428046573289795216
 MonoBehaviour:
@@ -54027,7 +54088,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass: 25
-  _temp: 0.6
+  _strength: 0.1
+  _auxStrength: 12
 --- !u!135 &2806361633340503721
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -54871,6 +54933,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3438130002923806417}
+  - component: {fileID: 8027904262131876456}
   m_Layer: 3
   m_Name: Camera Target
   m_TagString: Untagged
@@ -54886,13 +54949,40 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8965621961793269076}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.0000001872535, y: -0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0000009536743, y: -0.00000008940697, z: 6.5085706e-12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7436171251605984466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1773428102 &8027904262131876456
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8965621961793269076}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: -0.04717064, y: -0.30729437, z: -0.00071811676}
+  m_RotationOffsets:
+  - {x: -8.726548, y: -89.852585, z: -0.15460336}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 1086605637541829962}
+    weight: 1
 --- !u!1 &8967329220079938250
 GameObject:
   m_ObjectHideFlags: 0
@@ -55377,7 +55467,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 134
+  m_VersionIndex: 236
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -55648,10 +55738,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6203952127631840317, guid: 28fc5f3129128064da0683d09410920e, type: 3}
       propertyPath: InheritVelocityModule.m_Mode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6203952127631840317, guid: 28fc5f3129128064da0683d09410920e, type: 3}
       propertyPath: 'CollisionModule.m_Planes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225469014825581939, guid: 28fc5f3129128064da0683d09410920e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225469014825581939, guid: 28fc5f3129128064da0683d09410920e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -57617,6 +57715,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6203952127631840317, guid: 28fc5f3129128064da0683d09410920e, type: 3}
       propertyPath: 'CollisionModule.m_Planes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225469014825581939, guid: 28fc5f3129128064da0683d09410920e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225469014825581939, guid: 28fc5f3129128064da0683d09410920e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []

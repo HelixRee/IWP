@@ -50,6 +50,11 @@ public class RalphHeadlightBehaviour : MonoBehaviour
         _meshRenderer.material = _activeMaterial;
     }
 
+    private void Start()
+    {
+        OnValidate();
+    }
+
     // Update is called once per frame
     void Update()
     {

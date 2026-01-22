@@ -1,12 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 public class RalphRagdollController : MonoBehaviour
 {
+    [Header("Death Parameters")]
+    [SerializeField] private float _deathDelay = 0.5f;
     [Header("Launch Parameters")]
     [SerializeField] private Rigidbody _mainBody;
     [SerializeField] private CharacterController _characterController;
@@ -26,6 +30,7 @@ public class RalphRagdollController : MonoBehaviour
     }
     public void StartRagdoll()
     {
+        name = name + " (Dead)";
         foreach (Rigidbody rb in _rigidbodies)
             rb.isKinematic = false;
 
@@ -38,12 +43,19 @@ public class RalphRagdollController : MonoBehaviour
         _mainBody.AddForce(_characterController.velocity * _launchPower, ForceMode.Impulse);
 
         onBecomeRagdoll.Invoke();
+        StartCoroutine(WaitAndRespawn());
+    }
+    private IEnumerator WaitAndRespawn()
+    {
+        yield return new WaitForSeconds(_deathDelay);
+        RespawnManager.Instance.Respawn();
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            StartRagdoll();
+        //if (Input.GetKeyDown(KeyCode.R))
+        //    StartRagdoll();
     }
+
 }
 
 #if UNITY_EDITOR

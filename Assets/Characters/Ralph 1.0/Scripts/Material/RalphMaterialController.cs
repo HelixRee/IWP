@@ -12,6 +12,7 @@ using UnityEditor;
 public class RalphMaterialController : MonoBehaviour
 {
     private StarterAssetsInputs _input;
+    private RalphRagdollController _ragdoll;
 
     public bool flagForRefresh = true;
     [Header("References")]
@@ -21,6 +22,8 @@ public class RalphMaterialController : MonoBehaviour
     [SerializeField] private AnimationCurve _mainLightPowerCurve = new();
 
     [Header("Public Members")]
+    [Range(0, 1000f)] public float headlightDecayTime = 60f;
+    private bool _ragdollStarted = false;
     [InspectorName("Headlight Fill Amount")]
     [Range(0, 1f)] public float headlightFillAmt = 1f;
 
@@ -62,6 +65,7 @@ public class RalphMaterialController : MonoBehaviour
             RandomiseHue();
 
         _input = GetComponent<StarterAssetsInputs>();
+        _ragdoll = GetComponent<RalphRagdollController>();
         _mainLightInitialIntensities.Clear();
         _mainLights.ForEach(light => _mainLightInitialIntensities.Add(light.intensity));
         if (!_input.headlight)
@@ -98,10 +102,18 @@ public class RalphMaterialController : MonoBehaviour
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer renderer in renderers)
         {
-            if (renderer.sharedMaterial == null) continue;
+            if (renderer.sharedMaterial == null)
+            {
+                if (renderer.TryGetComponent(out ParticleSystem ps  )) continue;
+
+                renderer.SetMaterials(new List<Material>() { _activeMaterial });
+                continue;
+            }
             if (renderer.sharedMaterial.shader == null) continue;
             if (renderer.sharedMaterial.shader != _characterMaterial.shader) continue;
             if (renderer.sharedMaterial == _activeMaterial) continue;
+            if (renderer.TryGetComponent(out ParticleSystem ps2)) continue;
+            //Debug.Log(renderer.name);
             renderer.SetMaterials(new List<Material>() { _activeMaterial });
         }
         
@@ -109,15 +121,22 @@ public class RalphMaterialController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            headlightFillAmt = 0f;
-        mainLightPower = _mainLightPowerCurve.Evaluate(Time.time);
 
         UpdateMaterialProperties();
         UpdateHeadlightObjects();
 
         // Gate editor functionality
         if (!Application.isPlaying) return;
+        if (headlightFillAmt > 0)
+            headlightFillAmt -= Time.deltaTime / headlightDecayTime;
+        if (headlightFillAmt <= 0 && !_ragdollStarted)
+        {
+            _ragdoll.StartRagdoll();
+            _ragdollStarted = true;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+            headlightFillAmt = 0f;
+        mainLightPower = _mainLightPowerCurve.Evaluate(Time.time);
         if (_cycleHue)
             AdvanceHue(Time.deltaTime * 360f);
     }
@@ -135,6 +154,7 @@ public class RalphMaterialController : MonoBehaviour
         {
             _mainLightTimer = 0;
             mainLightIntensity = Mathf.Lerp(mainLightIntensity, 0, Time.deltaTime * 12f);
+            _mainLightEmission = Mathf.Lerp(_mainLightEmission, 0, Time.deltaTime * 12f);
         }
         _mainLightTimer = Mathf.Clamp01(_mainLightTimer);
         for (int i = 0; i < _mainLights.Count; i++)
@@ -207,7 +227,7 @@ public class RalphMaterialController : MonoBehaviour
             if (renderer.sharedMaterial == null) continue;
             if (renderer.sharedMaterial.shader == null) continue;
             if (renderer.sharedMaterial.shader != _characterMaterial.shader) continue;
-
+            //Debug.Log(renderer.name);
             renderer.SetMaterials(new List<Material>() { _characterMaterial });
         }
         _activeMaterial = null;

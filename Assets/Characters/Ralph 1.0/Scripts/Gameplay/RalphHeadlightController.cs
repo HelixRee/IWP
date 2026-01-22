@@ -12,7 +12,7 @@ public class RalphHeadlightController : MonoBehaviour
     [SerializeField] private Transform _brainTransform;
     [SerializeField] private Transform _rotationAnchorTransform;
     [SerializeField] private Transform _lightAnchorTransform;
-    [SerializeField] private float _yawOffset = 90f;
+    //[SerializeField] private float _yawOffset = 90f;
     private float _initialYawOffset;
     [SerializeField] private float _deploymentOffset = 0.2f;
     private SODFloat _currentOffset;
