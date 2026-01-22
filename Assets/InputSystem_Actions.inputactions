@@ -527,7 +527,7 @@
                 {
                     "name": "",
                     "id": "0f6455a7-c27d-445e-8981-13b30d5bb7b3",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
