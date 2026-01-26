@@ -3,9 +3,17 @@ using UnityEngine;
 
 public class RespawnManager : MonoBehaviour
 {
+    [SerializeField] private float _playerLifespan = 240f;
+    private float _playerRemainingLifespan = 0f;
+    private bool _ragdollStarted = false;
+    [SerializeField] private GameObject _activePlayer;
+    private RalphMaterialController _playerMaterial;
+    private RalphRagdollController _playerRagdoll;
+
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    [SerializeField] private UIBatteryCharge _batteryCharge;
     public static RespawnManager Instance { get; private set; }
     private void Awake()
     {
@@ -19,17 +27,46 @@ public class RespawnManager : MonoBehaviour
             //DontDestroyOnLoad(gameObject); // Optional: Persist across scene loads
         }
     }
-
+    private void Start()
+    {
+        if (_activePlayer == null)
+            Respawn();
+        else
+            InitPlayer();
+    }
+    private void InitPlayer()
+    {
+        _playerRemainingLifespan = _playerLifespan;
+        _playerMaterial = _activePlayer.GetComponent<RalphMaterialController>();
+        _playerRagdoll = _activePlayer.GetComponent<RalphRagdollController>();
+        _ragdollStarted = false;
+    }
     public void Respawn()
     {
-        GameObject player = Instantiate(_playerPrefab);
-        player.transform.position = _spawnPoint.position;
-        player.transform.rotation = _spawnPoint.rotation;
+        _activePlayer = Instantiate(_playerPrefab);
+        _activePlayer.transform.position = _spawnPoint.position;
+        _activePlayer.transform.rotation = _spawnPoint.rotation;
 
-        Transform cameraTarget = player.GetComponent<RalphCameraController>().CinemachineCameraTarget.transform;
+        Transform cameraTarget = _activePlayer.GetComponent<RalphCameraController>().CinemachineCameraTarget.transform;
         _virtualCamera.Follow = cameraTarget;
         _virtualCamera.LookAt = cameraTarget;
 
-        Debug.Log("respawn");
+        InitPlayer();
+        //Debug.Log("respawn");
+    }
+    private void Update()
+    {
+        if (_playerRemainingLifespan > 0)
+            _playerRemainingLifespan -= Time.deltaTime;
+        if (_playerRemainingLifespan <= 0 && !_ragdollStarted)
+        {
+            _playerRagdoll.StartRagdoll();
+            _ragdollStarted = true;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+            _playerRemainingLifespan = 0f;
+
+        _playerMaterial.headlightFillAmt = _playerRemainingLifespan / _playerLifespan;
+        _batteryCharge.fillAmount = _playerRemainingLifespan / _playerLifespan;
     }
 }

@@ -1730,6 +1730,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 285589432081699295}
   LockPosition: 0
   Frequency: 5
@@ -3223,6 +3224,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 2079166063218841554}
   LockPosition: 0
   Frequency: 2
@@ -21302,6 +21304,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 283274369224911194}
   LockPosition: 0
   Frequency: 2
@@ -22301,6 +22304,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 8014437211804217163}
   LockPosition: 0
   Frequency: 3
@@ -26892,6 +26896,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 4519397290005522721}
   LockPosition: 0
   Frequency: 3
@@ -27288,6 +27293,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 2089711335100504299}
   LockPosition: 0
   Frequency: 3
@@ -40307,6 +40313,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 7312356275651978092}
   LockPosition: 0
   Frequency: 3
@@ -42605,6 +42612,7 @@ MonoBehaviour:
   IsFalling: 0
   UseGravity: 0
   _unparentOnAwake: 1
+  _updatedManually: 1
   Target: {fileID: 2262323648928848546}
   LockPosition: 0
   Frequency: 2
@@ -53849,7 +53857,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 1
     m_RotationOrder: 4
-  headlightDecayTime: 240
   headlightFillAmt: 1
   _mainLights:
   - {fileID: 4830407565196313806}

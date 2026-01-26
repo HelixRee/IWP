@@ -4,6 +4,7 @@ public class FollowObject : BaseRalphAnimator
 {
     [Header("Behaviour")]
     [SerializeField] private bool _unparentOnAwake = true;
+    [SerializeField] private bool _updatedManually = true;
 
     [Header("Target")]
     public Transform Target;
@@ -105,5 +106,15 @@ public class FollowObject : BaseRalphAnimator
 
         Gizmos.color = Color.Lerp(Color.green, Color.red, anchorDistance / AnchorMaxDistance);
         Gizmos.DrawLine(transform.position, DistanceAnchor.position);
+    }
+
+    private void Start()
+    {
+        if (!_updatedManually) ManualInit();
+    }
+
+    private void LateUpdate()
+    {
+        if (!_updatedManually) ManualUpdate();
     }
 }

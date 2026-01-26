@@ -22,8 +22,6 @@ public class RalphMaterialController : MonoBehaviour
     [SerializeField] private AnimationCurve _mainLightPowerCurve = new();
 
     [Header("Public Members")]
-    [Range(0, 1000f)] public float headlightDecayTime = 60f;
-    private bool _ragdollStarted = false;
     [InspectorName("Headlight Fill Amount")]
     [Range(0, 1f)] public float headlightFillAmt = 1f;
 
@@ -127,15 +125,15 @@ public class RalphMaterialController : MonoBehaviour
 
         // Gate editor functionality
         if (!Application.isPlaying) return;
-        if (headlightFillAmt > 0)
-            headlightFillAmt -= Time.deltaTime / headlightDecayTime;
-        if (headlightFillAmt <= 0 && !_ragdollStarted)
-        {
-            _ragdoll.StartRagdoll();
-            _ragdollStarted = true;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-            headlightFillAmt = 0f;
+        //if (headlightFillAmt > 0)
+        //    headlightFillAmt -= Time.deltaTime / headlightDecayTime;
+        //if (headlightFillAmt <= 0 && !_ragdollStarted)
+        //{
+        //    _ragdoll.StartRagdoll();
+        //    _ragdollStarted = true;
+        //}
+        //if (Input.GetKeyDown(KeyCode.R))
+        //    headlightFillAmt = 0f;
         mainLightPower = _mainLightPowerCurve.Evaluate(Time.time);
         if (_cycleHue)
             AdvanceHue(Time.deltaTime * 360f);
