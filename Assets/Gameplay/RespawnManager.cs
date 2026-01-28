@@ -5,6 +5,8 @@ public class RespawnManager : MonoBehaviour
 {
     [SerializeField] private float _playerLifespan = 240f;
     private float _playerRemainingLifespan = 0f;
+    private float _smoothedChargeAmt = 1f;
+
     private bool _ragdollStarted = false;
     [SerializeField] private GameObject _activePlayer;
     private RalphMaterialController _playerMaterial;
@@ -40,6 +42,8 @@ public class RespawnManager : MonoBehaviour
         _playerMaterial = _activePlayer.GetComponent<RalphMaterialController>();
         _playerRagdoll = _activePlayer.GetComponent<RalphRagdollController>();
         _ragdollStarted = false;
+
+        _smoothedChargeAmt = 0f;
     }
     public void Respawn()
     {
@@ -66,7 +70,11 @@ public class RespawnManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
             _playerRemainingLifespan = 0f;
 
-        _playerMaterial.headlightFillAmt = _playerRemainingLifespan / _playerLifespan;
-        _batteryCharge.fillAmount = _playerRemainingLifespan / _playerLifespan;
+        float fillAmt = _playerRemainingLifespan / _playerLifespan;
+
+        _playerMaterial.headlightFillAmt = fillAmt;
+        if (fillAmt > 0f)
+            _smoothedChargeAmt = Mathf.Lerp(_smoothedChargeAmt, 1f, 1f * Time.deltaTime);
+        _batteryCharge.fillAmount = Mathf.Min(fillAmt, _smoothedChargeAmt);
     }
 }
