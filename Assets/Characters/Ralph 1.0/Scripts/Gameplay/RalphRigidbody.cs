@@ -32,6 +32,7 @@ public class RalphRigidbody : MonoBehaviour
     Vector3 vel = Vector3.one;
     private void OnTriggerStay(Collider other)
     {
+        if (!_movement.Grounded) return;
         Rigidbody parentRigidbody = null;
 
         if (other.TryGetComponent(out Rigidbody rigidbody) || other.transform.parent.TryGetComponent(out parentRigidbody))
