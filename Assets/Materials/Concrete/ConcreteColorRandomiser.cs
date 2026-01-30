@@ -96,8 +96,8 @@ public class ConcreteColorRandomiserEditor : Editor
         float rawVal = (input - offset) * fraction;
 
 
-        float output = (roundedVal / fraction) + offset;
-        return (Mathf.Abs(rawVal - roundedVal) > 0.001f);
+        input = (roundedVal / fraction) + offset;
+        return (Mathf.Abs(rawVal - roundedVal) > 0.05f * fraction);
     }
 }
 #endif
