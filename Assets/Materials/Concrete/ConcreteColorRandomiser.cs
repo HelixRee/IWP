@@ -54,32 +54,50 @@ public class ConcreteColorRandomiserEditor : Editor
         ConcreteColorRandomiser randomiser = (ConcreteColorRandomiser)target;
         if (GUILayout.Button("Snap to grid"))
         {
+            int i = 0;
             Undo.RecordObjects(randomiser.renderers.Select(renderer => renderer.gameObject).ToArray(), "Snapped objects to grid");
             foreach(Renderer renderer in randomiser.renderers)
             {
                 Vector3 objectPos = renderer.transform.position;
-                objectPos = RoundTo(objectPos, gridSpacing);
-                renderer.transform.position = objectPos;
+                if (RoundTo(ref objectPos, gridSpacing))
+                    continue;
 
                 Vector3 objectScale = renderer.transform.localScale;
-                objectScale = RoundTo(objectScale, gridSpacing);
+                if (RoundTo(ref objectScale, gridSpacing))
+                    continue;
+
+                i++;
+                renderer.transform.position = objectPos;
                 renderer.transform.localScale = objectScale;
             }
-            Debug.Log(randomiser.renderers.Length + " Objects snapped");
+            Debug.Log(i + " Objects snapped");
         }
         if (GUILayout.Button("Refresh Renderers"))
         {
             randomiser.GetRenderers();
         }
     }
-    private Vector3 RoundTo(Vector3 input, float fraction, float offset = 0f)
+    private bool RoundTo(ref Vector3 input, float fraction, float offset = 0f)
     {
-        return new Vector3(RoundTo(input.x, fraction, offset), RoundTo(input.y, fraction, offset), RoundTo(input.z, fraction, offset)); 
+        // return true if out of threshold
+        bool outOfSpec = false;
+        if (RoundTo(ref input.x, fraction, offset))
+            outOfSpec = true;
+        if (RoundTo(ref input.y, fraction, offset))
+            outOfSpec = true;
+        if (RoundTo(ref input.z, fraction, offset))
+            outOfSpec = true;
+
+        return outOfSpec;
     }
-    private float RoundTo(float input, float fraction, float offset = 0f)
+    private bool RoundTo(ref float input, float fraction, float offset = 0f)
     {
-        float output = ((Mathf.Round((input - offset) * fraction)) / fraction) + offset;
-        return output;
+        float roundedVal = Mathf.Round((input - offset) * fraction);
+        float rawVal = (input - offset) * fraction;
+
+
+        float output = (roundedVal / fraction) + offset;
+        return (Mathf.Abs(rawVal - roundedVal) > 0.001f);
     }
 }
 #endif
