@@ -59,6 +59,11 @@ public class ConcreteColorRandomiserEditor : Editor
             {
                 Vector3 objectPos = renderer.transform.position;
                 objectPos = RoundTo(objectPos, gridSpacing);
+                renderer.transform.position = objectPos;
+
+                Vector3 objectScale = renderer.transform.localScale;
+                objectScale = RoundTo(objectScale, gridSpacing);
+                renderer.transform.localScale = objectScale;
             }
             Debug.Log(randomiser.renderers.Length + " Objects snapped");
         }
