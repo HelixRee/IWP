@@ -47,7 +47,7 @@ public class ConcreteColorRandomiser : MonoBehaviour
 [CustomEditor(typeof(ConcreteColorRandomiser))]
 public class ConcreteColorRandomiserEditor : Editor
 {
-    public float gridSpacing = 0.125f;
+    public float gridSpacing = 1 / 0.125f;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
