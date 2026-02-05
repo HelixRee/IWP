@@ -1,8 +1,6 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Rendering.CameraUI;
-using UnityEngine.Windows;
 
 public class ConcreteColorRandomiser : MonoBehaviour
 {
@@ -97,7 +95,7 @@ public class ConcreteColorRandomiserEditor : Editor
 
 
         input = (roundedVal / fraction) + offset;
-        return (Mathf.Abs(rawVal - roundedVal) > 0.05f * fraction);
+        return (Mathf.Abs(rawVal - roundedVal) > 0.025f * fraction);
     }
 }
 #endif
