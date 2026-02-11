@@ -12,7 +12,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private LayerMask _litterLayer;
 
     private float _prevPackMountY;
-    private Dictionary<GameObject, LitterBehaviour> _litterBehaviours = new();
+    private Dictionary<GameObject, LitterFlightBehaviour> _litterBehaviours = new();
     public static InventoryManager Instance { get; private set; }
 
     private void Awake()
@@ -35,7 +35,7 @@ public class InventoryManager : MonoBehaviour
     {
         _kinematicProxy.transform.rotation = _realPackMount.transform.rotation;
     }
-    public GameObject CreateLitterObject(LitterBehaviour litterScript)
+    public GameObject CreateLitterObject(LitterFlightBehaviour litterScript)
     {
         GameObject simObject = Instantiate(litterScript.gameObject, transform);
         _litterBehaviours.Add(simObject, litterScript);
@@ -59,7 +59,7 @@ public class InventoryManager : MonoBehaviour
     public void RemoveLitterSimObject(GameObject simObject, bool reeableObject = true)
     {
         if (!_litterBehaviours.ContainsKey(simObject)) return;
-        LitterBehaviour litterScript = _litterBehaviours[simObject];
+        LitterFlightBehaviour litterScript = _litterBehaviours[simObject];
         _litterBehaviours.Remove(simObject);
 
         Destroy(simObject);
@@ -87,17 +87,17 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public LitterBehaviour RemoveTopLitterObject()
+    public LitterFlightBehaviour RemoveTopLitterObject()
     {
         RaycastHit hit;
         if (!Physics.BoxCast(_boxCast.center + _boxCast.transform.position, _boxCast.bounds.extents / 2f, _boxCast.transform.forward, out hit, _boxCast.transform.rotation, 10f, _litterLayer))
             return null;
-        LitterBehaviour litterScript = _litterBehaviours[hit.collider.gameObject];
+        LitterFlightBehaviour litterScript = _litterBehaviours[hit.collider.gameObject];
         RemoveLitterSimObject(hit.collider.gameObject, false);
         return litterScript;
     }
 
-    public IEnumerator WaitAndEnable(LitterBehaviour litterScript)
+    public IEnumerator WaitAndEnable(LitterFlightBehaviour litterScript)
     {
         yield return new WaitForSeconds(0.7f);
         litterScript.isAsleep = false;
@@ -117,6 +117,7 @@ public class InventoryManager : MonoBehaviour
         {
             Vector3 offset = litterScript.Value.simulatedObject.transform.position - _simulatedPackMount.position;
             litterScript.Value.gameObject.transform.position = _realPackMount.position + offset;
+            litterScript.Value.gameObject.transform.rotation = litterScript.Value.simulatedObject.transform.rotation;
         }
     }
 }

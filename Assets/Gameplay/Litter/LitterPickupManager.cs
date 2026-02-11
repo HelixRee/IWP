@@ -3,6 +3,7 @@ using UnityEngine;
 public class LitterPickupManager : MonoBehaviour
 {
     [SerializeField] private InventoryManager _inventorySystemReference;
+    [SerializeField] private Transform _flightTarget;
     private SphereCollider _sphereCollider;
     private float cooldownTimer = 0f;
     private void Start()
@@ -11,7 +12,7 @@ public class LitterPickupManager : MonoBehaviour
     }
     private void Update()
     {
-        Collider[] colliders = Physics.OverlapSphere(_sphereCollider.center + transform.position, _sphereCollider.radius);
+        Collider[] colliders = Physics.OverlapSphere(_sphereCollider.transform.rotation * _sphereCollider.center + _sphereCollider.transform.position, _sphereCollider.radius);
         //foreach (Collider collider in colliders)
         //{
         //    CreateLitter(collider);
@@ -39,7 +40,7 @@ public class LitterPickupManager : MonoBehaviour
         if (!other.CompareTag("Litter")) return false;
 
         GameObject go = other.gameObject;
-        LitterBehaviour flightScript = go.GetComponent<LitterBehaviour>();
+        LitterFlightBehaviour flightScript = go.GetComponent<LitterFlightBehaviour>();
         if (flightScript.isAsleep) return false;
         go.tag = "Untagged";
     
@@ -49,7 +50,7 @@ public class LitterPickupManager : MonoBehaviour
         rb.useGravity = false;
         rb.isKinematic = true;
 
-        flightScript.target = transform;
+        flightScript.target = _flightTarget;
         flightScript.enabled = true;
 
         flightScript.inventoryManager = _inventorySystemReference;

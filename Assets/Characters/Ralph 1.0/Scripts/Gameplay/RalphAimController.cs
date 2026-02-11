@@ -20,7 +20,7 @@ public class RalphAimController : MonoBehaviour
     [SerializeField] private float throwDelay;
     [SerializeField] private float throwPower = 2;
 
-    private LitterBehaviour _activeLitter;
+    private LitterFlightBehaviour _activeLitter;
     private void Update()
     {
         IsAiming = _input.aiming;
@@ -48,7 +48,7 @@ public class RalphAimController : MonoBehaviour
         {
             if (_activeLitter == null)
             {
-                LitterBehaviour litterScript = InventoryManager.Instance.RemoveTopLitterObject();
+                LitterFlightBehaviour litterScript = InventoryManager.Instance.RemoveTopLitterObject();
                 if (litterScript != null)
                 {
                     _activeLitter = litterScript;

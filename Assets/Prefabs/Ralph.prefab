@@ -55645,6 +55645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inventorySystemReference: {fileID: 0}
+  _flightTarget: {fileID: 0}
 --- !u!1 &9213189035739436642
 GameObject:
   m_ObjectHideFlags: 0
