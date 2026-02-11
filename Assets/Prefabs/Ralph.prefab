@@ -53703,6 +53703,7 @@ MonoBehaviour:
   sprint: 0
   aiming: 0
   headlight: 0
+  interact: 0
   analogMovement: 1
   cursorLocked: 1
   cursorInputForLook: 1
@@ -55644,6 +55645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 788364431e3a8f84c8dbdef22b5c5312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _input: {fileID: 0}
   _inventorySystemReference: {fileID: 0}
   _flightTarget: {fileID: 0}
 --- !u!1 &9213189035739436642

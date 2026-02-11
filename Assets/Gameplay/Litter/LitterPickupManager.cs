@@ -1,7 +1,9 @@
+using StarterAssets;
 using UnityEngine;
 
 public class LitterPickupManager : MonoBehaviour
 {
+    [SerializeField] private StarterAssetsInputs _input;
     [SerializeField] private InventoryManager _inventorySystemReference;
     [SerializeField] private Transform _flightTarget;
     private SphereCollider _sphereCollider;
@@ -13,10 +15,6 @@ public class LitterPickupManager : MonoBehaviour
     private void Update()
     {
         Collider[] colliders = Physics.OverlapSphere(_sphereCollider.transform.rotation * _sphereCollider.center + _sphereCollider.transform.position, _sphereCollider.radius);
-        //foreach (Collider collider in colliders)
-        //{
-        //    CreateLitter(collider);
-        //}
         if (colliders.Length > 0 && cooldownTimer <= 0)
         {
             foreach (Collider collider in colliders)
@@ -30,8 +28,16 @@ public class LitterPickupManager : MonoBehaviour
         }
         if (cooldownTimer > 0)
             cooldownTimer -= Time.deltaTime;
-
-        //Debug.Log(cooldownTimer);
+        
+        if (_input.interact)
+        {
+            foreach (Collider collider in colliders)
+            {
+                if (!collider.TryGetComponent(out BatterySocket batterySocket)) continue;
+                batterySocket.DetachBattery();
+                break;
+            }
+        }
     }
     private bool CreateLitter(Collider other)
     {
@@ -57,5 +63,15 @@ public class LitterPickupManager : MonoBehaviour
 
         return true;
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (!other.TryGetComponent(out BatterySocket batterySocket)) return;
+        batterySocket.RefreshUI();
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.TryGetComponent(out BatterySocket batterySocket)) return;
+        batterySocket.DisableUI();
+    }
 }
