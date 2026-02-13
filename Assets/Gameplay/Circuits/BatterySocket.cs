@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 
 public class BatterySocket : MonoBehaviour
 {
     [SerializeField] private Transform _attachTransform;
+    [SerializeField] private SplineAnimate _splineAnimator;
     [SerializeField] private List<CircuitComponent> _circuitGroup = new();
     [SerializeField] private GameObject _UI;
 
@@ -17,20 +19,31 @@ public class BatterySocket : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!_socketActive) return;
-        if (!other.TryGetComponent(out Battery battery))
-            return;
+        if (!other.TryGetComponent(out Battery battery)) return;
+        if (!other.CompareTag("Litter")) return;
+
 
         AttachBattery(battery);
     }
 
     private void AttachBattery(Battery battery)
     {
+        if (_attachedBattery != null) return;
+
         battery.tag = "Untagged";
         _attachedBattery = battery;
         battery.GetComponent<Collider>().enabled = false;
         battery.GetComponent<Rigidbody>().isKinematic = true;
 
-        _isPowered = true;
+        if (_splineAnimator == null)
+            _isPowered = true;
+        if (_splineAnimator != null)
+        {
+            _splineAnimator.gameObject.SetActive(false);
+            _splineAnimator.Restart(false);
+            _splineAnimator.gameObject.SetActive(true);
+            _splineAnimator.Play();
+        }
     }
     public void DetachBattery()
     {
@@ -41,9 +54,17 @@ public class BatterySocket : MonoBehaviour
         _attachedBattery.GetComponent<Rigidbody>().isKinematic = false;
 
         _attachedBattery = null;
-        _isPowered = false;
+        if (_splineAnimator == null)
+            _isPowered = false;
         _socketActive = false;
         StartCoroutine(WaitAndReenable());
+
+        if (_splineAnimator != null)
+        {
+            _splineAnimator.gameObject.SetActive(false);
+            _splineAnimator.Restart(false);
+            _splineAnimator.gameObject.SetActive(true);
+        }
     }
 
     // Change to blacklist system eventually
@@ -68,7 +89,10 @@ public class BatterySocket : MonoBehaviour
     }
     private void Update()
     {
-        _circuitGroup.ForEach(comp => comp.isPowered = _isPowered);
+        if (_splineAnimator != null)
+            _isPowered = _splineAnimator.NormalizedTime >= 1;
+
+        _circuitGroup.ForEach(comp => { if (comp != null) comp.isPowered = _isPowered; });
         if (_attachedBattery == null) return;
 
         _attachedBattery.transform.position = Vector3.Lerp(_attachedBattery.transform.position, _attachTransform.position, 12f * Time.deltaTime);

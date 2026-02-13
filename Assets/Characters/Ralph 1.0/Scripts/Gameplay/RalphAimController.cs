@@ -52,6 +52,7 @@ public class RalphAimController : MonoBehaviour
                 if (litterScript != null)
                 {
                     _activeLitter = litterScript;
+                    _activeLitter.gameObject.tag = "Untagged";
                     SetupSpline();
                     startOffset = _litterAttachPoint.position;
                     startTime = Time.time;
@@ -106,6 +107,8 @@ public class RalphAimController : MonoBehaviour
         IEnumerator coroutine;
         coroutine = InventoryManager.Instance.WaitAndEnable(_activeLitter);
         StartCoroutine(coroutine);
+
+        _activeLitter.gameObject.tag = "Litter";
         _activeLitter = null;
     }
 
@@ -119,6 +122,8 @@ public class RalphAimController : MonoBehaviour
         IEnumerator coroutine;
         coroutine = InventoryManager.Instance.WaitAndEnable(_activeLitter);
         StartCoroutine(coroutine);
+
+        _activeLitter.gameObject.tag = "Litter";
         _activeLitter = null;
     }
 }
