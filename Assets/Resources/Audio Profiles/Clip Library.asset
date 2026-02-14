@@ -53,3 +53,15 @@ MonoBehaviour:
     mixer: {fileID: -7819264832230789373, guid: 2ac0835207483454ebda6262d0389fb2, type: 2}
     sounds:
     - {fileID: 8300000, guid: 2550ea1300dd01b4c974a9c194043326, type: 3}
+  - name: Lock
+    volume: 1
+    pitchVariance: {x: 1, y: 1}
+    mixer: {fileID: -7819264832230789373, guid: 2ac0835207483454ebda6262d0389fb2, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: b1ad2cfe4a5df6446af83fdf8144ea18, type: 3}
+  - name: Unlock
+    volume: 1
+    pitchVariance: {x: 1, y: 1}
+    mixer: {fileID: -7819264832230789373, guid: 2ac0835207483454ebda6262d0389fb2, type: 2}
+    sounds:
+    - {fileID: 8300000, guid: 8d5f8fbdb68baef449ea0c3149d993dc, type: 3}

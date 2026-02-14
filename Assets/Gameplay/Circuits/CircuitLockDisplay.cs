@@ -1,3 +1,4 @@
+using SmallHedge.AudioManager;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -41,5 +42,17 @@ public class CircuitLockDisplay : CircuitComponent
         _lockShackle.localPosition = pos;
 
         _images.ForEach(image => image.color = _activeColor);
+    }
+
+    protected override void OnPowerOn()
+    {
+        base.OnPowerOn();
+        AudioManager.PlaySound(ClipType.Unlock, GetComponent<AudioSource>());
+    }
+
+    protected override void OnPowerOff()
+    {
+        base.OnPowerOff();
+        AudioManager.PlaySound(ClipType.Lock, GetComponent<AudioSource>());
     }
 }

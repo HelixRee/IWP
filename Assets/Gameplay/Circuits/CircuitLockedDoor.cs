@@ -8,6 +8,11 @@ public class CircuitLockedDoor : CircuitComponent
     private void Start()
     {
         _joint = GetComponent<ConfigurableJoint>();
+
+        if (isPowered)
+            OnPowerOn();
+        else
+            OnPowerOff();
     }
 
     protected override void OnPowerOn()

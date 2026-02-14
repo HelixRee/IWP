@@ -96,23 +96,26 @@ public class BatterySocket : MonoBehaviour
     private void Update()
     {
         if (_splineAnimator != null)
+        {
             _isPowered = _splineAnimator.NormalizedTime >= 1;
 
-        if (_splineAnimator.NormalizedTime > 0.05f && _splineAnimator.NormalizedTime < 0.95f && !_soundStarted)
-        {
-            _soundCoroutine = StartCoroutine(LoopCracklingSound());
-            _auxSoundCoroutine = StartCoroutine(StartLoopAuxCracklingSound());
-            _soundStarted = true;
+            if (_splineAnimator.NormalizedTime > 0.05f && _splineAnimator.NormalizedTime < 0.95f && !_soundStarted)
+            {
+                _soundCoroutine = StartCoroutine(LoopCracklingSound());
+                _auxSoundCoroutine = StartCoroutine(StartLoopAuxCracklingSound());
+                _soundStarted = true;
+            }
+
+            if (_splineAnimator.NormalizedTime <= 0.05f || _splineAnimator.NormalizedTime >= 0.95f)
+            {
+                if (_soundCoroutine != null)
+                    StopCoroutine(_soundCoroutine);
+                if (_auxSoundCoroutine != null)
+                    StopCoroutine(_auxSoundCoroutine);
+                _soundStarted = false;
+            }
         }
-            
-        if (_splineAnimator.NormalizedTime <= 0.05f || _splineAnimator.NormalizedTime >= 0.95f)
-        {
-            if (_soundCoroutine != null)
-                StopCoroutine(_soundCoroutine);
-            if (_auxSoundCoroutine != null)
-                StopCoroutine(_auxSoundCoroutine);
-            _soundStarted = false;
-        }
+
 
         _circuitGroup.ForEach(comp => { if (comp != null) comp.isPowered = _isPowered; });
         if (_attachedBattery == null) return;

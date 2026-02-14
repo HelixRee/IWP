@@ -15,5 +15,8 @@ namespace SmallHedge.AudioManager
         Flashlight_Click,
 
         Electric_Crackling,
+
+        Lock,
+        Unlock,
     }
 }
