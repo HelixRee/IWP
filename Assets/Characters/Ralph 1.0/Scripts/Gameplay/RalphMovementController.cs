@@ -1,3 +1,4 @@
+using SmallHedge.AudioManager;
 using StarterAssets;
 using TMPro;
 using UnityEngine;
@@ -379,7 +380,10 @@ public class RalphMovementController : MonoBehaviour
         if (_input.willJump)
         {
             if (!_jumpTriggered)
+            {
+                AudioManager.PlaySound(ClipType.Servo_Double);
                 Animator.SetTrigger(_animIDJumpTrigger);
+            }
             _jumpTriggered = true;
         }
         else
@@ -398,7 +402,11 @@ public class RalphMovementController : MonoBehaviour
             }
             if (ProxyAnimator)
             {
-                ProxyAnimator.IsFalling = false;
+                if (ProxyAnimator.IsFalling)
+                {
+                    AudioManager.PlaySound(ClipType.Footstep_Concrete);
+                    ProxyAnimator.IsFalling = false;
+                }
             }
 
 
@@ -503,6 +511,8 @@ public class RalphMovementController : MonoBehaviour
     }
     public void OnStep(bool isLeft)
     {
+        if (Animator.GetBool(_animIDLeftFootFlag) != isLeft)
+            AudioManager.PlaySound(ClipType.Footstep_Concrete);
         Animator.SetBool(_animIDLeftFootFlag, isLeft);
     }
     //private void OnFootstep(AnimationEvent animationEvent)

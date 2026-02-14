@@ -1,4 +1,6 @@
+using SmallHedge.AudioManager;
 using StarterAssets;
+using System.Collections;
 using UnityEngine;
 
 public class RalphHeadlightController : MonoBehaviour
@@ -9,6 +11,7 @@ public class RalphHeadlightController : MonoBehaviour
     [Range(0,360)] public float yaw = 0f;
     [Range(0,360)] public float pitch = 0f;
     public bool IsDeployed = false;
+    private bool _wasDeployed = false;
     [SerializeField] private Transform _brainTransform;
     [SerializeField] private Transform _rotationAnchorTransform;
     [SerializeField] private Transform _lightAnchorTransform;
@@ -59,13 +62,31 @@ public class RalphHeadlightController : MonoBehaviour
         if (IsDeployed)
         {
             _currentOffset.Update(Time.deltaTime, _deploymentOffset);
+            if (!_wasDeployed)
+            {
+                AudioManager.PlaySound(ClipType.Servo);
+                StartCoroutine(WaitAndPlayClickSound());
+            }
         }
         else
         {
             _currentOffset.Update(Time.deltaTime, _initialOffset);
+            if (_wasDeployed)
+            {
+                AudioManager.PlaySound(ClipType.Servo);
+                StopAllCoroutines();
+            }
         }
         Vector3 localPos = _brainTransform.localPosition;
         localPos.z = _currentOffset.Value;
         _brainTransform.localPosition = localPos;
+
+        _wasDeployed = IsDeployed;
+    }
+
+    private IEnumerator WaitAndPlayClickSound()
+    {
+        yield return new WaitForSeconds(0.3f);
+        AudioManager.PlaySound(ClipType.Flashlight_Click);
     }
 }
