@@ -41,6 +41,7 @@ public class RalphRagdollController : MonoBehaviour
         }
 
         _mainBody.AddForce(_characterController.velocity * _launchPower, ForceMode.Impulse);
+        InventoryManager.Instance.RemoveAllLitterObjects();
 
         onBecomeRagdoll.Invoke();
         StartCoroutine(WaitAndRespawn());

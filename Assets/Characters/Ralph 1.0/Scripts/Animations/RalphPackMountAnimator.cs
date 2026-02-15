@@ -7,6 +7,7 @@ public class RalphPackMountAnimator : BaseRalphAnimator
     [Header("Pack Mount")]
     public Transform PackMount;
     public Transform PackMountTarget;
+    public Transform RefPoint;
     private Vector3 _initialPackMountRot;
     public override void ManualInit()
     {

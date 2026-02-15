@@ -35,6 +35,11 @@ public class InventoryManager : MonoBehaviour
     {
         _kinematicProxy.transform.rotation = _realPackMount.transform.rotation;
     }
+
+    public void SetRefPoint(Transform refPoint)
+    {
+        _realPackMount = refPoint;
+    }
     public GameObject CreateLitterObject(LitterFlightBehaviour litterScript)
     {
         GameObject simObject = Instantiate(litterScript.gameObject, transform);
@@ -87,6 +92,20 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void RemoveAllLitterObjects()
+    {
+        foreach (var litterBehaviour in _litterBehaviours)
+        {
+            StartCoroutine(WaitAndRemove(litterBehaviour.Key));
+        }
+    }
+
+    private IEnumerator WaitAndRemove(GameObject simObject)
+    {
+        yield return null;
+        RemoveLitterSimObject(simObject);
+    }
+    
     public LitterFlightBehaviour RemoveTopLitterObject()
     {
         RaycastHit hit;

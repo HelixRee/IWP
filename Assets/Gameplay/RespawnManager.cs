@@ -1,4 +1,5 @@
 using Cinemachine;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RespawnManager : MonoBehaviour
@@ -16,6 +17,9 @@ public class RespawnManager : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [SerializeField] private UIBatteryCharge _batteryCharge;
+    [SerializeField] private InventoryManager _inventoryManager;
+
+    private Queue<GameObject> _playersInWorld = new();
     public static RespawnManager Instance { get; private set; }
     private void Awake()
     {
@@ -44,12 +48,19 @@ public class RespawnManager : MonoBehaviour
         _ragdollStarted = false;
 
         _smoothedChargeAmt = 0f;
+
+        _playersInWorld.Enqueue(_activePlayer);
+        if (_playersInWorld.Count > 3)
+            Destroy(_playersInWorld.Dequeue());
     }
     public void Respawn()
     {
+
         _activePlayer = Instantiate(_playerPrefab);
         _activePlayer.transform.position = _spawnPoint.position;
         _activePlayer.transform.rotation = _spawnPoint.rotation;
+
+        _inventoryManager.SetRefPoint(_activePlayer.GetComponentInChildren<RalphPackMountAnimator>().RefPoint);
 
         Transform cameraTarget = _activePlayer.GetComponent<RalphCameraController>().CinemachineCameraTarget.transform;
         _virtualCamera.Follow = cameraTarget;

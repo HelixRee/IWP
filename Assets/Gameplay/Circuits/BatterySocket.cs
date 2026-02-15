@@ -2,6 +2,7 @@ using SmallHedge.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Splines;
 
 public class BatterySocket : MonoBehaviour
@@ -15,6 +16,9 @@ public class BatterySocket : MonoBehaviour
     private bool _isPowered = false;
     private bool _socketActive = true;
     private bool _soundStarted = false;
+
+    [HideInInspector] public UnityEvent onAttachBattery;
+    [HideInInspector] public UnityEvent onDetachBattery;
     private void Start()
     {
         _UI.SetActive(false);
@@ -47,6 +51,8 @@ public class BatterySocket : MonoBehaviour
             _splineAnimator.gameObject.SetActive(true);
             _splineAnimator.Play();
         }
+
+        onAttachBattery.Invoke();
     }
     public void DetachBattery()
     {
@@ -68,6 +74,8 @@ public class BatterySocket : MonoBehaviour
             _splineAnimator.Restart(false);
             _splineAnimator.gameObject.SetActive(true);
         }
+
+        onDetachBattery.Invoke();
     }
 
     // Change to blacklist system eventually
