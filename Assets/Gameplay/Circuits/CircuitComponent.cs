@@ -2,20 +2,35 @@ using UnityEngine;
 
 public class CircuitComponent : MonoBehaviour
 {
-    public bool isPowered = false;
+    public bool isInverted = false;
+    private bool _wasInverted = false;
+    public bool isPowered 
+    {
+        get
+        {
+            return _isPowered != isInverted;
+        }
+        set
+        {
+            _isPowered = value;
+        } 
+    }
+    private bool _isPowered = false;
     public bool _wasPowered = false;
 
     protected virtual void Update()
     {
-        if (isPowered != _wasPowered)
+        if (_isPowered != _wasPowered || isInverted != _wasInverted)
         {
-            if (isPowered)
+            if (_isPowered != isInverted)
                 OnPowerOn();
             else
                 OnPowerOff();
 
             OnPowerChange();
-            _wasPowered = isPowered;
+
+            _wasPowered = _isPowered;
+            _wasInverted = isInverted;
         }
     }
 

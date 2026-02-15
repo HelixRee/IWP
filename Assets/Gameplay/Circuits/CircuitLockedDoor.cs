@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(ConfigurableJoint))]
 public class CircuitLockedDoor : CircuitComponent
 {
+    public bool closeOnLock = false;
     private ConfigurableJoint _joint;
 
     private void Start()
@@ -32,11 +33,37 @@ public class CircuitLockedDoor : CircuitComponent
     protected override void OnPowerOff()
     {
         base.OnPowerOff();
-        SoftJointLimit softJointLimit = new();
-        softJointLimit.limit = Mathf.Min(-10, -transform.localEulerAngles.z);
-        _joint.lowAngularXLimit = softJointLimit;
+        float _limit = -transform.localEulerAngles.z;
+        if (!closeOnLock)
+        {
+            _limit = Mathf.Min(-10, -transform.localEulerAngles.z);
 
-        softJointLimit.limit = Mathf.Min(-10, -transform.localEulerAngles.z) + 0.01f;
-        _joint.highAngularXLimit = softJointLimit;
+
+            SoftJointLimit softJointLimit = new();
+            softJointLimit.limit = _limit;
+            _joint.lowAngularXLimit = softJointLimit;
+
+            softJointLimit.limit = _limit + 0.01f;
+            _joint.highAngularXLimit = softJointLimit;
+        }
+    }
+
+    private float _limit = 0f;
+    protected override void Update()
+    {
+        base.Update();
+        
+        if (closeOnLock && !isPowered)
+        {
+            _limit = Mathf.Min(-transform.localEulerAngles.z, _limit);
+            _limit = Mathf.Lerp(_limit, 0, 12f * Time.deltaTime);
+
+            SoftJointLimit softJointLimit = new();
+            softJointLimit.limit = _limit;
+            _joint.lowAngularXLimit = softJointLimit;
+
+            softJointLimit.limit = 0f;
+            _joint.highAngularXLimit = softJointLimit;
+        }
     }
 }
