@@ -7,6 +7,7 @@ public class CircuitLight : CircuitComponent
     private Light _light;
     private float _transitionStartTimestamp = 0f;
     private float _transition = 0f;
+    [SerializeField] private float _intensity = 1f;
     [SerializeField] private AnimationCurve _poweredOnCurve;
     [SerializeField] private AnimationCurve _poweredOffCurve;
 
@@ -33,7 +34,7 @@ public class CircuitLight : CircuitComponent
         }
 
         float intensity = Mathf.Lerp(poweredOffIntensity, poweredOnIntensity, _transition);
-        _light.intensity = intensity;   
+        _light.intensity = intensity * _intensity;   
     }
     protected override void OnPowerOn()
     {

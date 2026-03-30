@@ -76,11 +76,11 @@ Material:
     - _RefractionStrenght: 1.15
     - _Smoothness: 0.285
     - _Strenght: 0.12
-    - _Tiling: 273
+    - _Tiling: 57
     m_Colors:
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _Tiling: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _TintColor: {r: 0.8584906, g: 0.59527415, b: 0.8378462, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1748688521998277390

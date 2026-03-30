@@ -1,0 +1,8 @@
+Model Information:
+* title:	light switch and Bulb
+* source:	https://sketchfab.com/3d-models/light-switch-and-bulb-e21d4232e1d9496eafd164673e47b93f
+* author:	Sousinho (https://sketchfab.com/sousinho)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

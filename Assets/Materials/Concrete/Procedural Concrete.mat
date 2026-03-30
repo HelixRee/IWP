@@ -150,7 +150,7 @@ Material:
     - _Mask_Enable: 1
     - _Metallic: 0
     - _Normal_Enable: 1
-    - _Normal_Intensity: 3
+    - _Normal_Intensity: 1
     - _Normal_Sampling_Offset: 0.0000038146968
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -165,7 +165,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _Temp: 0
-    - _Tiling: 0.3
+    - _Tiling: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
