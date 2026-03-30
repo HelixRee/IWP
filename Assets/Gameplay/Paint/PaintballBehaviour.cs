@@ -13,7 +13,7 @@ public class PaintballBehaviour : MonoBehaviour
         _renderer = GetComponent<Renderer>();
 
 
-        Color color = Color.HSVToRGB(hue / 360f, 1, 1);
+        Color color = Color.HSVToRGB((hue + 15)/ 360f, 1, 1);
         _renderer.material.SetColor("_BaseColor", color);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created

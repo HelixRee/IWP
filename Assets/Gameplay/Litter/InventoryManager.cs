@@ -103,6 +103,10 @@ public class InventoryManager : MonoBehaviour
     private IEnumerator WaitAndRemove(GameObject simObject)
     {
         yield return null;
+        if (_litterBehaviours[simObject].TryGetComponent(out PaintballBehaviour paintball))
+        {
+            paintball.enabled = true;
+        }
         RemoveLitterSimObject(simObject);
     }
     
