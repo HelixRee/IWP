@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RespawnManager : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class RespawnManager : MonoBehaviour
     }
     public void Respawn()
     {
+        // Disable prev input
+        _activePlayer.GetComponent<PlayerInput>().enabled = false;
 
         _activePlayer = Instantiate(_playerPrefab);
         _activePlayer.transform.position = _spawnPoint.position;
