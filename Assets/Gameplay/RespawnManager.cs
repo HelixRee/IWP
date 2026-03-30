@@ -88,4 +88,8 @@ public class RespawnManager : MonoBehaviour
             _smoothedChargeAmt = Mathf.Lerp(_smoothedChargeAmt, 1f, 1f * Time.deltaTime);
         _batteryCharge.fillAmount = Mathf.Min(fillAmt, _smoothedChargeAmt);
     }
+    public RalphMaterialController GetActivePlayerMaterial()
+    {
+        return _playerMaterial;
+    }
 }

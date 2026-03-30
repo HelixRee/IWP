@@ -230,6 +230,11 @@ public class RalphMaterialController : MonoBehaviour
         }
         _activeMaterial = null;
     }
+
+    public float GetActiveMaterialHueShift()
+    {
+        return _activeMaterial.GetFloat(_matHueOffsetID);
+    }
 }
 
 #if UNITY_EDITOR

@@ -108,6 +108,11 @@ public class RalphAimController : MonoBehaviour
         coroutine = InventoryManager.Instance.WaitAndEnable(_activeLitter);
         StartCoroutine(coroutine);
 
+        if (_activeLitter.TryGetComponent(out PaintballBehaviour paintball))
+        {
+            paintball.enabled = true;
+        }
+
         _activeLitter.gameObject.tag = "Litter";
         _activeLitter = null;
     }
@@ -122,6 +127,11 @@ public class RalphAimController : MonoBehaviour
         IEnumerator coroutine;
         coroutine = InventoryManager.Instance.WaitAndEnable(_activeLitter);
         StartCoroutine(coroutine);
+
+        if (_activeLitter.TryGetComponent(out PaintballBehaviour paintball))
+        {
+            paintball.enabled = true;
+        }
 
         _activeLitter.gameObject.tag = "Litter";
         _activeLitter = null;
