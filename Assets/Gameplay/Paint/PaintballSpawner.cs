@@ -21,6 +21,14 @@ public class PaintballSpawner : MonoBehaviour
         
     }
 
+    public void ClearBalls()
+    {
+        foreach (var ball in _storedBalls)
+        {
+            Destroy(ball);
+        }
+        _storedBalls.Clear();
+    }
     void AttemptSpawnBall()
     {
         if (_storedBalls.Count < 3)

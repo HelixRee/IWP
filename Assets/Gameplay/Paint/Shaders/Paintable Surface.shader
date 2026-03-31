@@ -15,11 +15,15 @@ Shader "Custom/Paintable Surface"
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+                        #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
 
-            #include "UnityCG.cginc"
+            
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+            // #include "UnityCG.cginc"
 
             struct appdata
             {
@@ -34,6 +38,7 @@ Shader "Custom/Paintable Surface"
                 float3 normal : POSITION1;
                 float3 worldPos : POSITION2;
                 float4 vertex : SV_POSITION;
+                float4 shadowCoords : TEXCOORD3;
             };
 
             sampler2D _MainTex;
@@ -46,14 +51,26 @@ Shader "Custom/Paintable Surface"
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.normal = UnityObjectToWorldNormal(v.normal);
+                o.normal = TransformObjectToWorldNormal(v.normal);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+
+                
+                // Get the VertexPositionInputs for the vertex position  
+                VertexPositionInputs positions = GetVertexPositionInputs(v.vertex.xyz);
+
+                // Convert the vertex position to a position on the shadow map
+                float4 shadowCoordinates = GetShadowCoord(positions);
+
+                // Pass the shadow coordinates to the fragment shader
+                o.shadowCoords = shadowCoordinates;
+
+
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 // sample the texture
                 // fixed4 col = tex2D(_MainTex, i.uv);
@@ -68,11 +85,11 @@ Shader "Custom/Paintable Surface"
                 float3 projY = tex2D(_MainTex, worldPos.xz) * blends.y;
                 float3 projZ = tex2D(_MainTex, worldPos.xy) * blends.z;
 
-                fixed4 col = fixed4((projX + projY + projZ), 0);
+                float4 col = float4((projX + projY + projZ), 0);
                 col *= _Color;
 
                 // Filter mask
-                fixed4 maskCol = tex2D(_MaskTexture, i.uv);
+                float4 maskCol = tex2D(_MaskTexture, i.uv);
                 float oneMinusAlpha = 1 - maskCol.a;
 
                 float blendValue = maskCol.a * tex2D(_NoiseSample, i.uv).r;
@@ -81,10 +98,19 @@ Shader "Custom/Paintable Surface"
                 float maskBlendFactor = step(oneMinusAlpha, blendValue);
 
 
-                fixed4 finalCol = lerp(col, maskCol, maskBlendFactor);
+                float4 finalCol = lerp(col, maskCol, maskBlendFactor);
+
+
+                                // Get the value from the shadow map at the shadow coordinates
+                half shadowAmount = MainLightRealtimeShadow(i.shadowCoords);
+
+
+
+
+
                 return finalCol;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

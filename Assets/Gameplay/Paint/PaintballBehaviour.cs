@@ -42,7 +42,7 @@ public class PaintballBehaviour : MonoBehaviour
         {
             if (!(collider.TryGetComponent(out Paintable paintable))) continue;
 
-            PaintManager.instance.Paint(paintable, transform.position, 0.4f, 0.8f, 0.8f, _storedColor);
+            PaintManager.instance.Paint(paintable, transform.position, 0.6f, 0.8f, 0.8f, _storedColor);
             
         }
 

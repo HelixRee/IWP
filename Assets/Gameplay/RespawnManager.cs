@@ -70,6 +70,12 @@ public class RespawnManager : MonoBehaviour
         _virtualCamera.LookAt = cameraTarget;
 
         InitPlayer();
+
+        var spawners = FindObjectsByType<PaintballSpawner>(FindObjectsSortMode.None);
+        foreach (var spawner in spawners)
+        {
+            spawner.ClearBalls();
+        }
         //Debug.Log("respawn");
     }
     private void Update()

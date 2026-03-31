@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 public class Paintable : MonoBehaviour
 {
     const int TEXTURE_SIZE = 512;
+    const int TEXTURE_WIDTH = 2560;
+    const int TEXTURE_HEIGHT = 1080;
 
     public RenderTexture maskRenderTexture;
     public RenderTexture supportTexture;
@@ -23,10 +25,10 @@ public class Paintable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maskRenderTexture = new RenderTexture(TEXTURE_SIZE, TEXTURE_SIZE, 0, RenderTextureFormat.ARGB32);
+        maskRenderTexture = new RenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, RenderTextureFormat.ARGB32);
         maskRenderTexture.filterMode = FilterMode.Bilinear;
 
-        supportTexture = new RenderTexture(TEXTURE_SIZE, TEXTURE_SIZE, 0, RenderTextureFormat.ARGB32);
+        supportTexture = new RenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, RenderTextureFormat.ARGB32);
         supportTexture.filterMode = FilterMode.Bilinear;
         //baseTexture = new RenderTexture(TEXTURE_SIZE, TEXTURE_SIZE, 0, RenderTextureFormat.ARGB32);
         //baseTexture.filterMode = FilterMode.Bilinear;
