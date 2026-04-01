@@ -9,7 +9,7 @@ public class RespawnManager : MonoBehaviour
     private float _playerRemainingLifespan = 0f;
     private float _smoothedChargeAmt = 1f;
 
-    private bool _ragdollStarted = false;
+    public bool _ragdollStarted = false;
     [SerializeField] private GameObject _activePlayer;
     private RalphMaterialController _playerMaterial;
     private RalphRagdollController _playerRagdoll;
@@ -100,5 +100,9 @@ public class RespawnManager : MonoBehaviour
     public RalphMaterialController GetActivePlayerMaterial()
     {
         return _playerMaterial;
+    }
+    public void ForceRagdoll()
+    {
+        _playerRagdoll.StartRagdoll();
     }
 }
