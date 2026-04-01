@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -47,6 +48,7 @@ public class Paintable : MonoBehaviour
 
 
         InvokeRepeating("SavePNG", 0, 60 * 60);
+        //InvokeRepeating("SavePNG", 0, 5);
 
         //PaintManager.instance.initTextures(this);
     }
@@ -54,7 +56,10 @@ public class Paintable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SavePNG();
+        }
     }
 
     private void OnGUI()
@@ -65,7 +70,13 @@ public class Paintable : MonoBehaviour
 
     public void SavePNG()
     {
-        StartCoroutine(SaveTextureToFile(maskRenderTexture, "SavedImage.png"));
+        //Debug.Log("Test");
+        DateTime currentTime = DateTime.Now;
+        string formattedDateTime = currentTime.ToString("dd_HH-mm-ss");
+        formattedDateTime = "SavedImage" + formattedDateTime;
+        
+        StartCoroutine(SaveTextureToFile(maskRenderTexture, formattedDateTime));
+        //StartCoroutine(SaveTextureToFile(maskRenderTexture, "SavedImage.png"));
     }
 
     IEnumerator SaveTextureToFile(RenderTexture rt, string fileName)
@@ -101,7 +112,7 @@ public class Paintable : MonoBehaviour
         }
 
         // 7. Write the bytes to the file
-        File.WriteAllBytes(path, bytes);
+        File.WriteAllBytes(path + ".png", bytes);
 
         Debug.Log("Saved to " + path);
 

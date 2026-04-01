@@ -233,7 +233,7 @@ public class RalphMaterialController : MonoBehaviour
 
     public float GetActiveMaterialHueShift()
     {
-        if (_activeMaterial != null)
+        if (_activeMaterial != null && _activeMaterial.HasFloat(_matHueOffsetID))
             return _activeMaterial.GetFloat(_matHueOffsetID);
         else
             return Random.Range(0, 360f);

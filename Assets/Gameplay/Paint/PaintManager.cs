@@ -46,7 +46,7 @@ public class PaintManager : MonoBehaviour
 
     public void Paint(Paintable paintable, Vector3 pos, float radius = 1f, float hardness = .5f, float strength = .5f, Color? color = null)
     {
-        Debug.Log("Attempted Paint");
+        //Debug.Log("Attempted Paint");
         RenderTexture mask = paintable.getMask();
         RenderTexture support = paintable.getSupport();
         Renderer rend = paintable.getRenderer();

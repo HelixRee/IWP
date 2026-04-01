@@ -58,6 +58,11 @@ public class InventoryManager : MonoBehaviour
 
         simObject.transform.position = _simulatedPackMount.position + offset;
 
+        if (_litterBehaviours[simObject].TryGetComponent(out PaintballBehaviour paintball))
+        {
+            paintball.enabled = false;
+        }
+
         return simObject;
     }
 
@@ -65,6 +70,13 @@ public class InventoryManager : MonoBehaviour
     {
         if (!_litterBehaviours.ContainsKey(simObject)) return;
         LitterFlightBehaviour litterScript = _litterBehaviours[simObject];
+
+
+        if (_litterBehaviours[simObject].TryGetComponent(out PaintballBehaviour paintball))
+        {
+            paintball.enabled = true;
+        }
+
         _litterBehaviours.Remove(simObject);
 
         Destroy(simObject);
@@ -90,6 +102,7 @@ public class InventoryManager : MonoBehaviour
             coroutine = WaitAndEnable(litterScript);
             StartCoroutine(coroutine);
         }
+
     }
 
     public void RemoveAllLitterObjects()

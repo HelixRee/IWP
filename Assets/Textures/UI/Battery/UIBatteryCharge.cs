@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class UIBatteryCharge : MonoBehaviour
     [Header("Materials")]
     [InspectorName("Battery UI Materials")]
     [SerializeField] private List<Image> _batteryUIs = new();
+    [SerializeField] private TMP_Text _text;
     private int _fillAmountID;
 
     private void OnValidate()
@@ -25,5 +27,7 @@ public class UIBatteryCharge : MonoBehaviour
     void Update()
     {
         _batteryUIs.ForEach(img => img.materialForRendering.SetFloat(_fillAmountID, fillAmount));
+        if (_text)
+            _text.text = string.Format("{00:F0}%", fillAmount * 100);
     }
 }

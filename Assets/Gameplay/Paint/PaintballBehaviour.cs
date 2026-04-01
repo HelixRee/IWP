@@ -8,6 +8,7 @@ public class PaintballBehaviour : MonoBehaviour
     private float _hue;
     private Renderer _renderer;
     private Color _storedColor;
+    public bool isChild = false;
     public void InitMaterial(float hue)
     {
         _hue = hue;
