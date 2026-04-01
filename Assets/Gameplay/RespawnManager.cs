@@ -77,6 +77,8 @@ public class RespawnManager : MonoBehaviour
             spawner.ClearBalls();
         }
         //Debug.Log("respawn");
+
+        ResetBattery();
     }
     private void Update()
     {
@@ -104,5 +106,14 @@ public class RespawnManager : MonoBehaviour
     public void ForceRagdoll()
     {
         _playerRagdoll.StartRagdoll();
+    }
+
+    public BatterySocket batterySocket;
+    public GameObject battery;
+
+    void ResetBattery()
+    {
+        if (batterySocket._isPowered) return;
+        battery.transform.position = batterySocket.transform.position;
     }
 }

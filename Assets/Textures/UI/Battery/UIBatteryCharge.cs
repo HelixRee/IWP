@@ -28,6 +28,6 @@ public class UIBatteryCharge : MonoBehaviour
     {
         _batteryUIs.ForEach(img => img.materialForRendering.SetFloat(_fillAmountID, fillAmount));
         if (_text)
-            _text.text = string.Format("{00:F0}%", fillAmount * 100);
+            _text.text = string.Format("Charge left: {00:F0}%", fillAmount * 100);
     }
 }

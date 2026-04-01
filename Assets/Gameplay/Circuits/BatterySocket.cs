@@ -13,7 +13,7 @@ public class BatterySocket : MonoBehaviour
     [SerializeField] private GameObject _UI;
 
     private Battery _attachedBattery;
-    private bool _isPowered = false;
+    public bool _isPowered = false;
     private bool _socketActive = true;
     private bool _soundStarted = false;
 
