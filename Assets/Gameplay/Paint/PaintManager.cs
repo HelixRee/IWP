@@ -71,7 +71,7 @@ public class PaintManager : MonoBehaviour
         if (paintSounds.Count > 0)
         {
             int rand = Random.Range(0, paintSounds.Count - 1);
-            AudioSource.PlayClipAtPoint(paintSounds[rand], pos, 0.01f);
+            AudioSource.PlayClipAtPoint(paintSounds[rand], pos, SFXVolume);
         }
     }
 
